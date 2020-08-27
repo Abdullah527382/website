@@ -1,16 +1,23 @@
 <!doctype html>
 <html lang="en">
   <head>
-  	<link href="js/prism.css" rel="stylesheet" />
+  	<link href="prism.css" rel="stylesheet" />
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-   
+    <!-- Bootstrap CSS -->
+    <!-- OLD style sheet: (from template)-->
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
+
+  
+    <!-- ALL bootstrap classes: https://www.w3schools.com/bootstrap/bootstrap_ref_all_classes.asp-->
+
   </head>
   <body>
       <!-- TYPOGRAPHY -->
@@ -83,7 +90,22 @@
           </code>
       </pre>
 
-        <samp>The valid you entered was invalid error 404.</samp>
+      <samp>The valid you entered was invalid error 404.</samp>
+      <hr>
+      <!-- Dropdown class in bootstrap: -->
+      <div class="dropdown"> 
+        <h5>Choose subject to drop</h5>
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Subjects
+          <span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            <li><a href="#">COMP3331</a></li>
+            <li><a href="#">COMP3311</a></li>
+            <li><a href="#">COMP2511</a></li>
+          </ul>
+      </div>
+
+      
+      
     </div>
 
     <!-- Optional JavaScript -->
@@ -92,7 +114,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    <script src="js/prism-whitespace.js"></script>
+    <script src="prism-whitespace.js"></script>
 
   </body>
 </html>
