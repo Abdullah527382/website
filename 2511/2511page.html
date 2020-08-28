@@ -11,7 +11,7 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/navbar-fixed/">
 
     <!-- Bootstrap core CSS -->
-<link href="assets/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
       .bd-placeholder-img {
@@ -34,7 +34,7 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-  <a class="navbar-brand" href="index.html">Home</a>
+  <a class="navbar-brand" href="#">Home</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -42,7 +42,7 @@
     <ul class="navbar-nav mr-auto">
       <!-- Links to our pages-->
       <li class="nav-item active">
-        <a class="nav-link" href="eloquentJS/learnjs.html">JavaScript</a>
+        <a class="nav-link" href="#">JavaScript</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Algos</a>
@@ -55,6 +55,10 @@
       </li>
 
     </ul>
+    <form class="form-inline mt-2 mt-md-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
   </div>
 </nav>
 
@@ -63,7 +67,7 @@
     <h1>Abdullah's website</h1>
     <p class="lead">Hi there! You're currently looking at the main page of my personal website, 
       my first bootstrap project! Checkout my current JavaScript progress by clicking the link below</p>
-    <a class="btn btn-lg btn-primary" href="eloquentJS/learnjs.html" role="button">JavaScript progress &raquo;</a>
+    <a class="btn btn-lg btn-primary" href="../components/navbar/" role="button">JavaScript progress &raquo;</a>
   </div>
 </main>
 
@@ -102,5 +106,5 @@
 
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-      <script>window.jQuery || document.write('<script src="assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="assets/dist/js/bootstrap.bundle.min.js"></script>
+      <script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 </html>

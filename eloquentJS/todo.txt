@@ -1,0 +1,7 @@
+
+
+To do:
+
+- Figure out a better note taking method than just plain html 
+- Automating blog post material
+- md to html converter

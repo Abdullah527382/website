@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v4.1.1">
+    <title>Fixed top navbar example · Bootstrap</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/navbar-fixed/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  	<link href="../js/prism.css" rel="stylesheet" />
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <!-- OLD style sheet: (from template)-->
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
+
+  
+    <!-- ALL bootstrap classes: https://www.w3schools.com/bootstrap/bootstrap_ref_all_classes.asp-->
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="navbar-top-fixed.css" rel="stylesheet">
+  </head>
+
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <a class="navbar-brand" href="../index.html">Home</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto">
+        <!-- Links to our pages-->
+        <li class="nav-item active">
+          <a class="nav-link" href="#">JavaScript</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Algos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">COMP2511</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">COMP3311</a>
+        </li>
+
+      </ul>
+    </div>
+    
+</nav>
+  <body>
+      <!-- TYPOGRAPHY -->
+    <div class="container">
+        <h1  class="border-bottom">Hello, world!<small> secondary </small></h1>
+        <p class="lead">
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quos, asperiores 
+        iste quo facere perferendis dolorem nostrum ex minima. </p> Doloribus omnis dolor, 
+        porro magnam in deserunt assumenda delectus voluptatum eum vitae!
+        Lorem ipsum dolor, <del>sit amet consectetur adipisicing elit. </del>eld Nam modi laborum aut, 
+        nobis iste, fugit minus ut ipsum iure omnis natus nemo corrupti consectetur 
+        incidunt ea quo molestias <u>pariatur repudiandae</u>!
+        </p>
+        <hr> 
+
+        <!-- ALIGNMENT -->
+        <p class="text-left text lowercase">Left aligned text thats lower case</p>
+        <p class="text-center">Centred text</p>
+        <!-- There is also: text uppercase, capitalize, justify, nowrap, etc.-->
+
+        <!-- FLOATS -->
+        <div class="pull-right">Div floated to the right</div>
+
+        <!-- Whenever we float, clear it-->
+        <div class="clearfix"></div>
+        <hr>
+
+        <!-- BLOCKQUOTE -->
+        <blockquote class="blockquote">
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
+                Illo natus libero eius odit.</p>
+                <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>
+        </blockquote>
+
+        <!-- CODE -->
+        For example, <code>&lt;Coding section&gt;</code> should be wrapped as inline.
+
+        <pre><code class="language-javascript">
+          for(let x of y) { }
+        </code></pre>
+
+        <prev>
+          <code class="language-perl">
+            #!/usr/bin/perl -w
+            sub dot_product {
+            # Use ref instead
+            # @_ is can be used to pass the parameter list to the function
+            my ($aref, $bref) = @_;
+
+            my @c;
+            # $#$aref will give the length of the array
+            foreach $i (0..$#$aref){
+                $c[$i] = $$aref[$i] * $$bref[$i];
+            }
+
+            return @c;
+            }
+        </code>
+      </prev>
+
+        <pre>
+          <code class="language-css">
+            var _self = (typeof window !== 'undefined')
+            ? window   // if in browser
+            : (
+              (typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope)
+              ? self // if in worker
+              : {}   // if in node js
+            );
+          </code>
+      </pre>
+
+      <samp>The valid you entered was invalid error 404.</samp>
+      <hr>
+      <!-- Dropdown class in bootstrap: -->
+    </div>
+  </body>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- https://www.youtube.com/watch?v=mQaJhQCBwUo -->
+    <!-- 
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="../assets/dist/js/bootstrap.bundle.min.js"></script> -->
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/prism-whitespace.js"></script>
+</html>
