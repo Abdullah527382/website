@@ -13,8 +13,11 @@
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/navbar-fixed/">
 
+
+
     <!-- Bootstrap core CSS -->
     <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   	<link href="../js/prism.css" rel="stylesheet" />
 
@@ -33,6 +36,56 @@
     <!-- ALL bootstrap classes: https://www.w3schools.com/bootstrap/bootstrap_ref_all_classes.asp-->
 
     <style>
+     /* 
+        Bottom footer for socials
+      */
+      .footer {
+        position:relative;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color:transparent;
+        color: white;
+        text-align: center;
+      }
+
+      .table {
+        margin: 0 auto;
+      }
+      ul#horizontal-list {
+        list-style: none;
+        padding-top: 0px;
+        }
+        ul#horizontal-list li {
+          display: inline;
+        }
+      .fa {
+        padding: 15px;
+        width: 30px 30px;
+        text-align: center;
+        text-decoration: none;
+        margin: 5px 2px;
+
+        border-radius: 50%;
+        margin-bottom: 20px;
+        }
+      .fa-youtube {
+        background: #020202;
+        color: white;
+
+      }
+      .fa-reddit {
+        background: #000000;
+        color: white;
+      }
+      .fa-github {
+        background: #000000;
+        color: white;
+      }
+      .fa:hover {
+          opacity: 0.7;
+      }
+      /* Page format and style*/
       .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
@@ -153,9 +206,21 @@
 
       <samp>The valid you entered was invalid error 404.</samp>
       <hr>
-      <!-- Dropdown class in bootstrap: -->
+      <div class="footer">
+        <div class="table">
+          <ul id="horizontal-list">
+            <li><a href="https://www.youtube.com/" class="fa fa-youtube"></a></li>
+            <li><a href="https://www.reddit.com/r/cscareerquestions/" class="fa fa-reddit"></a></li>
+            <li><a href="https://github.com/abdullah527382" class="fa fa-github"></a></li>
+          </ul>
+        </div>
+      </div>
+
     </div>
+  
   </body>
+
+
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
