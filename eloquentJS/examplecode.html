@@ -1,0 +1,37 @@
+       <!-- CODE -->
+       For example, <code>&lt;Coding section&gt;</code> should be wrapped as inline.
+
+       <pre><code class="language-javascript">
+         for(let x of y) { }
+       </code></pre>
+
+       <prev>
+         <code class="language-perl">
+           #!/usr/bin/perl -w
+           sub dot_product {
+           # Use ref instead
+           # @_ is can be used to pass the parameter list to the function
+           my ($aref, $bref) = @_;
+
+           my @c;
+           # $#$aref will give the length of the array
+           foreach $i (0..$#$aref){
+               $c[$i] = $$aref[$i] * $$bref[$i];
+           }
+
+           return @c;
+           }
+       </code>
+     </prev>
+
+       <pre>
+         <code class="language-css">
+           var _self = (typeof window !== 'undefined')
+           ? window   // if in browser
+           : (
+             (typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope)
+             ? self // if in worker
+             : {}   // if in node js
+           );
+         </code>
+     </pre>
