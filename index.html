@@ -19,79 +19,12 @@
     <!-- Bootstrap core CSS -->
 <link href="assets/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-      /* 
-        Bottom footer for socials
-      */
-      /* Transitions of web pages: https://www.youtube.com/watch?v=1dJT-99KpiI*/
-      .footer {
-        position:relative;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        background-color:transparent;
-        color: white;
-        text-align: center;
-      }
-      img {
-        max-width: 100%;
-        max-height: 100%;
-      }
-      .table {
-        margin: 0 auto;
-      }
-      ul#horizontal-list {
-        list-style: none;
-        padding-top: 0px;
-        }
-        ul#horizontal-list li {
-          display: inline;
-        }
-      .fa {
-        padding: 15px;
-        width: 30px 30px;
-        text-align: center;
-        text-decoration: none;
-        margin: 5px 2px;
-
-        border-radius: 50%;
-        margin-bottom: 20px;
-        }
-      .fa-youtube {
-        background: #020202;
-        color: white;
-
-      }
-      .fa-reddit {
-        background: #000000;
-        color: white;
-      }
-      .fa-github {
-        background: #000000;
-        color: white;
-      }
-      .fa:hover {
-          opacity: 0.7;
-      }
-      
-      /*Text for the page aligned and formatted*/
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-    </style>
+    <!-- Custom styles for this template -->
     <!-- Custom styles for this template -->
     <link href="navbar-top-fixed.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/custom.css">  
+
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -103,7 +36,23 @@
     <ul class="navbar-nav mr-auto">
       <!-- Links to our pages-->
       <li class="nav-item">
-        <a class="nav-link" href="eloquentJS/learnjs.html">JavaScript</a>
+        <!-- Change this to a dropdown -->
+        <div class="btn-group">
+          <button type="button" class="btn btn-dropdown">
+            <a class="btn-dropdown"href="eloquentJS/learnjs.html"> JavaScript</a>
+          </button>
+          <button type="button" class="btn btn-dropdown dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="eloquentJS/learnjs.html">
+            <span class="sr-only" >Toggle Dropdown</span>
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="eloquentJS/learnjs.html#chapter-1-values-types-and-operators">Chapter 1</a>
+            <a class="dropdown-item" href="eloquentJS/learnjs.html#chapter-2-program-structure">Chapter 2</a>
+            <a class="dropdown-item" href="#">Chapter 3</a>
+            <a class="dropdown-item" href="#">Chapter 4</a>
+          </div>
+        </div>
+
+        
       </li>
       <li class="nav-item">
         <a class="nav-link" href="Algos/Algospage.html">Algos</a>

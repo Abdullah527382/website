@@ -1,0 +1,116 @@
+    /* 
+        Bottom footer for socials
+      */
+      /* Transitions of web pages: https://www.youtube.com/watch?v=1dJT-99KpiI*/
+      .footer {
+        position:relative;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color:transparent;
+        color: white;
+        text-align: center;
+      }
+      img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+      .table {
+        margin: 0 auto;
+      }
+      ul#horizontal-list {
+        list-style: none;
+        padding-top: 0px;
+        }
+        ul#horizontal-list li {
+          display: inline;
+        }
+      .fa {
+        padding: 15px;
+        width: 30px 30px;
+        text-align: center;
+        text-decoration: none;
+        margin: 5px 2px;
+
+        border-radius: 50%;
+        margin-bottom: 20px;
+        }
+      .fa-youtube {
+        background: #020202;
+        color: white;
+
+      }
+      .fa-reddit {
+        background: #000000;
+        color: white;
+      }
+      .fa-github {
+        background: #000000;
+        color: white;
+      }
+      .fa:hover {
+          opacity: 0.7;
+      }
+      
+      /*Text for the page aligned and formatted*/
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        }
+      /*Below 2 change the Javascript dropdown*/
+      .btn-dropdown {
+            color: rgba(255, 255, 255, 0.5);
+            background-color: transparent
+        }
+        .btn-dropdown-active {
+            color: white;
+            background-color: transparent  
+        }
+        a:hover {
+            color: rgba(255,255,255,.75);
+            text-decoration: none;
+            text-decoration-style: initial;
+            text-decoration-color: initial;
+        }
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1000;
+            display: none;
+            float: left;
+            min-width: 10rem;
+            padding: .5rem 0;
+            margin: .125rem 0 0;
+            font-size: 1rem;
+            color: white;
+            text-align: left;
+            list-style: none;
+            background-color: #343a40;
+            background-clip: padding-box;
+            border-radius: .25rem;
+        }
+        .dropdown-item {
+            display: block;
+            width: 100%;
+            padding: .25rem 1.5rem;
+            clear: both;
+            font-weight: 400;
+            color:  rgba(255,255,255,.75);
+            text-align: inherit;
+            white-space: nowrap;
+            background-color: transparent;
+            border: 0;
+        }
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+      html {
+        scroll-behavior: smooth;
+      }
