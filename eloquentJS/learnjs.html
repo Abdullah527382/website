@@ -36,6 +36,8 @@
     <!-- ALL bootstrap classes: https://www.w3schools.com/bootstrap/bootstrap_ref_all_classes.asp-->
 
     <style>
+
+      /* Inline code */
      /* 
         Bottom footer for socials
       */
@@ -141,7 +143,7 @@
         <i>"Eloquent JavaScript" <small>Written by Marijn Haverbeke</small>.</i> 
 
         <!-- Insert starter paragraph-->
-        <hr> 
+         
         <!-- Following text-->
 
         <!-- BLOCKQUOTE -->
@@ -151,14 +153,269 @@
               same value.”</p>
                 <footer class="blockquote-footer"> Marijn Haverbeke <cite title="Source Title">Eloquent JavaScript: A Modern Introduction to Programming</cite></footer>
         </blockquote>
+        <hr>
 
-        <!-- CODE -->
-        For example, <code>&lt;Coding section&gt;</code> should be wrapped as inline.
+        <!-- START CHP1 -->
+  </head>
+    <body for="html-export">
+      <div class="mume markdown-preview  ">
+      <h2 class="mume-header" id="chapter-1-values-types-and-operators">Chapter 1: Values, Types and operators</h2>
+  
+  <hr>
+  <h4 class="mume-header" id="values">Values</h4>
+  
+  <p>Every value has a type that will determine its tole, some are numbers, others are pieces of text or even functions and so on.</p>
+  <p>To create a value, you merely invoke its name, this is convenient in comparison to other languages such as <em>C</em> where we would have to delcare type as well. Using ALOT of values simultaneously can lead to running out of memory.</p>
+  <p>This chapter introduces the atomic elements of <em>JavaScript</em> programs, that is, the simple value types and the operators that can act on such <strong>values</strong>.</p>
+  <h4 class="mume-header" id="numbers">Numbers</h4>
+  
+  <p>JS uses a fixed number of bits (64 of them), there are only so many different patterns to make with 64 bits, meaning the numbers (being patterns) have limited amount of representations. With N decimal digits, you can represent<br>
+  <img src="https://latex.codecogs.com/svg.latex?10%5EN" alt="equation"> ways, similarly given 64 binary digits, you&apos;d be able to represent 2^64 different numbers.</p>
+  <p>Fractional numbers are written by using a dot</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token number">9.81</span>
+  </pre><p>For very big numbers, you can use scientific notation</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token number">2.998e8</span>
+  </pre><h4 class="mume-header" id="arithmetic">Arithmetic:</h4>
+  
+  <p>The main things to do with numbers is arithmetic, here is what they look like</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token number">10</span> <span class="token operator">+</span> <span class="token number">4</span> <span class="token operator">*</span> <span class="token number">11</span>
+  </pre><p>This follows <em>bodmas</em> as expected unless you use braces around some numbers in the expression above</p>
+  <p>There is one more arithmetic operator <em>%</em>, used to represent the remainder operation</p>
+  <h4 class="mume-header" id="special-numbers">Special Numbers:</h4>
+  
+  <p>There are 3 <em>special numbers</em> in JS</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript">infinity<span class="token punctuation">,</span> <span class="token operator">-</span>infinity<span class="token punctuation">,</span> <span class="token number">NaN</span>
+  </pre><p>which are denoted as: infinity, negative infinity and <em>&quot;Not A Number&quot;</em>, the last of which you get as a result of dividing by <em>0</em>.</p>
+  <h4 class="mume-header" id="strings">Strings:</h4>
+  
+  <p>Strings are used to represent text, written by enclosing their content in quotes</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token template-string"><span class="token string">`Down on the sea`</span></span>
+  <span class="token string">&quot;Lie on the ocean&quot;</span>
+  <span class="token string">&apos;Float on the ocean&apos;</span>
+  </pre><p>We use the <em>escaping</em> character to denote that a character after &quot;\n&quot; has a special meaning. Newlines can be included without escaping only with backticks (`). When an <em>n</em> character occurs after a backlash, it is interpreted as a newline character, similarly <em>\t</em> means tab.</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token string">&quot;A newline character is written like \&quot;\\n\&quot;.&quot;</span>
+  </pre><p>Strings too are modeled as bits, the way JS does this is based on the unicode standard which included every character from <em>Greek, Arabic</em> and so on. The complication is that JS&apos;s representation uses <strong>16 bits</strong> per string element which can describe up to 2^16 different characters, but unicode describes twice as many thus leading some characters in JS to take up 2 character positions.</p>
+  <p>Strings in JS can be concatenated using the &quot;+&quot; operator shown below</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token string">&quot;con&quot;</span> <span class="token operator">+</span> <span class="token string">&quot;cat&quot;</span> <span class="token operator">+</span> <span class="token string">&quot;e&quot;</span> <span class="token operator">+</span> <span class="token string">&quot;nate&quot;</span>
+  </pre><pre data-role="codeBlock" data-info="shell" class="language-shell">concatenate
+  </pre><p>String values have a number of associated functions called <em>methods</em> that can be used to perform other operations on them.</p>
+  <p>Backtick-quoted strings usually called <em>template literals</em> can do a few more tricks. When you write something inside ${ } (template literal), the result will be computed, converted to a string and included at that position. E.g.</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token template-string"><span class="token string">`half of 100 is </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token number">100</span> <span class="token operator">/</span> <span class="token number">2</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span>
+  </pre><pre data-role="codeBlock" data-info="shell" class="language-shell">half of 100 is 50
+  </pre><h4 class="mume-header" id="unary-operators">Unary operators:</h4>
+  
+  <p>Non symbolised operators are written as words. For e.g. <em>typeof</em> produces string value for the type of value you gave it</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">typeof</span> <span class="token number">4.5</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; number</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">typeof</span> <span class="token string">&quot;x&quot;</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; string</span>
+  </pre><p>Operators that take 1 value are called unary whilst those who take 2 are called binary operators.</p>
+  <h4 class="mume-header" id="boolean-values">Boolean values:</h4>
+  
+  <p>JS has a <em>boolean</em> type which has two values, <em>true</em> and <em>false</em>. We can use comparisons to produce such boolean values:</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">3</span> <span class="token operator">&gt;</span> <span class="token number">2</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; true</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">3</span> <span class="token operator">&lt;</span> <span class="token number">2</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; false</span>
+  </pre><p>Similarly this can be applied to strings, they are ordered roughly alphabetically, upper case letters are always <em>less</em> than lowercase ones i.e. &quot;Z&quot; &lt; &quot;a&quot; and nonalphabetic. Other comparison operators are &gt;=, &lt;=, == and !=. Examples below</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;Aardvark&quot;</span> <span class="token operator">&lt;</span> <span class="token string">&quot;Zoroaster&quot;</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; true</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;Itchy&quot;</span> <span class="token operator">!=</span> <span class="token string">&quot;Scratchy&quot;</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; true</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;Apple&quot;</span> <span class="token operator">==</span> <span class="token string">&quot;Orange&quot;</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; false</span>
+  </pre><p>The only value <strong>not</strong> equal to itself is <em>NaN</em></p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">NaN</span> <span class="token operator">==</span> <span class="token number">NaN</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; false</span>
+  </pre><h4 class="mume-header" id="logical-operators">Logical operators:</h4>
+  
+  <p>These are operations applied to Boolean values themselves, JS supports: <em>and, or</em> and <em>not</em>. The &amp;&amp; operator results true if both values given are true. The || operator returns true if either of the given values are true. Examples below:</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token boolean">true</span> <span class="token operator">&amp;&amp;</span> <span class="token boolean">false</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; false</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token boolean">true</span> <span class="token operator">&amp;&amp;</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; true</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token boolean">false</span> <span class="token operator">||</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; true</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token boolean">false</span> <span class="token operator">||</span> <span class="token boolean">false</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; false</span>
+  </pre><p><em>Not</em> is written as !, it flips the value given to it. When mixing these boolean operators with arithmetic and other operators, consider that || has the lowest precedence, then comes &amp;&amp;, then <em>&gt;, ==,</em> and so on.</p>
+  <p>The last operator is <em>ternary</em> (operates on 3 values), written with a question mark and a colon shown below</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token boolean">true</span> <span class="token operator">?</span> <span class="token number">1</span> <span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 1</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token boolean">false</span> <span class="token operator">?</span> <span class="token number">1</span> <span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 2</span>
+  </pre><p>It&apos;s often called the <em>conditional operator</em>. The value on the left of the question mark will determine which of the other 2 values will come out. If true, chooses middle, if false chooses the value on the right.</p>
+  <h4 class="mume-header" id="empty-values">Empty values:</h4>
+  
+  <p>Two special values: <em>null</em> and <em>undefined</em> are used to denote the absence of a meaningful value, they are valued which carry no information. Treat both <em>null, undefined</em> interchangeably.</p>
+  <h4 class="mume-header" id="automatic-type-conversion">Automatic type conversion:</h4>
+  
+  <p>JS goes out if its way to accept any program, demonstrated below:</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token comment">// Type coercion</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">8</span> <span class="token operator">*</span> <span class="token keyword">null</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; 0</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;5&quot;</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; 4</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;5&quot;</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; 51</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;five&quot;</span> <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; NaN</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token boolean">false</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; true</span>
+  </pre><p>You result in <em>NaN</em> mostly in accidental type conversions, this is something to take note of.</p>
+  <p>A useful behaviour to consider is when comparing <em>null</em> and <em>undefined</em>.</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">null</span> <span class="token operator">==</span> undefined<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; true</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">null</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; false</span>
+  </pre><p>The usefulness appears when you want to test whether a value has a real value instead of <em>null</em> or <em>undefined</em>. It is also recommended using three character comparison operators (=== and !==) <strong>defensively</strong> to prevent unexpected type conversions. They are used to test whether values are <em>precisely</em> equal/not equal.</p>
+  <h4 class="mume-header" id="short-circuiting-of-logical-operators">Short circuiting of logical operators</h4>
+  
+  <p>Logical operators &amp;&amp; and || handle values in a manner where they convert their left hand side to boolean type in order to decide what to do</p>
+  <p>The || operator returns value to its left when that value can be converted to true otherwise it will return the right side value.</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">null</span> <span class="token operator">||</span> <span class="token string">&quot;user&quot;</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; user</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;Agnes&quot;</span> <span class="token operator">||</span> <span class="token string">&quot;user&quot;</span><span class="token punctuation">)</span>
+  <span class="token comment">// &#x2192; Agnes</span>
+  </pre>
+  <p>The rules for converting strings and numbers to Boolean values state that 0, NaN and empty str (&quot;&quot;) count as <em>false</em> so: So 0 || -1 produces -1, and &quot;&quot; || &quot;!?&quot; yields &quot;!?&quot;</p>
+  <p>The &amp;&amp; operator works similarly BUT the other way around, when value to its left converts to false it returns that value and otherwise it returns right hand value.</p>
+  <p>For both of these operators, the part on their right side is only evaluated when <em>necessary</em>.</p>
+    </div>
+        <!-- END CHP1 -->
+  <hr>
+  </body></html>
+        <!-- CHAPTER 2 notes-->
+  </head>
+    <body for="html-export">
+        <div class="mume markdown-preview  ">
+        <h2 class="mume-header" id="chapter-2-program-structure">Chapter 2: Program Structure</h2>
+    <h4 class="mume-header" id="expressions-and-statements">Expressions and statements</h4>
+  
+  <p>A fragment of code that produces a value is called an <em>expression</em>.<br>
+  If an expression corresponds to a sentence fragment, a JavaScript <em>statement</em> corresponds to a full sentence. A program is a list of statements.</p>
+  <p>Example of a simple <strong>program</strong>:</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token number">1</span><span class="token punctuation">;</span>
+  <span class="token operator">!</span><span class="token boolean">false</span><span class="token punctuation">;</span>
+  </pre><p>It is a usless program but as long as it has changed the internal state of the machine in a way that it will affect the statements coming after it, it counts.</p>
+  <h4 class="mume-header" id="bindings">Bindings</h4>
+  
+  <p>JavaScript provides a thing called a binding, or variable:</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">let</span> caught <span class="token operator">=</span> <span class="token number">5</span> <span class="token operator">*</span> <span class="token number">5</span><span class="token punctuation">;</span>
+  </pre><p><em>let</em> indicates that this sentence is going to define a binding. After it has been defined, its name can be used as an expression e.g.</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">let</span> ten <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>ten <span class="token operator">*</span> ten<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 100</span>
+  </pre><p>The = <em>operator</em> can be used at any time on existing bindings to disconnect them from their current value and have them point to a new one.</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">let</span> mood <span class="token operator">=</span> <span class="token string">&quot;light&quot;</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>mood<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; light</span>
+  mood <span class="token operator">=</span> <span class="token string">&quot;dark&quot;</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>mood<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; dark</span>
+  </pre><p>A single let statement can define multiple <em>bindings</em>, seperated by commas:</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">let</span> one <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> two <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>one <span class="token operator">+</span> two<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 3</span>
+  </pre><p>The words <em>var and const</em> can also be used to create bindings, in a way similar to let.<br>
+  <em>var</em> will barely be used in this book because of confusing properties it comes with. The word <em>const</em> points at the same value forever</p>
+  <h4 class="mume-header" id="binding-names">Binding names</h4>
+  
+  <p>These can be any words <strong>except</strong> keyword (words with special meaning), these are shown below:</p>
+  <pre data-role="codeBlock" data-info class="language-"><code>break case catch class const continue debugger default
+  delete do else enum export extends false finally for
+  function if implements import interface in instanceof let
+  new package private protected public return static super
+  switch this throw true try typeof var void while with yield
+  </code></pre><h4 class="mume-header" id="the-environment">The environment</h4>
+  
+  <p>The collection of bindings and their values that exist at a given time is called the <em>environment</em>.</p>
+  <h4 class="mume-header" id="functions">Functions</h4>
+  
+  <p>A lot of the values provided in the default <em>environment</em> have the type function. A function is a piece of program wrapped in a value. Executing a function is called <em>invoking, calling, or applying it</em>. Values given to functions are called <em>arguments</em>.</p>
+  <h4 class="mume-header" id="return-values">Return values:</h4>
+  
+  <p>When a function produces a value, it is said to return that value.For example, the function <em>Math.max</em> takes any amount of number arguments and gives back the greatest</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">max</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 4</span>
+  </pre><p>Anything that produces a value is an expression in JavaScript, which means function calls can be used within larger expressions<br>
+  Here a call to <strong>Math.min</strong>, is used as part of a plus expression</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">min</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 102</span>
+  </pre><h4 class="mume-header" id="conditional-execution">Conditional execution</h4>
+  
+  <p>Some programs would want to take a branch based on the situation at hand rather than a straight road program</p>
+  <p><img src="https://eloquentjavascript.net/img/controlflow-if.svg" alt="Branch"><br>
+  This conditional execution is created with the <em>if statement</em> in JS.<br>
+  One-liner if statement in JS:</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">+</span> <span class="token number">1</span> <span class="token operator">==</span> <span class="token number">2</span><span class="token punctuation">)</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;It&apos;s true&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; It&apos;s true</span>
+  </pre><p>You can also chain if/else if/else statements together if you have more paths to choose from e.g.</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">let</span> num <span class="token operator">=</span> <span class="token function">Number</span><span class="token punctuation">(</span><span class="token function">prompt</span><span class="token punctuation">(</span><span class="token string">&quot;Pick a number&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>num <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;Small&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>num <span class="token operator">&lt;</span> <span class="token number">100</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;Medium&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;Large&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  </pre><p>The <em>schema</em> for this program looks like this<br>
+  <img src="https://eloquentjavascript.net/img/controlflow-nested-if.svg" alt="schema_chain"></p>
+  <h4 class="mume-header" id="loops">Loops</h4>
+  
+  <h6 class="mume-header" id="while-and-do-loops">While and do loops</h6>
+  
+  <p>A way to run a piece of code multiple times. This form of control flow is called a loop.<br>
+  <img src="https://eloquentjavascript.net/img/controlflow-loop.svg" alt="Loop"></p>
+  <p>We can now write a program that calculates and shows the value of 2^10</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> counter <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span>counter <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    result <span class="token operator">=</span> result <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">;</span>
+    counter <span class="token operator">=</span> counter <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 1024</span>
+  </pre><p>We use two <em>bindings</em>: one to keep track of our result and one to count how often we have multiplied this result by 2, the loop tests whether the second binding has reached 10 yet, if not updates both bindings.</p>
+  <p>A do loop is similar to a while loop except it always executes once and it starts reflecting whether it should stop only after the <strong>first execution</strong>. Example below will keep prompting till it receives an empty string.</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">let</span> yourName<span class="token punctuation">;</span>
+  <span class="token keyword">do</span> <span class="token punctuation">{</span>
+    yourName <span class="token operator">=</span> <span class="token function">prompt</span><span class="token punctuation">(</span><span class="token string">&quot;Who are you?&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span>yourName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>yourName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  </pre><h6 class="mume-header" id="for-loops">For loops</h6>
+  
+  <p>A slightly shorter and more comprehensive form of the while loop, the for loops:</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> number <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> number <span class="token operator">&lt;=</span> <span class="token number">12</span><span class="token punctuation">;</span> number <span class="token operator">=</span> number <span class="token operator">+</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>number<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment">// &#x2192; 0</span>
+  <span class="token comment">// &#x2192; 2</span>
+  <span class="token comment">//   &#x2026; etc.</span>
+  </pre><h6 class="mume-header" id="breaking-out-of-for-loops">Breaking out of for loops</h6>
+  
+  <p>There is a special statement called <strong>break</strong> that has the effect of immediately jumping out of the enclosing loop. Example shown below</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> current <span class="token operator">=</span> <span class="token number">20</span><span class="token punctuation">;</span> <span class="token punctuation">;</span> current <span class="token operator">=</span> current <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>current <span class="token operator">%</span> <span class="token number">7</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>current<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment">// &#x2192; 21</span>
+  </pre><ul>
+  <li>Illustrates the <strong>break</strong> statement</li>
+  <li>It finds the first number that is both greater than or equal to 20 and divisible by 7.</li>
+  <li>Uses remainder operator</li>
+  <li>The for statement doesn&apos;t indicate end of loop rather the if statement, if executed, will break the loop otherwise <em>infinite loop</em></li>
+  </ul>
+  <p>The <em>continue</em> keyword is similar to break but when it is encountered in a loop, control jumps out of the body and continues with the loop&apos;s next <em>iteration</em>.</p>
+  
+    </div>
+  </body></html>  
+        <!-- END CHP2 -->
 
-        <pre><code class="language-javascript">
-          for(let x of y) { }
-        </code></pre>
-      <samp>The valid you entered was invalid error 404.</samp>
+
 
       <hr>
       <div class="footer">
