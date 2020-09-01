@@ -1,5 +1,5 @@
 <!DOCTYPE html><html><head>
-      <title>mainblog</title>
+      <title>notes_chp3</title>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       
@@ -261,91 +261,20 @@ pre[data-line] .line-highlight[data-end]:after {
     </head>
     <body for="html-export">
       <div class="mume markdown-preview  ">
-      <h1 class="mume-header" id="blog-by-abdullah">Blog by Abdullah</h1>
+      <h2 class="mume-header" id="chapter-3-functions">Chapter 3: Functions</h2>
 
 <hr>
-<h5 class="mume-header" id="august-28-2020">August 28, 2020</h5>
+<h4 class="mume-header" id="defining-a-function">Defining a function</h4>
 
-<h5 class="mume-header" id="recap">Recap</h5>
+<p>A <em>function</em> definition is a regular binding where the value of the binding is a function.</p>
+<p>The below function defines <em>square</em> to refer to a function that produces the square of a given number</p>
+<pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">const</span> <span class="token function-variable function">square</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> x <span class="token operator">*</span> x<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
 
-<p>It&apos;s currently <strong>4:51pm</strong> on a Friday afternoon as I type this, just a small little recap for the previous weeks. Its currently term 2 at my university and I have just finished exams</p>
-<p>My last one was <em>Human Computer Interaction</em> on the 25th of August. I fairly enjoyed that subject, it got me thinking more deeply about the connection between a human and the interface he/she interacts with. It allowed me to appreciate the user centred design process (UCD) in a different, more technical light.</p>
-<blockquote>
-<p><em>&#x201C;Being human centred is an additional cost to any project, so businesses rightly ask whether taking so much time to talk to people, produce prototype designs and so on is worthwhile. The answer is a fundamental &#x2018;yes&#x2019;&#x201D;</em> 
-  <footer class="blockquote-footer"> David Benyon <cite title="Source Title">Designing Interactive Systems</cite></footer>
-  </blockquote>
-<p>Another subject I had completed was <em>software construction</em> taught greatly by <em>Andrew</em>, this had been the third time he had taught me a computing subject and each time I build a greater appreciation for him, but especially recently due to this pandemic situation, the course ran smoothly with no issues at all, we can also partly attribute that to <em>Jas</em> as well</p>
-<p>Below I will show <strong>completed</strong> <em>COMP</em> courses this year so far with my personal ratings and languages used.</p>
-<table>
-<thead>
-<tr>
-<th>Courses</th>
-<th style="text-align:center">Interest</th>
-<th style="text-align:right">Languages</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>COMP1531</td>
-<td style="text-align:center">8/10</td>
-<td style="text-align:right">Python, Md</td>
-</tr>
-<tr>
-<td>COMP2521</td>
-<td style="text-align:center">7.5/10</td>
-<td style="text-align:right">C, makefile</td>
-</tr>
-<tr>
-<td>COMP2041</td>
-<td style="text-align:center">8.5/10</td>
-<td style="text-align:right">Shell, Perl, Makefile</td>
-</tr>
-<tr>
-<td>COMP3511</td>
-<td style="text-align:center">7/10</td>
-<td style="text-align:right">None</td>
-</tr>
-</tbody>
-</table>
-<p>About a day ago I had gotten my first proper website up and running with the help of a free <em>namecheap</em> domain name (<em>github student developer pack</em>) and <em>netlify</em>.</p>
-<hr>
-<h5 class="mume-header" id="august-29-2020">August 29, 2020</h5>
-
-<h6 class="mume-header" id="t3-subjects">T3 subjects</h6>
-
-<p>Subjects which I have successfully enrolled in, with their respective course outlines</p>
-<table>
-<thead>
-<tr>
-<th>Courses</th>
-<th style="text-align:center">Course outline</th>
-<th style="text-align:right">Languages</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>COMP2511</td>
-<td style="text-align:center"><a href="https://webcms3.cse.unsw.edu.au/COMP2511/20T2/outline">https://webcms3.cse.unsw.edu.au/COMP2511/20T2/outline</a></td>
-<td style="text-align:right">Java</td>
-</tr>
-<tr>
-<td>COMP3311</td>
-<td style="text-align:center"><a href="https://webcms3.cse.unsw.edu.au/COMP3311/20T1/outline">https://webcms3.cse.unsw.edu.au/COMP3311/20T1/outline</a></td>
-<td style="text-align:right">SQL</td>
-</tr>
-<tr>
-<td>COMP3331</td>
-<td style="text-align:center"><a href="https://webcms3.cse.unsw.edu.au/COMP3331/20T2/outline">https://webcms3.cse.unsw.edu.au/COMP3331/20T2/outline</a></td>
-<td style="text-align:right">Theory</td>
-</tr>
-</tbody>
-</table>
-<p>What are the <em>goals</em> for today? Any <em>project</em> ideas?</p>
-<ul>
-<li>A personal tutoring <strong>website/interface</strong> which connects a tutor with his/her students, acting as an educational platform any student can easily get assistance. All students would be distributed homework and tasks for the week, the app also allows for <em>scheduling/booking</em> of lessons.</li>
-</ul>
-<hr>
-
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">square</span><span class="token punctuation">(</span><span class="token number">12</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 144</span>
+</pre>
       </div>
       
       

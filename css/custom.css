@@ -62,7 +62,7 @@
         user-select: none;
         }
       /*Below 2 change the Javascript dropdown*/
-      .btn-dropdown {
+        .btn-dropdown {
             color: rgba(255, 255, 255, 0.5);
             background-color: transparent
         }
@@ -70,8 +70,8 @@
             color: white;
             background-color: transparent  
         }
+        /*Link hovering*/
         a:hover {
-            color: rgba(255,255,255,.75);
             text-decoration: none;
             text-decoration-style: initial;
             text-decoration-color: initial;
@@ -94,6 +94,7 @@
             background-clip: padding-box;
             border-radius: .25rem;
         }
+        
         .dropdown-item {
             display: block;
             width: 100%;
@@ -114,3 +115,18 @@
       html {
         scroll-behavior: smooth;
       }
+
+ pre[class*="language-"] {
+  padding: .8em;
+  margin: 0 0;
+  overflow: auto;
+  border-radius: 3px;
+}
+pre[class*="language-"] {
+
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  line-height: 1.4;
+  tab-size: 8;
+  
+  padding: .8em;
+}
