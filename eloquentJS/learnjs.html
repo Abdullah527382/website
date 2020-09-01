@@ -59,11 +59,14 @@
             <button type="button" class="btn btn-dropdown dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="eloquentJS/learnjs.html">
               <span class="sr-only" >Toggle Dropdown</span>
             </button>
+            <!-- When adding more chapters: Use this script to update: 
+              sed -i 's/href="../eloquentJS/learnjs.html#chapter-3-functions"/href="..\/eloquentJS\/learnjs.html#chapter-3-functions"/g' ../*.html
+            -->
             <div class="dropdown-menu">
               <a class="dropdown-item" href=#chapter-1-values-types-and-operators>Chapter 1</a>
               <a class="dropdown-item" href=#chapter-2-program-structure>Chapter 2</a>
-              <a class="dropdown-item" href="#">Chapter 3</a>
-              <a class="dropdown-item" href="#">Chapter 4</a>
+              <a class="dropdown-item" href=#chapter-3-functions>Chapter 3</a>
+              <a class="dropdown-item" href=#chapter-3-functions>Chapter 4</a>
             </div>
           </div>        </li>
         <li class="nav-item">
@@ -360,7 +363,244 @@
     </div>
   </body></html>  
         <!-- END CHP2 -->
+        <!-- START CHP2 -->
+      </head>
+      <body for="html-export">
+        <hr>
 
+        <div class="mume markdown-preview  ">
+        <h2 class="mume-header" id="chapter-3-functions">Chapter 3: Functions</h2>
+    <h4 class="mume-header" id="defining-a-function">Defining a function</h4>
+  
+  <p>A <em>function</em> definition is a regular binding where the value of the binding is a function.</p>
+  <p>The below function defines <em>square</em> to refer to a function that produces the square of a given number</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">const</span> <span class="token function-variable function">square</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> x <span class="token operator">*</span> x<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">square</span><span class="token punctuation">(</span><span class="token number">12</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 144</span>
+  </pre><p>Function is created with keyword <em>function</em>, they have a set of <em>parameters</em> (in this case, only x) and a <em>body</em> which contains statements to be executed during function calls.</p>
+  <p>Below are examples of functions with varying amount of parameters:</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">const</span> <span class="token function-variable function">makeNoise</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;Pling!&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  
+  <span class="token function">makeNoise</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; Pling!</span>
+  
+  <span class="token keyword">const</span> <span class="token function-variable function">power</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">base<span class="token punctuation">,</span> exponent</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> count <span class="token operator">&lt;</span> exponent<span class="token punctuation">;</span> count<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      result <span class="token operator">*=</span> base<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">power</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 1024</span>
+  </pre><p>A return statement determines the value the function returns<br>
+  <strong>Parameters</strong> to a function behave like regular <em>bindings</em>, but their initial values are given by the caller of the function, not the code in the function itself</p>
+  <h4 class="mume-header" id="bindings-and-scope">Bindings and scope</h4>
+  
+  <p>Each binding has a scope, which is the part of the program in which the binding is visible. For bindings defined outside of any function or block, the scope is the whole program&#x2014;you can refer to such bindings wherever you want. These are called <em>global</em>.</p>
+  <p>Each function acts like a <em>little world</em>, a local environment for bindings declared in the function parameters or declared inside the function. We should also consider locality of bindings to the blocks they are created in (example below):</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">let</span> x <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> y <span class="token operator">=</span> <span class="token number">20</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> z <span class="token operator">=</span> <span class="token number">30</span><span class="token punctuation">;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>x <span class="token operator">+</span> y <span class="token operator">+</span> z<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// &#x2192; 60</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment">// y is not visible here</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>x <span class="token operator">+</span> z<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 40</span>
+  </pre><p>Bindings created with <strong>var</strong> keyword are visible throughout the whole function. Remember to care when multiple bindings have same name (example below).</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">const</span> <span class="token function-variable function">halve</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">n</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> n <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  
+  <span class="token keyword">let</span> n <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">halve</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 50</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 10</span>
+  </pre><h4 class="mume-header" id="nested-scope">Nested scope:</h4>
+  
+  <p>Multiple degrees of locality can be created when considering blocks/fuctions within other functions/blocks. See the code below</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">const</span> <span class="token function-variable function">hummus</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">factor</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> <span class="token function-variable function">ingredient</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">amount<span class="token punctuation">,</span> unit<span class="token punctuation">,</span> name</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">let</span> ingredientAmount <span class="token operator">=</span> amount <span class="token operator">*</span> factor<span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>ingredientAmount <span class="token operator">&gt;</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        unit <span class="token operator">+=</span> <span class="token string">&quot;s&quot;</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>ingredientAmount<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>unit<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token function">ingredient</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">&quot;can&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;chickpeas&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ingredient</span><span class="token punctuation">(</span><span class="token number">0.25</span><span class="token punctuation">,</span> <span class="token string">&quot;cup&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;tahini&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ingredient</span><span class="token punctuation">(</span><span class="token number">0.25</span><span class="token punctuation">,</span> <span class="token string">&quot;cup&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;lemon juice&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ingredient</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">&quot;clove&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;garlic&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ingredient</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">&quot;tablespoon&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;olive oil&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ingredient</span><span class="token punctuation">(</span><span class="token number">0.5</span><span class="token punctuation">,</span> <span class="token string">&quot;teaspoon&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;cumin&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  </pre><p>The code inside the ingredient function can see the <em>factor</em> binding from the outer function.</p>
+  <h4 class="mume-header" id="functions-as-values">Functions as values:</h4>
+  
+  <p>A function <em>binding</em> usually simply acts as a name for a specific piece of the program. Such a binding is defined once and never changed. This makes it easy to confuse the function and its name.</p>
+  <p>Function values can imitate all typical value attributes, e.g.  It is possible to store a function value in a new binding, pass it as an argument to a function, and so on.</p>
+  <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">let</span> <span class="token function-variable function">launchMissiles</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    missileSystem<span class="token punctuation">.</span><span class="token function">launch</span><span class="token punctuation">(</span><span class="token string">&quot;now&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>safeMode<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function-variable function">launchMissiles</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token comment">/* do nothing */</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  </pre><h4 class="mume-header" id="declaration-notation">Declaration notation:</h4>
+  
+  <p>A shorter way:</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">square</span><span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> x <span class="token operator">*</span> x<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  </pre><p>A small subtlety, the below code will work even though the function comes after its call.</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;The future says:&quot;</span><span class="token punctuation">,</span> <span class="token function">future</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token keyword">function</span> <span class="token function">future</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token string">&quot;You&apos;ll never have flying cars&quot;</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  </pre><h4 class="mume-header" id="arrow-functions">Arrow functions:</h4>
+  
+  <p>The third notation uses an arrow (=&gt;), it comes <em>after</em> the list of parameters and is followed by the function&apos;s body. Example:</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">const</span> <span class="token function-variable function">power</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">base<span class="token punctuation">,</span> exponent</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      <span class="token operator">...</span> 
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  </pre><p>If there is a single <em>parameter</em> name, you may omit the braces around it, similarly if the body is a single expression. Also, when a function has no parameters, the list is an empty set of parameters. The below statements both do the same thing.</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">const</span> <span class="token function-variable function">square1</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> x <span class="token operator">*</span> x<span class="token punctuation">;</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> <span class="token function-variable function">square2</span> <span class="token operator">=</span> <span class="token parameter">x</span> <span class="token operator">=&gt;</span> x <span class="token operator">*</span> x<span class="token punctuation">;</span>
+  <span class="token comment">// No parameters</span>
+  <span class="token keyword">const</span> <span class="token function-variable function">horn</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;Toot&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  </pre><h4 class="mume-header" id="the-call-stack">The call stack:</h4>
+  
+  <p>Everytime a function is called, the computer stores this <em>&quot;current context&quot;</em> on top of the <strong>call stack</strong>. When a function returns, it removes the top context from the stack and uses that context to continue execution.</p>
+  <p>Storing this stack requires space in the computer&apos;s memory, as it grows too big, the computer will fail with a message like <em>&quot;out of stack space&quot;</em>. The following code illustrates a <em>&quot;would be infinite recursion&quot;</em> if the computer had an infinite stack.</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">chicken</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token function">egg</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">function</span> <span class="token function">egg</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token function">chicken</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">chicken</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">&quot; came first.&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; ??</span>
+  </pre><h4 class="mume-header" id="optional-arguments">Optional arguments:</h4>
+  
+  <p>The following code is allowed and executes without any problem:</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">square</span><span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> x <span class="token operator">*</span> x<span class="token punctuation">;</span> <span class="token punctuation">}</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">square</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token string">&quot;hedgehog&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 16</span>
+  </pre><p>JavaScript is extremely broad-minded about the number of arguments you pass to a function. If you pass too many, the extra ones are ignored. If you pass too few, the <em>missing parameters</em> get assigned the value <strong>undefined</strong>.</p>
+  <p>If you write an = operator after a parameter, followed by an expression, the value of that expression will replace the argument when it is not given.<br>
+  <em>Example</em> below</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">power</span><span class="token punctuation">(</span><span class="token parameter">base<span class="token punctuation">,</span> exponent <span class="token operator">=</span> <span class="token number">2</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> count <span class="token operator">&lt;</span> exponent<span class="token punctuation">;</span> count<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      result <span class="token operator">*=</span> base<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">power</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 16</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">power</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 64</span>
+  </pre><h4 class="mume-header" id="closure">Closure</h4>
+  
+  <p>What happens to local bindings when the <em>function call</em> that created them is no longer active?</p>
+  <p>The following code shows an example of this:</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">wrapValue</span><span class="token punctuation">(</span><span class="token parameter">n</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> local <span class="token operator">=</span> n<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> local<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token keyword">let</span> wrap1 <span class="token operator">=</span> <span class="token function">wrapValue</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> wrap2 <span class="token operator">=</span> <span class="token function">wrapValue</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">wrap1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 1</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">wrap2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 2</span>
+  </pre><p><strong>NOTE</strong>: The explicit local binding from the wrapValue example isn&#x2019;t really needed since a parameter is itself a local binding.</p>
+  <p>It defines a function, <em>wrapValue</em>, that creates a local <em>binding</em>. It then returns a function that accesses and returns this local binding.</p>
+  <p>This is allowed and works as you&#x2019;d hope&#x2014;both instances of the binding can still be accessed. This situation is a good demonstration of the fact that local bindings are created anew for every call.</p>
+  <p>This feature&#x2014;being able to reference a specific instance of a local binding in an enclosing scope&#x2014;is called closure.</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">multiplier</span><span class="token punctuation">(</span><span class="token parameter">factor</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token parameter">number</span> <span class="token operator">=&gt;</span> number <span class="token operator">*</span> factor<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token keyword">let</span> twice <span class="token operator">=</span> <span class="token function">multiplier</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">twice</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 10</span>
+  </pre><h4 class="mume-header" id="recursion">Recursion:</h4>
+  
+  <p>A function may call itself (recursive), as long as it doesn&apos;t overflow the stack. Below is shown an alternative representation of the power function.</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">power</span><span class="token punctuation">(</span><span class="token parameter">base<span class="token punctuation">,</span> exponent</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>exponent <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> base <span class="token operator">*</span> <span class="token function">power</span><span class="token punctuation">(</span>base<span class="token punctuation">,</span> exponent <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">power</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 8</span>
+  </pre><p>This implementation has one problem: in typical JavaScript implementations, it&#x2019;s about <strong>three</strong> times slower than the <em>looping</em> version.</p>
+  <p>The looping version is still fairly simple and easy to read thus there is no reason to replace it with the recursive version.</p>
+  <p>In other cases often, though, a program deals with such <em>complex</em> concepts that giving up some efficiency in order to make the program more straightforward is helpful.</p>
+  <p>Below is an example of a <strong>recursive function</strong> which finds a sequence of additions and multiplications which produce a target number.</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">findSolution</span><span class="token punctuation">(</span><span class="token parameter">target</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">function</span> <span class="token function">find</span><span class="token punctuation">(</span><span class="token parameter">current<span class="token punctuation">,</span> history</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>current <span class="token operator">==</span> target<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> history<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>current <span class="token operator">&gt;</span> target<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token function">find</span><span class="token punctuation">(</span>current <span class="token operator">+</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token template-string"><span class="token string">`(</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>history<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> + 5)`</span></span><span class="token punctuation">)</span> <span class="token operator">||</span>
+               <span class="token function">find</span><span class="token punctuation">(</span>current <span class="token operator">*</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token template-string"><span class="token string">`(</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>history<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> * 3)`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token function">find</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">&quot;1&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">findSolution</span><span class="token punctuation">(</span><span class="token number">24</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; (((1 * 3) + 5) * 3)</span>
+  </pre><p>Below are calls to find that are made when searching for solution to 13.</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token function">find</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">&quot;1&quot;</span><span class="token punctuation">)</span>
+    <span class="token function">find</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token string">&quot;(1 + 5)&quot;</span><span class="token punctuation">)</span>
+      <span class="token function">find</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">,</span> <span class="token string">&quot;((1 + 5) + 5)&quot;</span><span class="token punctuation">)</span>
+        <span class="token function">find</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">,</span> <span class="token string">&quot;(((1 + 5) + 5) + 5)&quot;</span><span class="token punctuation">)</span>
+          too big
+        <span class="token function">find</span><span class="token punctuation">(</span><span class="token number">33</span><span class="token punctuation">,</span> <span class="token string">&quot;(((1 + 5) + 5) * 3)&quot;</span><span class="token punctuation">)</span>
+          too big
+      <span class="token function">find</span><span class="token punctuation">(</span><span class="token number">18</span><span class="token punctuation">,</span> <span class="token string">&quot;((1 + 5) * 3)&quot;</span><span class="token punctuation">)</span>
+        too big
+    <span class="token function">find</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token string">&quot;(1 * 3)&quot;</span><span class="token punctuation">)</span>
+      <span class="token function">find</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">,</span> <span class="token string">&quot;((1 * 3) + 5)&quot;</span><span class="token punctuation">)</span>
+        <span class="token function">find</span><span class="token punctuation">(</span><span class="token number">13</span><span class="token punctuation">,</span> <span class="token string">&quot;(((1 * 3) + 5) + 5)&quot;</span><span class="token punctuation">)</span>
+          found<span class="token operator">!</span>
+  </pre>
+        </div>
+        
+        
+      
+      
+      
+      
+      
+      
+      
+      
+    
+      </body></html>
+
+        <!-- END OF CHP2 -->
 
 
       <hr>
