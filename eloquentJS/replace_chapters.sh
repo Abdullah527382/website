@@ -1,3 +1,3 @@
 #!/bin/sh
 
-find ./ -type f -exec sed -i 's/href="#"/href="..\/eloquentJS\/learnjs.html#chapter-3-functions"/g' {} \;
+find ./ -type f -exec sed -i 's/#chapter-4-objects-and-arrays->Chapter 4"/#chapter-4-objects-and-arrays->Chapter 4/g' {} \;

@@ -321,7 +321,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token comment">// &#x2192; 10</span>
 </pre><h4 class="mume-header" id="nested-scope">Nested scope:</h4>
 
-<p>Multiple degrees of locality can be created when considering blocks/fuctions within other functions/blocks. See the code below</p>
+<p>Multiple degrees of locality can be created when considering blocks/functions within other functions/blocks. See the code below</p>
 <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">const</span> <span class="token function-variable function">hummus</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">factor</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> <span class="token function-variable function">ingredient</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">amount<span class="token punctuation">,</span> unit<span class="token punctuation">,</span> name</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">let</span> ingredientAmount <span class="token operator">=</span> amount <span class="token operator">*</span> factor<span class="token punctuation">;</span>
@@ -375,7 +375,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token punctuation">}</span><span class="token punctuation">;</span>
 </pre><h4 class="mume-header" id="the-call-stack">The call stack:</h4>
 
-<p>Everytime a function is called, the computer stores this <em>&quot;current context&quot;</em> on top of the <strong>call stack</strong>. When a function returns, it removes the top context from the stack and uses that context to continue execution.</p>
+<p>Every time a function is called, the computer stores this <em>&quot;current context&quot;</em> on top of the <strong>call stack</strong>. When a function returns, it removes the top context from the stack and uses that context to continue execution.</p>
 <p>Storing this stack requires space in the computer&apos;s memory, as it grows too big, the computer will fail with a message like <em>&quot;out of stack space&quot;</em>. The following code illustrates a <em>&quot;would be infinite recursion&quot;</em> if the computer had an infinite stack.</p>
 <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">chicken</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">return</span> <span class="token function">egg</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -479,6 +479,38 @@ console<span class="token punctuation">.</span><span class="token function">log<
     <span class="token function">find</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">,</span> <span class="token string">&quot;((1 * 3) + 5)&quot;</span><span class="token punctuation">)</span>
       <span class="token function">find</span><span class="token punctuation">(</span><span class="token number">13</span><span class="token punctuation">,</span> <span class="token string">&quot;(((1 * 3) + 5) + 5)&quot;</span><span class="token punctuation">)</span>
         found<span class="token operator">!</span>
+</pre><p>The indentation indicates the depth of the call stack.</p>
+<h4 class="mume-header" id="growing-functions">Growing functions</h4>
+
+<p>There are two ways for functions to be introduced into programs.</p>
+<ol>
+<li>You find yourself writing code multiple times, for convenience you take the repeated functionality and put it into a function</li>
+<li>The 2nd way is you find some functionality in your program which sounds like it deserve its own function.</li>
+</ol>
+<p>Whenever we &quot;<em>grow</em>&quot; our functions to make them smarter and more versatile i.e. to handle more parameters, different characters, num types, etc. We must make sure the &quot;<em>cleverness</em>&quot; is necessary.</p>
+<h4 class="mume-header" id="functions-and-side-effects">Functions and side effects</h4>
+
+<p>Functions can be divided into those which return a value and those who are called for their <em>side effects</em> (e.g. prints a line).</p>
+<ul>
+<li><em>Functions</em> that create values are easier to combine than those that directly perform side effects.</li>
+<li><em>A pure function</em> doesn&apos;t perform these side effects neither does it rely on side effects from other code&#x2014;for e.g. global bindings whose value might change.</li>
+<li><em>Non pure functions</em> are still useful in certain contexts, for instance, there&apos;d be no way to write a pure version of <em>console.log</em>. Computing speed in itself can be a reaso to avoid purity.</li>
+</ul>
+<h4 class="mume-header" id="summary">Summary</h4>
+
+<p>This chapter taught me ways to write my own functions, using the function keyword and arrow symbol.</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// Define f to hold a function value</span>
+<span class="token keyword">const</span> <span class="token function-variable function">f</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">a</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>a <span class="token operator">+</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Declare g to be a function</span>
+<span class="token keyword">function</span> <span class="token function">g</span><span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> a <span class="token operator">*</span> b <span class="token operator">*</span> <span class="token number">3.5</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// A less verbose function value</span>
+<span class="token keyword">let</span> <span class="token function-variable function">h</span> <span class="token operator">=</span> <span class="token parameter">a</span> <span class="token operator">=&gt;</span> a <span class="token operator">%</span> <span class="token number">3</span><span class="token punctuation">;</span>
 </pre>
       </div>
       

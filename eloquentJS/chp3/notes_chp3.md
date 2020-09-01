@@ -73,7 +73,7 @@ console.log(n);
 
 #### Nested scope:
 
-Multiple degrees of locality can be created when considering blocks/fuctions within other functions/blocks. See the code below 
+Multiple degrees of locality can be created when considering blocks/functions within other functions/blocks. See the code below 
 
 ```javascript
 const hummus = function(factor) {
@@ -142,7 +142,7 @@ const horn = () => {
 ```
 
 #### The call stack:
-Everytime a function is called, the computer stores this *"current context"* on top of the __call stack__. When a function returns, it removes the top context from the stack and uses that context to continue execution. 
+Every time a function is called, the computer stores this *"current context"* on top of the __call stack__. When a function returns, it removes the top context from the stack and uses that context to continue execution. 
 
 Storing this stack requires space in the computer's memory, as it grows too big, the computer will fail with a message like *"out of stack space"*. The following code illustrates a *"would be infinite recursion"* if the computer had an infinite stack. 
 ```js
@@ -275,4 +275,36 @@ find(1, "1")
     find(8, "((1 * 3) + 5)")
       find(13, "(((1 * 3) + 5) + 5)")
         found!
+```
+The indentation indicates the depth of the call stack. 
+
+#### Growing functions
+
+There are two ways for functions to be introduced into programs. 
+1. You find yourself writing code multiple times, for convenience you take the repeated functionality and put it into a function
+2. The 2nd way is you find some functionality in your program which sounds like it deserve its own function.
+
+ Whenever we "*grow*" our functions to make them smarter and more versatile i.e. to handle more parameters, different characters, num types, etc. We must make sure the "*cleverness*" is necessary. 
+
+#### Functions and side effects
+Functions can be divided into those which return a value and those who are called for their *side effects* (e.g. prints a line). 
+* *Functions* that create values are easier to combine than those that directly perform side effects.
+* *A pure function* doesn't perform these side effects neither does it rely on side effects from other code—for e.g. global bindings whose value might change. 
+* *Non pure functions* are still useful in certain contexts, for instance, there'd be no way to write a pure version of *console.log*. Computing speed in itself can be a reaso to avoid purity. 
+
+#### Summary
+This chapter taught me ways to write my own functions, using the function keyword and arrow symbol. 
+```js
+// Define f to hold a function value
+const f = function(a) {
+  console.log(a + 2);
+};
+
+// Declare g to be a function
+function g(a, b) {
+  return a * b * 3.5;
+}
+
+// A less verbose function value
+let h = a => a % 3;
 ```

@@ -66,7 +66,7 @@
               <a class="dropdown-item" href=#chapter-1-values-types-and-operators>Chapter 1</a>
               <a class="dropdown-item" href=#chapter-2-program-structure>Chapter 2</a>
               <a class="dropdown-item" href=#chapter-3-functions>Chapter 3</a>
-              <a class="dropdown-item" href=#chapter-3-functions>Chapter 4</a>
+              <a class="dropdown-item" href=#chapter-4-objects-and-arrays>Chapter 4</a>
             </div>
           </div>        </li>
         <li class="nav-item">
@@ -363,14 +363,15 @@
     </div>
   </body></html>  
         <!-- END CHP2 -->
-        <!-- START CHP2 -->
+
+        <!-- START CHP3 -->
+        <hr>
       </head>
       <body for="html-export">
-        <hr>
-
         <div class="mume markdown-preview  ">
         <h2 class="mume-header" id="chapter-3-functions">Chapter 3: Functions</h2>
-    <h4 class="mume-header" id="defining-a-function">Defining a function</h4>
+  
+  <h4 class="mume-header" id="defining-a-function">Defining a function</h4>
   
   <p>A <em>function</em> definition is a regular binding where the value of the binding is a function.</p>
   <p>The below function defines <em>square</em> to refer to a function that produces the square of a given number</p>
@@ -427,7 +428,7 @@
   <span class="token comment">// &#x2192; 10</span>
   </pre><h4 class="mume-header" id="nested-scope">Nested scope:</h4>
   
-  <p>Multiple degrees of locality can be created when considering blocks/fuctions within other functions/blocks. See the code below</p>
+  <p>Multiple degrees of locality can be created when considering blocks/functions within other functions/blocks. See the code below</p>
   <pre data-role="codeBlock" data-info="javascript" class="language-javascript"><span class="token keyword">const</span> <span class="token function-variable function">hummus</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">factor</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">const</span> <span class="token function-variable function">ingredient</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">amount<span class="token punctuation">,</span> unit<span class="token punctuation">,</span> name</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
       <span class="token keyword">let</span> ingredientAmount <span class="token operator">=</span> amount <span class="token operator">*</span> factor<span class="token punctuation">;</span>
@@ -481,7 +482,7 @@
   <span class="token punctuation">}</span><span class="token punctuation">;</span>
   </pre><h4 class="mume-header" id="the-call-stack">The call stack:</h4>
   
-  <p>Everytime a function is called, the computer stores this <em>&quot;current context&quot;</em> on top of the <strong>call stack</strong>. When a function returns, it removes the top context from the stack and uses that context to continue execution.</p>
+  <p>Every time a function is called, the computer stores this <em>&quot;current context&quot;</em> on top of the <strong>call stack</strong>. When a function returns, it removes the top context from the stack and uses that context to continue execution.</p>
   <p>Storing this stack requires space in the computer&apos;s memory, as it grows too big, the computer will fail with a message like <em>&quot;out of stack space&quot;</em>. The following code illustrates a <em>&quot;would be infinite recursion&quot;</em> if the computer had an infinite stack.</p>
   <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">chicken</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">return</span> <span class="token function">egg</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -585,23 +586,197 @@
       <span class="token function">find</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">,</span> <span class="token string">&quot;((1 * 3) + 5)&quot;</span><span class="token punctuation">)</span>
         <span class="token function">find</span><span class="token punctuation">(</span><span class="token number">13</span><span class="token punctuation">,</span> <span class="token string">&quot;(((1 * 3) + 5) + 5)&quot;</span><span class="token punctuation">)</span>
           found<span class="token operator">!</span>
+  </pre><p>The indentation indicates the depth of the call stack.</p>
+  <h4 class="mume-header" id="growing-functions">Growing functions</h4>
+  
+  <p>There are two ways for functions to be introduced into programs.</p>
+  <ol>
+  <li>You find yourself writing code multiple times, for convenience you take the repeated functionality and put it into a function</li>
+  <li>The 2nd way is you find some functionality in your program which sounds like it deserve its own function.</li>
+  </ol>
+  <p>Whenever we &quot;<em>grow</em>&quot; our functions to make them smarter and more versatile i.e. to handle more parameters, different characters, num types, etc. We must make sure the &quot;<em>cleverness</em>&quot; is necessary.</p>
+  <h4 class="mume-header" id="functions-and-side-effects">Functions and side effects</h4>
+  
+  <p>Functions can be divided into those which return a value and those who are called for their <em>side effects</em> (e.g. prints a line).</p>
+  <ul>
+  <li><em>Functions</em> that create values are easier to combine than those that directly perform side effects.</li>
+  <li><em>A pure function</em> doesn&apos;t perform these side effects neither does it rely on side effects from other code&#x2014;for e.g. global bindings whose value might change.</li>
+  <li><em>Non pure functions</em> are still useful in certain contexts, for instance, there&apos;d be no way to write a pure version of <em>console.log</em>. Computing speed in itself can be a reaso to avoid purity.</li>
+  </ul>
+  <h4 class="mume-header" id="summary">Summary</h4>
+  
+  <p>This chapter taught me ways to write my own functions, using the function keyword and arrow symbol.</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// Define f to hold a function value</span>
+  <span class="token keyword">const</span> <span class="token function-variable function">f</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">a</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>a <span class="token operator">+</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  
+  <span class="token comment">// Declare g to be a function</span>
+  <span class="token keyword">function</span> <span class="token function">g</span><span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> a <span class="token operator">*</span> b <span class="token operator">*</span> <span class="token number">3.5</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token comment">// A less verbose function value</span>
+  <span class="token keyword">let</span> <span class="token function-variable function">h</span> <span class="token operator">=</span> <span class="token parameter">a</span> <span class="token operator">=&gt;</span> a <span class="token operator">%</span> <span class="token number">3</span><span class="token punctuation">;</span>
   </pre>
         </div>
-        
-        
-      
-      
-      
-      
-      
-      
-      
-      
     
       </body></html>
-
-        <!-- END OF CHP2 -->
-
+        <!-- END OF CHP3 -->
+      </head>
+      <body for="html-export">
+        <div class="mume markdown-preview  ">
+        <hr>
+  <h2 class="mume-header" id="chapter-4-objects-and-arrays">Chapter 4: Objects and Arrays</h2>
+  
+  <p><em>Numbers, Booleans, and strings</em> are the atoms that data structures are built from. Many types of information require more than one atom, though. <strong>Objects</strong> allow us to group values&#x2014;including other objects&#x2014;to build more <em>complex</em> structures.</p>
+  <h4 class="mume-header" id="data-sets">Data sets</h4>
+  
+  <p>JavaScript provides a data set for specifically storing sequences of values, called an array, below shows an example</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript">  <span class="token keyword">let</span> listOfNumbers <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">11</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>listOfNumbers<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 5</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>listOfNumbers<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 2</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>listOfNumbers<span class="token punctuation">[</span><span class="token number">2</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 3</span>
+  </pre><p>The first index of an array is <strong>zero</strong>, not one. So the first element is retrieved with listOfNumbers[0]</p>
+  <h4 class="mume-header" id="properties">Properties</h4>
+  
+  <p>We have already come across properties in myString.length and Math.max, the names after the dots are properties. All <strong>valid</strong> property names are strings, easily accessed by a dot, otherwise accessed by square braces: value[2], value[&quot;John Uptight&quot;].</p>
+  <p><em>Accessing properties:</em></p>
+  <ul>
+  <li><em>value.x</em> fetches the property of value named &apos;x&apos;,e.g. if you know the name of the property as &apos;color&apos;, you say: value.color</li>
+  <li><em>value[x]</em> tries to evaluate the expression x and uses the result, converted to a string, as a property name.  e.g. If you want to extract property named by the value held in the binding i, you say: value[i]</li>
+  </ul>
+  <p>The <em>length</em> property of an array tells us how many elements it has, use: array.length</p>
+  <h4 class="mume-header" id="methods">Methods</h4>
+  
+  <p>In addition to the above length property, there are a number of properties that hold function values. Consider below:</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">let</span> doh <span class="token operator">=</span> <span class="token string">&quot;Doh&quot;</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">typeof</span> doh<span class="token punctuation">.</span>toUpperCase<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; function</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>doh<span class="token punctuation">.</span><span class="token function">toUpperCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; DOH</span>
+  </pre><p>Every string has a toUpperCase, toLowerCase property. Properties that contains functions are generally called <em>methods</em> of the value they belong to, e.g. <em>toUpperCase</em> is a method of a string.</p>
+  <p>The example below shows 2 methods: <em>push</em> (add values to end of array), <em>pop</em> (remove last value in array and return it).</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">let</span> sequence <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  sequence<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  sequence<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>sequence<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; [1, 2, 3, 4, 5]</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>sequence<span class="token punctuation">.</span><span class="token function">pop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 5</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>sequence<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; [1, 2, 3, 4]</span>
+  </pre><h4 class="mume-header" id="objects">Objects</h4>
+  
+  <p>Values of the type <strong>object</strong> are arbitrary collections of properties. One way to create an object is by using braces as an expression.</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">let</span> day1 <span class="token operator">=</span> <span class="token punctuation">{</span>
+    squirrel<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+    events<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&quot;work&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;touched tree&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;pizza&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;running&quot;</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>day1<span class="token punctuation">.</span>squirrel<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; false</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>day1<span class="token punctuation">.</span>wolf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; undefined</span>
+  day1<span class="token punctuation">.</span>wolf <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>day1<span class="token punctuation">.</span>wolf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; false</span>
+  </pre><p>Reading a property that doesn&#x2019;t exist will give you the value <em>undefined</em>.</p>
+  <p>The delete operator applied to an object property, will remove the named property from the object.</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">let</span> anObject <span class="token operator">=</span> <span class="token punctuation">{</span>left<span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span> right<span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>anObject<span class="token punctuation">.</span>left<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 1</span>
+  <span class="token keyword">delete</span> anObject<span class="token punctuation">.</span>left<span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>anObject<span class="token punctuation">.</span>left<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; undefined</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;left&quot;</span> <span class="token keyword">in</span> anObject<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; false</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;right&quot;</span> <span class="token keyword">in</span> anObject<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; true</span>
+  </pre><p>The binary <strong>in</strong> operator, when applied to a string and an object, tells you whether that object has a property with that name.</p>
+  <p>To find out what <em>properties</em> an object has, you can use the <strong>Object.keys</strong> function. You give it an object, and it returns an array of strings&#x2014;the object&#x2019;s property names.</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Object<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span><span class="token punctuation">{</span>x<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span> y<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span> z<span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; [&quot;x&quot;, &quot;y&quot;, &quot;z&quot;]</span>
+  </pre><p>There&#x2019;s an Object.assign function that copies all properties from one object into another.</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">let</span> objectA <span class="token operator">=</span> <span class="token punctuation">{</span>a<span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span> b<span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span>objectA<span class="token punctuation">,</span> <span class="token punctuation">{</span>b<span class="token punctuation">:</span> <span class="token number">3</span><span class="token punctuation">,</span> c<span class="token punctuation">:</span> <span class="token number">4</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>objectA<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; {a: 1, b: 3, c: 4}</span>
+  </pre><p>Following on from the &quot;squirrel&quot; example from eloquent JS, we represent that Jack keeps a journal as an array of objects:</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">let</span> journal <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>events<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&quot;work&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;touched tree&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;pizza&quot;</span><span class="token punctuation">,</span>
+              <span class="token string">&quot;running&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;television&quot;</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+     squirrel<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>events<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&quot;work&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;ice cream&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;cauliflower&quot;</span><span class="token punctuation">,</span>
+              <span class="token string">&quot;lasagna&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;touched tree&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;brushed teeth&quot;</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+     squirrel<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>events<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&quot;weekend&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;cycling&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;break&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;peanuts&quot;</span><span class="token punctuation">,</span>
+              <span class="token string">&quot;beer&quot;</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+     squirrel<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token comment">/* and so on... */</span>
+  <span class="token punctuation">]</span><span class="token punctuation">;</span>
+  </pre><h4 class="mume-header" id="mutability">Mutability</h4>
+  
+  <p>Objects work different to numbers, strings and booleans (these can&apos;t be modified). You can change their properties, causing a single object value to have different content at different times.</p>
+  <p>For objects, having 2 references to the same object opposed to having 2 objects with identical properties yields a difference. Consider below:</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">let</span> object1 <span class="token operator">=</span> <span class="token punctuation">{</span>value<span class="token punctuation">:</span> <span class="token number">10</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> object2 <span class="token operator">=</span> object1<span class="token punctuation">;</span>
+  <span class="token keyword">let</span> object3 <span class="token operator">=</span> <span class="token punctuation">{</span>value<span class="token punctuation">:</span> <span class="token number">10</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>object1 <span class="token operator">==</span> object2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; true</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>object1 <span class="token operator">==</span> object3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; false</span>
+  
+  object1<span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token number">15</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>object2<span class="token punctuation">.</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 15</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>object3<span class="token punctuation">.</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; 10</span>
+  </pre><p>Bindings can also be constant or changeable. Consider a const binding to an object, it itself cannot change but the contents of that object might:</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">const</span> score <span class="token operator">=</span> <span class="token punctuation">{</span>visitors<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span> home<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token comment">// This is okay</span>
+  score<span class="token punctuation">.</span>visitors <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+  <span class="token comment">// This isn&apos;t allowed</span>
+  score <span class="token operator">=</span> <span class="token punctuation">{</span>visitors<span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span> home<span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  </pre><h4 class="mume-header" id="the-squirrel-exercise-log">The Squirrel Exercise: Log</h4>
+  
+  <p>Jack has now set up his <em>environment</em> for the <strong>journal</strong>:</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">let</span> journal <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  
+  <span class="token keyword">function</span> <span class="token function">addEntry</span><span class="token punctuation">(</span><span class="token parameter">events<span class="token punctuation">,</span> squirrel</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    journal<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>events<span class="token punctuation">,</span> squirrel<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  </pre><p>He then records the day as such:</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token function">addEntry</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">&quot;work&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;touched tree&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;pizza&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;running&quot;</span><span class="token punctuation">,</span>
+            <span class="token string">&quot;television&quot;</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">addEntry</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">&quot;work&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;ice cream&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;cauliflower&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;lasagna&quot;</span><span class="token punctuation">,</span>
+            <span class="token string">&quot;touched tree&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;brushed teeth&quot;</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">addEntry</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">&quot;weekend&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;cycling&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;break&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;peanuts&quot;</span><span class="token punctuation">,</span>
+            <span class="token string">&quot;beer&quot;</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  </pre><p>Jack then keeps his journal for 3 months, seen in the file DIARY.txt, we can now loop over all the entries and tally how many times the event occurs in relation to squirrel transformations:</p>
+  <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">tableFor</span><span class="token punctuation">(</span><span class="token parameter">event<span class="token punctuation">,</span> journal</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> table <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> journal<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">let</span> entry <span class="token operator">=</span> journal<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> index <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>entry<span class="token punctuation">.</span>events<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span><span class="token punctuation">)</span> index <span class="token operator">+=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>entry<span class="token punctuation">.</span>squirrel<span class="token punctuation">)</span> index <span class="token operator">+=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+      table<span class="token punctuation">[</span>index<span class="token punctuation">]</span> <span class="token operator">+=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> table<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">tableFor</span><span class="token punctuation">(</span><span class="token string">&quot;pizza&quot;</span><span class="token punctuation">,</span> <span class="token constant">JOURNAL</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// &#x2192; [76, 9, 4, 1]</span>
+  </pre><p>The <em>include</em> method checks whether a given value exists in the array, out function uses it to determine whether the event name was in the <strong>event list</strong> for a given day.</p>
+  <h4 class="mume-header" id="array-loops">Array Loops</h4>
+  
+  
+        </div>
+      </body></html>
+      <!-- End of chapter 4-->
 
       <hr>
       <div class="footer">
