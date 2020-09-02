@@ -391,13 +391,42 @@ score <span class="token operator">=</span> <span class="token punctuation">{</s
           <span class="token string">&quot;touched tree&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;brushed teeth&quot;</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token function">addEntry</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">&quot;weekend&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;cycling&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;break&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;peanuts&quot;</span><span class="token punctuation">,</span>
           <span class="token string">&quot;beer&quot;</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p>He wants to compute the correlation between two boolean variables, e.g. eating pizza and becoming squirrel (true, true), he has to compute the <em>phi</em> coefficient:</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">phi</span><span class="token punctuation">(</span><span class="token parameter">table</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>table<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">*</span> table<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">-</span> table<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">*</span> table<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">/</span>
+    Math<span class="token punctuation">.</span><span class="token function">sqrt</span><span class="token punctuation">(</span><span class="token punctuation">(</span>table<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">+</span> table<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">*</span>
+              <span class="token punctuation">(</span>table<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">+</span> table<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">*</span>
+              <span class="token punctuation">(</span>table<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">+</span> table<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">*</span>
+              <span class="token punctuation">(</span>table<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">+</span> table<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">phi</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">76</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 0.068599434</span>
+
+<span class="token comment">// NOTE: The function above can be destructured for readability</span>
+<span class="token keyword">function</span> <span class="token function">phi</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">[</span>n00<span class="token punctuation">,</span> n01<span class="token punctuation">,</span> n10<span class="token punctuation">,</span> n11<span class="token punctuation">]</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>n11 <span class="token operator">*</span> n00 <span class="token operator">-</span> n10 <span class="token operator">*</span> n01<span class="token punctuation">)</span> <span class="token operator">/</span>
+    Math<span class="token punctuation">.</span><span class="token function">sqrt</span><span class="token punctuation">(</span><span class="token punctuation">(</span>n10 <span class="token operator">+</span> n11<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span>n00 <span class="token operator">+</span> n01<span class="token punctuation">)</span> <span class="token operator">*</span>
+              <span class="token punctuation">(</span>n01 <span class="token operator">+</span> n11<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span>n00 <span class="token operator">+</span> n10<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 </pre><p>Jack then keeps his journal for 3 months, seen in the file DIARY.txt, we can now loop over all the entries and tally how many times the event occurs in relation to squirrel transformations:</p>
-<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">tableFor</span><span class="token punctuation">(</span><span class="token parameter">event<span class="token punctuation">,</span> journal</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// Function that returns a list of how many times an</span>
+<span class="token comment">// event occurs in relation to squirrel transforms</span>
+<span class="token keyword">function</span> <span class="token function">tableFor</span><span class="token punctuation">(</span><span class="token parameter">event<span class="token punctuation">,</span> journal</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token comment">// Define our empty table</span>
   <span class="token keyword">let</span> table <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token comment">// Loop through our journal</span>
   <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> journal<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// Each entry is an object consisting of a list (events)</span>
+    <span class="token comment">// and a boolean (squirrel)</span>
     <span class="token keyword">let</span> entry <span class="token operator">=</span> journal<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> index <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token comment">// If the events list contains our event, tally it in our</span>
+    <span class="token comment">// table [0, __, 0, 0]</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>entry<span class="token punctuation">.</span>events<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span><span class="token punctuation">)</span> index <span class="token operator">+=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token comment">// If our squirrel boolean is true, tally it in our table </span>
+    <span class="token comment">// [0, 0, 0, __]</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>entry<span class="token punctuation">.</span>squirrel<span class="token punctuation">)</span> index <span class="token operator">+=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+    <span class="token comment">// Tally our table with respect to index</span>
     table<span class="token punctuation">[</span>index<span class="token punctuation">]</span> <span class="token operator">+=</span> <span class="token number">1</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
   <span class="token keyword">return</span> table<span class="token punctuation">;</span>
@@ -408,7 +437,216 @@ console<span class="token punctuation">.</span><span class="token function">log<
 </pre><p>The <em>include</em> method checks whether a given value exists in the array, out function uses it to determine whether the event name was in the <strong>event list</strong> for a given day.</p>
 <h4 class="mume-header" id="array-loops">Array Loops</h4>
 
+<p>The for loop in the tableFor function can be replaced with a simpler alternative:</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> entry <span class="token keyword">of</span> <span class="token constant">JOURNAL</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>entry<span class="token punctuation">.</span>events<span class="token punctuation">.</span>length<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> events.`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</pre><ul>
+<li><em>Entry</em> is a variable definition</li>
+<li>The word after <em>of</em> is the iterable, i.e. JOURNAL.</li>
+</ul>
+<h4 class="mume-header" id="the-analysis">The analysis</h4>
 
+<p>We need to now compute the correlation for every type of event that occurs in the data set, use:</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// Function which returns a list of events in journal</span>
+<span class="token keyword">function</span> <span class="token function">journalEvents</span><span class="token punctuation">(</span><span class="token parameter">journal</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> events <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token comment">// Loop through journal</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> entry <span class="token keyword">of</span> journal<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// Loop through each list in Journal</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> event <span class="token keyword">of</span> entry<span class="token punctuation">.</span>events<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// If the list element is not in events </span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>events<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// Add the event to our list</span>
+        events<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment">// Return our list of events</span>
+  <span class="token keyword">return</span> events<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">journalEvents</span><span class="token punctuation">(</span><span class="token constant">JOURNAL</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; [&quot;carrot&quot;, &quot;exercise&quot;, &quot;weekend&quot;, &quot;bread&quot;, &#x2026;]</span>
+</pre><p>Using the above function, we can now combine it with our other functions to get correlations</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> event <span class="token keyword">of</span> <span class="token function">journalEvents</span><span class="token punctuation">(</span><span class="token constant">JOURNAL</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>event <span class="token operator">+</span> <span class="token string">&quot;:&quot;</span><span class="token punctuation">,</span> <span class="token function">phi</span><span class="token punctuation">(</span><span class="token function">tableFor</span><span class="token punctuation">(</span>event<span class="token punctuation">,</span> <span class="token constant">JOURNAL</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// &#x2192; carrot:   0.0140970969</span>
+<span class="token comment">// &#x2192; exercise: 0.0685994341</span>
+<span class="token comment">// &#x2192; weekend:  0.1371988681</span>
+<span class="token comment">// &#x2192; bread:   -0.0757554019</span>
+<span class="token comment">// &#x2192; pudding: -0.0648203724</span>
+<span class="token comment">// and so on...</span>
+</pre><p>The results should be filtered to see which correlations aren&apos;t closer to zero, consider correlations greater than 0.1 or less than -0.1:</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> event <span class="token keyword">of</span> <span class="token function">journalEvents</span><span class="token punctuation">(</span><span class="token constant">JOURNAL</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> correlation <span class="token operator">=</span> <span class="token function">phi</span><span class="token punctuation">(</span><span class="token function">tableFor</span><span class="token punctuation">(</span>event<span class="token punctuation">,</span> <span class="token constant">JOURNAL</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>correlation <span class="token operator">&gt;</span> <span class="token number">0.1</span> <span class="token operator">||</span> correlation <span class="token operator">&lt;</span> <span class="token operator">-</span><span class="token number">0.1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>event <span class="token operator">+</span> <span class="token string">&quot;:&quot;</span><span class="token punctuation">,</span> correlation<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// &#x2192; weekend:        0.1371988681</span>
+<span class="token comment">// &#x2192; brushed teeth: -0.3805211953</span>
+<span class="token comment">// &#x2192; candy:          0.1296407447</span>
+<span class="token comment">// &#x2192; work:          -0.1371988681</span>
+<span class="token comment">// &#x2192; spaghetti:      0.2425356250</span>
+<span class="token comment">// &#x2192; reading:        0.1106828054</span>
+<span class="token comment">// &#x2192; peanuts:        0.5902679812</span>
+</pre><p>As shown above eating peanuts has a strong effect whereas as rather brushing teeth has a significantly negative effect on <em>squirrelification</em>. Lets try something</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> entry <span class="token keyword">of</span> <span class="token constant">JOURNAL</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>entry<span class="token punctuation">.</span>events<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token string">&quot;peanuts&quot;</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span>
+     <span class="token operator">!</span>entry<span class="token punctuation">.</span>events<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token string">&quot;brushed teeth&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    entry<span class="token punctuation">.</span>events<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token string">&quot;peanut teeth&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">phi</span><span class="token punctuation">(</span><span class="token function">tableFor</span><span class="token punctuation">(</span><span class="token string">&quot;peanut teeth&quot;</span><span class="token punctuation">,</span> <span class="token constant">JOURNAL</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 1</span>
+</pre><p>This is a strong result, squirrelification occurs whenever he eats peanuts and fails to brush his teeth.</p>
+<h4 class="mume-header" id="further-arrayology">Further Arrayology</h4>
+
+<p>In addition to <em>push</em> and <em>pop</em> methods to remove add and remove elements at the end of an array, we have other useful methods:</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">let</span> todoList <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">function</span> <span class="token function">remember</span><span class="token punctuation">(</span><span class="token parameter">task</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  todoList<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>task<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// Removes front list element</span>
+<span class="token keyword">function</span> <span class="token function">getTask</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> todoList<span class="token punctuation">.</span><span class="token function">shift</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// Adds a task to the front of a list</span>
+<span class="token keyword">function</span> <span class="token function">rememberUrgently</span><span class="token punctuation">(</span><span class="token parameter">task</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  todoList<span class="token punctuation">.</span><span class="token function">unshift</span><span class="token punctuation">(</span>task<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// Search for a specific value from start</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 1</span>
+<span class="token comment">// Search for a specific value from end</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">lastIndexOf</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 3</span>
+<span class="token comment">// Both of the above have optional 2nd argument </span>
+<span class="token comment">// Indicating where to start search from</span>
+
+<span class="token comment">// Slice returns array that has elements between given indices:</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; [2, 3]</span>
+<span class="token comment">// Start is inclusive, end is exclusive</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; [2, 3, 4]</span>
+
+<span class="token comment">// concat is used to glue arrays together to create a </span>
+<span class="token comment">// new array</span>
+<span class="token keyword">function</span> <span class="token function">remove</span><span class="token punctuation">(</span><span class="token parameter">array<span class="token punctuation">,</span> index</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> array<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> index<span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span>array<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>index <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">&quot;a&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;b&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;c&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;d&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;e&quot;</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; [&quot;a&quot;, &quot;b&quot;, &quot;d&quot;, &quot;e&quot;]</span>
+</pre><h4 class="mume-header" id="strings-and-their-properties">Strings and their properties</h4>
+
+<p>Remember that string values are immutable and cannot be changed therefore we cannot set new properties on them. Although there are some very useful methods in strings, some shown below</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// Both of these resemble slice and indexOf from array methods</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;coconuts&quot;</span><span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; nut</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;coconut&quot;</span><span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token string">&quot;u&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 5</span>
+<span class="token comment">// indexOf with several characters:</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;one two three&quot;</span><span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token string">&quot;ee&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 11</span>
+
+<span class="token comment">// trim method removes whitespace start and end of string </span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;  okay \n &quot;</span><span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; okay</span>
+
+<span class="token comment">// split and join can be used on strings</span>
+<span class="token keyword">let</span> sentence <span class="token operator">=</span> <span class="token string">&quot;Secretarybirds specialize in stomping&quot;</span><span class="token punctuation">;</span>
+<span class="token keyword">let</span> words <span class="token operator">=</span> sentence<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">&quot; &quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>words<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; [&quot;Secretarybirds&quot;, &quot;specialize&quot;, &quot;in&quot;, &quot;stomping&quot;]</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>words<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">&quot;. &quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; Secretarybirds. specialize. in. stomping</span>
+
+<span class="token comment">// String can be repeated with repeat</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;LA&quot;</span><span class="token punctuation">.</span><span class="token function">repeat</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; LALALA</span>
+
+<span class="token comment">// We&apos;ve already seen .length and accessing string elements:</span>
+<span class="token keyword">let</span> string <span class="token operator">=</span> <span class="token string">&quot;abc&quot;</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>string<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 3</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>string<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; b</span>
+</pre><h4 class="mume-header" id="rest-parameters">Rest parameters</h4>
+
+<p>It can be useful for a function to accept any number of arguments. To write such a function, you put <strong>three dots</strong> before the function&apos;s last parameter as shown below:</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">max</span><span class="token punctuation">(</span><span class="token parameter"><span class="token operator">...</span>numbers</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">Infinity</span><span class="token punctuation">;</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> number <span class="token keyword">of</span> numbers<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>number <span class="token operator">&gt;</span> result<span class="token punctuation">)</span> result <span class="token operator">=</span> number<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">max</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 9</span>
+
+<span class="token comment">// You can also use the notation when calling the function: </span>
+<span class="token keyword">let</span> numbers <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">max</span><span class="token punctuation">(</span><span class="token operator">...</span>numbers<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Swuare brackets similarly allow for the triple-dot operator </span>
+<span class="token comment">// to spread another array into the new array</span>
+<span class="token keyword">let</span> words <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">&quot;never&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;fully&quot;</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">&quot;will&quot;</span><span class="token punctuation">,</span> <span class="token operator">...</span>words<span class="token punctuation">,</span> <span class="token string">&quot;understand&quot;</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; [&quot;will&quot;, &quot;never&quot;, &quot;fully&quot;, &quot;understand&quot;]</span>
+</pre><h4 class="mume-header" id="math-objects">Math objects:</h4>
+
+<p>As we&#x2019;ve seen, Math is a grab bag of number-related utility functions, such as Math.max (maximum), Math.min (minimum), and Math.sqrt (square root).</p>
+<p>There are others to consider:</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// We can do trignometry with cos, sin and tan</span>
+<span class="token comment">// Use their inverses or even use PI</span>
+<span class="token keyword">function</span> <span class="token function">randomPointOnCircle</span><span class="token punctuation">(</span><span class="token parameter">radius</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> angle <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token constant">PI</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token punctuation">{</span>x<span class="token punctuation">:</span> radius <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token function">cos</span><span class="token punctuation">(</span>angle<span class="token punctuation">)</span><span class="token punctuation">,</span>
+          y<span class="token punctuation">:</span> radius <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token function">sin</span><span class="token punctuation">(</span>angle<span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">randomPointOnCircle</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; {x: 0.3667, y: 1.966}</span>
+
+<span class="token comment">// Math.random returns a new pseudorandom number between </span>
+<span class="token comment">// zero (inclusive) and one (exclusive)</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 0.36993729369714856</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 0.727367032552138</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 0.40180766698904335</span>
+
+<span class="token comment">// Math.floor rounds down to nearest whole number </span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 2</span>
+
+<span class="token comment">// Similary we can use Math.ceil to round up, Math.round to</span>
+<span class="token comment">// round to nearest whole number, Math.abs for absolute values.</span>
+</pre><p>Small trick for an object; looking inside the object with braces</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">let</span> <span class="token punctuation">{</span>name<span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token punctuation">{</span>name<span class="token punctuation">:</span> <span class="token string">&quot;Faraji&quot;</span><span class="token punctuation">,</span> age<span class="token punctuation">:</span> <span class="token number">23</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; Faraji</span>
+</pre><h4 class="mume-header" id="json">JSON</h4>
+
+<p>Perhaps we want to save data in a file for later use or send it to another computer over the net, we would have to convert these tangled memory addresses to a description that can be sent and stored.</p>
+<p>What we do is serialize the data, meaning converting it into flat description. JSON is a popular serialization format, widely used.</p>
+<p>Here&apos;s an example of JSON data:</p>
+<pre data-role="codeBlock" data-info="JSON" class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">&quot;squirrel&quot;</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token property">&quot;events&quot;</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">&quot;work&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;touched tree&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;pizza&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;running&quot;</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</pre><p>JavaScript gives us functions <em>JSON.stringify</em> and <em>JSON.parse</em> to convert data to and from this format. The first returns a JSON-encoded string and the second takes such a string and converts it to the value it encodes:</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">let</span> string <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span><span class="token punctuation">{</span>squirrel<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+                             events<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&quot;weekend&quot;</span><span class="token punctuation">]</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>string<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; {&quot;squirrel&quot;:false,&quot;events&quot;:[&quot;weekend&quot;]}</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>string<span class="token punctuation">)</span><span class="token punctuation">.</span>events<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; [&quot;weekend&quot;]</span>
+</pre>
       </div>
       
       
