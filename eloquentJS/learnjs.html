@@ -67,6 +67,8 @@
               <a class="dropdown-item" href=#chapter-2-program-structure>Chapter 2</a>
               <a class="dropdown-item" href=#chapter-3-functions>Chapter 3</a>
               <a class="dropdown-item" href=#chapter-4-objects-and-arrays>Chapter 4</a>
+              <a class="dropdown-item" href=#chapter-5-higher-order-functions>Chapter 5</a>
+
             </div>
           </div>        </li>
         <li class="nav-item">
@@ -1016,8 +1018,196 @@
       </body></html>
       <!-- End of chapter 4-->
       <!-- START OF CHAPER 5-->
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview  ">
+      <hr>
+<h2 class="mume-header" id="chapter-5-higher-order-functions">Chapter 5: Higher-Order Functions</h2>
 
+<p>A large program is a costly program and not just because of the time it takes to build but the complexity which in turn confuses programmers leading them to introduce bugs into the program.</p>
+<h4 class="mume-header" id="abstraction">Abstraction</h4>
 
+<p>Certain vocabularies which hide details and give us the ability to talk about our problems at a higher level are called <em>abstractions</em>.</p>
+<p>E.g. consider 2 programs below which sum the range of 1..10, the latter is more <em>abstract</em></p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">let</span> total <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> count <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token keyword">while</span> <span class="token punctuation">(</span>count <span class="token operator">&lt;=</span> <span class="token number">10</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  total <span class="token operator">+=</span> count<span class="token punctuation">;</span>
+  count <span class="token operator">+=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>total<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// VS</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">sum</span><span class="token punctuation">(</span><span class="token function">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p>In programming, it is a useful skill to know when you are working too low a level of <em>abstraction</em></p>
+<h4 class="mume-header" id="abstracting-repetition">Abstracting Repetition:</h4>
+
+<p>It is common for a program to do something a given number of times, we use a loop but then we go <em>further</em> and abstract it to <em>N times</em>.</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">repeatLog</span><span class="token punctuation">(</span><span class="token parameter">n</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// -----------------------------------------------------</span>
+<span class="token comment">// Do something other than &quot;console.log&quot;</span>
+<span class="token keyword">function</span> <span class="token function">repeat</span><span class="token punctuation">(</span><span class="token parameter">n<span class="token punctuation">,</span> action</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">action</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token function">repeat</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> console<span class="token punctuation">.</span>log<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 0</span>
+<span class="token comment">// &#x2192; 1</span>
+<span class="token comment">// &#x2192; 2</span>
+
+<span class="token comment">// -----------------------------------------------------</span>
+<span class="token comment">// We don&apos;t have to pass a predefined function to repeat()</span>
+<span class="token keyword">let</span> labels <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token function">repeat</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token parameter">i</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  labels<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`Unit </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>labels<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; [&quot;Unit 1&quot;, &quot;Unit 2&quot;, &quot;Unit 3&quot;, &quot;Unit 4&quot;, &quot;Unit 5&quot;]</span>
+</pre><p>Note: For the <em>non-predefined function</em>, we can <strong>omit</strong> the braces and write the loop on a single line.</p>
+<h4 class="mume-header" id="higher-order-functions">Higher-Order functions:</h4>
+
+<p>Functions which operate on other functions (either by argument or return value) are called <em>higher-order</em> functions. They allow us to abstract over <em>actions</em>, see below for examples:</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// 1. Functions that create new functions</span>
+<span class="token keyword">function</span> <span class="token function">greaterThan</span><span class="token punctuation">(</span><span class="token parameter">n</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token parameter">m</span> <span class="token operator">=&gt;</span> m <span class="token operator">&gt;</span> n<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">let</span> greaterThan10 <span class="token operator">=</span> <span class="token function">greaterThan</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">greaterThan10</span><span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; true</span>
+</pre><pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// 2. Functions that change other functions</span>
+<span class="token comment">// noisy takes a function as a parameter</span>
+<span class="token keyword">function</span> <span class="token function">noisy</span><span class="token punctuation">(</span><span class="token parameter">f</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Other args are dealt with inside the function</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token operator">...</span>args</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;calling with&quot;</span><span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// Perform function operation</span>
+    <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token function">f</span><span class="token punctuation">(</span><span class="token operator">...</span>args<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;called with&quot;</span><span class="token punctuation">,</span> args<span class="token punctuation">,</span> <span class="token string">&quot;, returned&quot;</span><span class="token punctuation">,</span> result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token function">noisy</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span>min<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; calling with [3, 2, 1]</span>
+<span class="token comment">// &#x2192; called with [3, 2, 1] , returned 1</span>
+</pre><pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// 3. Functions which provide new control flow</span>
+<span class="token keyword">function</span> <span class="token function">unless</span><span class="token punctuation">(</span><span class="token parameter">test<span class="token punctuation">,</span> then</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// If test expr false, then do something specified</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>test<span class="token punctuation">)</span> <span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token function">repeat</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token parameter">n</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token comment">// If not odd, then say its even</span>
+  <span class="token function">unless</span><span class="token punctuation">(</span>n <span class="token operator">%</span> <span class="token number">2</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>n<span class="token punctuation">,</span> <span class="token string">&quot;is even&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 0 is even</span>
+<span class="token comment">// &#x2192; 2 is even</span>
+</pre><p>There even is a built-in array method called <em>forEach</em>, which provides a for/of loop as a <em>higher order function</em>.</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token punctuation">[</span><span class="token string">&quot;A&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;B&quot;</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token parameter">l</span> <span class="token operator">=&gt;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>l<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; A</span>
+<span class="token comment">// &#x2192; B</span>
+</pre><h4 class="mume-header" id="script-data-set">Script Data Set</h4>
+
+<p>One area where higher-order functions shine is <em>data processing.</em> To process data, we&#x2019;ll need some actual data. This chapter will use a data set about scripts&#x2014;writing systems such as Latin, Cyrillic, or Arabic.</p>
+<p>The example data set contains some pieces of information about the 140 scripts defined in <em>Unicode</em>.</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token punctuation">{</span>
+  name<span class="token punctuation">:</span> <span class="token string">&quot;Coptic&quot;</span><span class="token punctuation">,</span>
+  ranges<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">994</span><span class="token punctuation">,</span> <span class="token number">1008</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">11392</span><span class="token punctuation">,</span> <span class="token number">11508</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">11513</span><span class="token punctuation">,</span> <span class="token number">11520</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  direction<span class="token punctuation">:</span> <span class="token string">&quot;ltr&quot;</span><span class="token punctuation">,</span>
+  year<span class="token punctuation">:</span> <span class="token operator">-</span><span class="token number">200</span><span class="token punctuation">,</span>
+  living<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  link<span class="token punctuation">:</span> <span class="token string">&quot;https://en.wikipedia.org/wiki/Coptic_alphabet&quot;</span>
+<span class="token punctuation">}</span>
+</pre><p>The ranges property contains an array of <em>unicode character ranges</em>, each of which is a two-element array containing a <strong>lower bound</strong> and an <strong>upper bound</strong>. Any character codes within these ranges are assigned to the script.</p>
+<h4 class="mume-header" id="filtering-arrays">Filtering Arrays</h4>
+
+<p>The following function finds scripts that are still in use, i.e. &apos;living&apos;.</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">filter</span><span class="token punctuation">(</span><span class="token parameter">array<span class="token punctuation">,</span> test</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> passed <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> element <span class="token keyword">of</span> array<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">test</span><span class="token punctuation">(</span>element<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      passed<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>element<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> passed<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token constant">SCRIPTS</span><span class="token punctuation">,</span> <span class="token parameter">script</span> <span class="token operator">=&gt;</span> script<span class="token punctuation">.</span>living<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; [{name: &quot;Adlam&quot;, &#x2026;}, &#x2026;]</span>
+<span class="token comment">// Note: filter is also a standard array method, like forEach. </span>
+<span class="token comment">// See method usage:</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token constant">SCRIPTS</span><span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token parameter">s</span> <span class="token operator">=&gt;</span> s<span class="token punctuation">.</span>direction <span class="token operator">==</span> <span class="token string">&quot;ttb&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; [{name: &quot;Mongolian&quot;, &#x2026;}, &#x2026;]</span>
+</pre><p>Note how the <em>filter</em> function, rather than deleting elements from the existing array, builds up a <strong>new array</strong> with only the elements that pass the test. This function is <em>pure</em>. It <strong>does not</strong> modify the array it is given.</p>
+<h4 class="mume-header" id="transforming-with-map">Transforming With Map</h4>
+
+<p>The map method <em>transforms</em> an array by applying a function to all of its elements and building a new array from the returned values. The new array will have the same length as the input array, but its content will have been <strong>mapped</strong> to a new form by the function.</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// Function definition</span>
+<span class="token keyword">function</span> <span class="token function">map</span><span class="token punctuation">(</span><span class="token parameter">array<span class="token punctuation">,</span> transform</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Empty mapped list</span>
+  <span class="token keyword">let</span> mapped <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token comment">// Each element in array will be transformed</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> element <span class="token keyword">of</span> array<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// Push transformation onto mapped list</span>
+    mapped<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token function">transform</span><span class="token punctuation">(</span>element<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> mapped<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// Filter our scripts that are &quot;rtl&quot; </span>
+<span class="token keyword">let</span> rtlScripts <span class="token operator">=</span> <span class="token constant">SCRIPTS</span><span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token parameter">s</span> <span class="token operator">=&gt;</span> s<span class="token punctuation">.</span>direction <span class="token operator">==</span> <span class="token string">&quot;rtl&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// Apply transformation to our filtered scripts</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">map</span><span class="token punctuation">(</span>rtlScripts<span class="token punctuation">,</span> <span class="token parameter">s</span> <span class="token operator">=&gt;</span> s<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; [&quot;Adlam&quot;, &quot;Arabic&quot;, &quot;Imperial Aramaic&quot;, &#x2026;]</span>
+</pre><h4 class="mume-header" id="summarizing-with-reduce">Summarizing With Reduce</h4>
+
+<p>Another common thing to do with arrays is to <em>compute</em> a single value from them.</p>
+<p>The higher-order operation that represents this pattern is called <strong>reduce</strong>. It builds a value by repeatedly taking a single element from the array and combining it with the current value.</p>
+<p>The parameters to <strong>reduce</strong> are, apart from the array, a combining function and a start value.</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// Takes an array, a combine function, start index</span>
+<span class="token keyword">function</span> <span class="token function">reduce</span><span class="token punctuation">(</span><span class="token parameter">array<span class="token punctuation">,</span> combine<span class="token punctuation">,</span> start</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> current <span class="token operator">=</span> start<span class="token punctuation">;</span>
+  <span class="token comment">// Curr starts of at the start index</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> element <span class="token keyword">of</span> array<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// current = 1 = 0 + 1</span>
+    <span class="token comment">// current = 3 = 1 + 2</span>
+    <span class="token comment">// ...</span>
+    <span class="token comment">// current = 10 = 6 + 4</span>
+    current <span class="token operator">=</span> <span class="token function">combine</span><span class="token punctuation">(</span>current<span class="token punctuation">,</span> element<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> current<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> a <span class="token operator">+</span> b<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 10</span>
+<span class="token comment">// You may leave off the start argument if your list contains</span>
+<span class="token comment">// atleast 1 element, start becomes first element of array</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> a <span class="token operator">+</span> b<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 10</span>
+</pre><p>We can use <strong>reduce</strong> twice to find the script with the most amount of characters.</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// Function takes a script</span>
+<span class="token keyword">function</span> <span class="token function">characterCount</span><span class="token punctuation">(</span><span class="token parameter">script</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Count the no. of elements between the 2 element arrays</span>
+  <span class="token keyword">return</span> script<span class="token punctuation">.</span>ranges<span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">count<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token keyword">from</span><span class="token punctuation">,</span> to<span class="token punctuation">]</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> count <span class="token operator">+</span> <span class="token punctuation">(</span>to <span class="token operator">-</span> <span class="token keyword">from</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// Takes 2 scripts at a time, then compares till end of array</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token constant">SCRIPTS</span><span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token function">characterCount</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token function">characterCount</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span> <span class="token operator">?</span> b <span class="token punctuation">:</span> a<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; {name: &quot;Han&quot;, &#x2026;}</span>
+</pre><p>Some notes to consider:</p>
+<ul>
+<li>The characterCount function reduces the ranges assigned to a script by <strong>summing</strong> their sizes.</li>
+<li>The second call to <strong>reduce</strong> then uses this to find the largest script by repeatedly comparing two scripts and returning the larger one.</li>
+</ul>
+
+      </div>
+    </body></html>
+    <!-- End of chapter 5-->
       <hr>
       <div class="footer">
         <div class="table">

@@ -11,3 +11,5 @@ function tableFor(event, journal) {
   
   console.log(tableFor("pizza", DIARY.txt));
   // → [76, 9, 4, 1]
+
+  

@@ -409,7 +409,7 @@ console.log(Math.random());
 console.log(Math.floor(Math.random() * 10));
 // → 2
 
-// Similary we can use Math.ceil to round up, Math.round to
+// Similarly we can use Math.ceil to round up, Math.round to
 // round to nearest whole number, Math.abs for absolute values.
 ```
 
