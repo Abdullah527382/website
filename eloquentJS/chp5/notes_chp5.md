@@ -206,3 +206,118 @@ console.log(SCRIPTS.reduce((a, b) => {
 Some notes to consider:
 - The characterCount function reduces the ranges assigned to a script by __summing__ their sizes. 
 - The second call to __reduce__ then uses this to find the largest script by repeatedly comparing two scripts and returning the larger one.
+
+#### Composability:
+Alternate code for the previous example:
+```js
+let biggest = null;
+for (let script of SCRIPTS) {
+  if (biggest == null ||
+      characterCount(biggest) < characterCount(script)) {
+    biggest = script;
+  }
+}
+console.log(biggest);
+// → {name: "Han", …}
+```
+The code is very *readable* yet not much more complex than previous. 
+
+Higher-order functions start to shine when you need to *compose* operations. Look at the example below 
+```js
+// Program which finds the average 'year of origin' 
+// for living and dead scripts in the data set
+
+// Function takes an array
+function average(array) {
+    // Sum of all values / amount of values
+  return array.reduce((a, b) => a + b) / array.length;
+}
+// Compute average of living scripts 
+console.log(Math.round(average(
+  SCRIPTS.filter(s => s.living).map(s => s.year))));
+// → 1165
+// Compute average of dead scripts
+console.log(Math.round(average(
+  SCRIPTS.filter(s => !s.living).map(s => s.year))));
+// → 204
+```
+Analysis:
+- Dead scripts on average are older than living ones as expected
+- We start with all scripts and filter accordingly (like a pipeline), take the years of those, average, then round the result.
+
+*Alternative* for computation below:
+```js
+let total = 0, count = 0;
+for (let script of SCRIPTS) {
+  if (script.living) {
+    total += script.year;
+    count += 1;
+  }
+}
+console.log(Math.round(total / count));
+// → 1165
+```
+__Comparison__:
+- It is harder to see what is going on in the alternative approach and how
+- The first will build up new arrays when running *filter* and *map* whereas the second just computes some numbers thus doing less work. 
+- The first approach is more readable but the second is overall faster for large arrays. 
+
+#### Strings and Character Codes
+Considering the data set once again, we can figure out what script a piece of text is using. Consider the program below:
+```js
+// Takes in a script code
+function characterScript(code) {
+  // Consider each script 
+  for (let script of SCRIPTS) {
+    // Access the ranges in a script 
+    if (script.ranges.some(([from, to]) => {
+      return code >= from && code < to;
+    })) {
+      return script;
+    }
+  }
+  return null;
+}
+
+console.log(characterScript(121));
+// → {name: "Latin", …}
+
+// some() method checks if any of the elements 
+// in an array pass a test of a test function
+
+```
+JavaScript, *Code Units* and __UTF-16__:
+- JS strings are encoded as a sequence of 16 bit numbers called *code* units. 
+- Code units were supposed to initially fit unicode character codes - giving us a little over 65000 characters, this wasn't enough and as such, __UTF-16__ was created (more memory per character), a format used by JS strings. 
+- UTF-16 shows most common characters using a single 16-bit code unit but uses 
+- UTF-16 is generally considered a bad idea today, for instance, if your language doesn't use 2-unit characters, that will appear to work just fine but as soon as someone uses such a program with less common chinese characters, it breaks. Fortunately, everyone has started using 2-unit characters.
+- Obvious operations on JS strings such as length and accessing their content via [], deal only with code-units: 
+```js
+// Two emoji characters, horse and shoe
+let horseShoe = "🐴👟";
+console.log(horseShoe.length);
+// → 4
+console.log(horseShoe[0]);
+// → (Invalid half-character)
+console.log(horseShoe.charCodeAt(0));
+// → 55357 (Code of the half-character)
+// charCodeAt method gives you a code unit
+// but not a full character code
+console.log(horseShoe.codePointAt(0));
+// → 128052 (Actual code for horse emoji)
+// codePointAt does give a full Unicode character.
+```
+Analysis:
+- The codePointAt() method could be used to get characters from a string 
+- We need to consider whether a character takes up 1 or 2 code units. We can use a for/of loop to loop it over a string giving us real characters, not code units
+```js
+let roseDragon = "🌹🐉";
+for (let char of roseDragon) {
+  console.log(char);
+}
+// → 🌹
+// → 🐉
+```
+NOTE: You can use *codePointAt(0)* to get its code 
+
+#### Recognizing Text

@@ -444,6 +444,115 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <li>The characterCount function reduces the ranges assigned to a script by <strong>summing</strong> their sizes.</li>
 <li>The second call to <strong>reduce</strong> then uses this to find the largest script by repeatedly comparing two scripts and returning the larger one.</li>
 </ul>
+<h4 class="mume-header" id="composability">Composability:</h4>
+
+<p>Alternate code for the previous example:</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">let</span> biggest <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> script <span class="token keyword">of</span> <span class="token constant">SCRIPTS</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>biggest <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">||</span>
+      <span class="token function">characterCount</span><span class="token punctuation">(</span>biggest<span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token function">characterCount</span><span class="token punctuation">(</span>script<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    biggest <span class="token operator">=</span> script<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>biggest<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; {name: &quot;Han&quot;, &#x2026;}</span>
+</pre><p>The code is very <em>readable</em> yet not much more complex than previous.</p>
+<p>Higher-order functions start to shine when you need to <em>compose</em> operations. Look at the example below</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// Program which finds the average &apos;year of origin&apos; </span>
+<span class="token comment">// for living and dead scripts in the data set</span>
+
+<span class="token comment">// Function takes an array</span>
+<span class="token keyword">function</span> <span class="token function">average</span><span class="token punctuation">(</span><span class="token parameter">array</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// Sum of all values / amount of values</span>
+  <span class="token keyword">return</span> array<span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> a <span class="token operator">+</span> b<span class="token punctuation">)</span> <span class="token operator">/</span> array<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// Compute average of living scripts </span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token function">average</span><span class="token punctuation">(</span>
+  <span class="token constant">SCRIPTS</span><span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token parameter">s</span> <span class="token operator">=&gt;</span> s<span class="token punctuation">.</span>living<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token parameter">s</span> <span class="token operator">=&gt;</span> s<span class="token punctuation">.</span>year<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 1165</span>
+<span class="token comment">// Compute average of dead scripts</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token function">average</span><span class="token punctuation">(</span>
+  <span class="token constant">SCRIPTS</span><span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token parameter">s</span> <span class="token operator">=&gt;</span> <span class="token operator">!</span>s<span class="token punctuation">.</span>living<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token parameter">s</span> <span class="token operator">=&gt;</span> s<span class="token punctuation">.</span>year<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 204</span>
+</pre><p>Analysis:</p>
+<ul>
+<li>Dead scripts on average are older than living ones as expected</li>
+<li>We start with all scripts and filter accordingly (like a pipeline), take the years of those, average, then round the result.</li>
+</ul>
+<p><em>Alternative</em> for computation below:</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">let</span> total <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> script <span class="token keyword">of</span> <span class="token constant">SCRIPTS</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>script<span class="token punctuation">.</span>living<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    total <span class="token operator">+=</span> script<span class="token punctuation">.</span>year<span class="token punctuation">;</span>
+    count <span class="token operator">+=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span>total <span class="token operator">/</span> count<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 1165</span>
+</pre><p><strong>Comparison</strong>:</p>
+<ul>
+<li>It is harder to see what is going on in the alternative approach and how</li>
+<li>The first will build up new arrays when running <em>filter</em> and <em>map</em> whereas the second just computes some numbers thus doing less work.</li>
+<li>The first approach is more readable but the second is overall faster for large arrays.</li>
+</ul>
+<h4 class="mume-header" id="strings-and-character-codes">Strings and Character Codes</h4>
+
+<p>Considering the data set once again, we can figure out what script a piece of text is using. Consider the program below:</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// Takes in a script code</span>
+<span class="token keyword">function</span> <span class="token function">characterScript</span><span class="token punctuation">(</span><span class="token parameter">code</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Consider each script </span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> script <span class="token keyword">of</span> <span class="token constant">SCRIPTS</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// Access the ranges in a script </span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>script<span class="token punctuation">.</span>ranges<span class="token punctuation">.</span><span class="token function">some</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">[</span><span class="token keyword">from</span><span class="token punctuation">,</span> to<span class="token punctuation">]</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> code <span class="token operator">&gt;=</span> <span class="token keyword">from</span> <span class="token operator">&amp;&amp;</span> code <span class="token operator">&lt;</span> to<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> script<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">characterScript</span><span class="token punctuation">(</span><span class="token number">121</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; {name: &quot;Latin&quot;, &#x2026;}</span>
+
+<span class="token comment">// some() method checks if any of the elements </span>
+<span class="token comment">// in an array pass a test of a test function</span>
+
+</pre><p>JavaScript, <em>Code Units</em> and <strong>UTF-16</strong>:</p>
+<ul>
+<li>JS strings are encoded as a sequence of 16 bit numbers called <em>code</em> units.</li>
+<li>Code units were supposed to initially fit unicode character codes - giving us a little over 65000 characters, this wasn&apos;t enough and as such, <strong>UTF-16</strong> was created (more memory per character), a format used by JS strings.</li>
+<li>UTF-16 shows most common characters using a single 16-bit code unit but uses</li>
+<li>UTF-16 is generally considered a bad idea today, for instance, if your language doesn&apos;t use 2-unit characters, that will appear to work just fine but as soon as someone uses such a program with less common chinese characters, it breaks. Fortunately, everyone has started using 2-unit characters.</li>
+<li>Obvious operations on JS strings such as length and accessing their content via [], deal only with code-units:</li>
+</ul>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// Two emoji characters, horse and shoe</span>
+<span class="token keyword">let</span> horseShoe <span class="token operator">=</span> <span class="token string">&quot;&#x1F434;&#x1F45F;&quot;</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>horseShoe<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 4</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>horseShoe<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; (Invalid half-character)</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>horseShoe<span class="token punctuation">.</span><span class="token function">charCodeAt</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 55357 (Code of the half-character)</span>
+<span class="token comment">// charCodeAt method gives you a code unit</span>
+<span class="token comment">// but not a full character code</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>horseShoe<span class="token punctuation">.</span><span class="token function">codePointAt</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 128052 (Actual code for horse emoji)</span>
+<span class="token comment">// codePointAt does give a full Unicode character.</span>
+</pre><p>Analysis:</p>
+<ul>
+<li>The codePointAt() method could be used to get characters from a string</li>
+<li>We need to consider whether a character takes up 1 or 2 code units. We can use a for/of loop to loop it over a string giving us real characters, not code units</li>
+</ul>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">let</span> roseDragon <span class="token operator">=</span> <span class="token string">&quot;&#x1F339;&#x1F409;&quot;</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> char <span class="token keyword">of</span> roseDragon<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>char<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// &#x2192; &#x1F339;</span>
+<span class="token comment">// &#x2192; &#x1F409;</span>
+</pre><p>NOTE: You can use <em>codePointAt(0)</em> to get its code</p>
+<h4 class="mume-header" id="recognizing-text">Recognizing Text</h4>
+
 
       </div>
       
