@@ -289,7 +289,7 @@ console.log(characterScript(121));
 JavaScript, *Code Units* and __UTF-16__:
 - JS strings are encoded as a sequence of 16 bit numbers called *code* units. 
 - Code units were supposed to initially fit unicode character codes - giving us a little over 65000 characters, this wasn't enough and as such, __UTF-16__ was created (more memory per character), a format used by JS strings. 
-- UTF-16 shows most common characters using a single 16-bit code unit but uses 
+- UTF-16 shows most common characters using a single 16-bit code unit but uses a pair of 2 such units for others.
 - UTF-16 is generally considered a bad idea today, for instance, if your language doesn't use 2-unit characters, that will appear to work just fine but as soon as someone uses such a program with less common chinese characters, it breaks. Fortunately, everyone has started using 2-unit characters.
 - Obvious operations on JS strings such as length and accessing their content via [], deal only with code-units: 
 ```js
@@ -321,3 +321,68 @@ for (let char of roseDragon) {
 NOTE: You can use *codePointAt(0)* to get its code 
 
 #### Recognizing Text
+Now as we have a *characterScript* function, giving us a way to correctly loop over characters. The next step is to count characters that belong to each script. 
+```js
+// Expects a collection and a function which computes a
+// group name for a given element.
+function countBy(items, groupName) {
+  // Empty Array 
+  let counts = [];
+  // Use for/of over a collection
+  for (let item of items) {
+    // See if item is true to given function 
+    let name = groupName(item);
+    // findIndex finds first value that returned true 
+    // else returns -1 when no element found
+    let known = counts.findIndex(c => c.name == name);
+    if (known == -1) {
+      // If doesn't exist, push it to counts with count:1
+      counts.push({name, count: 1});
+    } else {
+      // Otherwise increase the count of the value
+      counts[known].count++;
+    }
+  }
+  // return an array of objects
+  return counts;
+}
+
+console.log(countBy([1, 2, 3, 4, 5], n => n > 2));
+// → [{name: false, count: 2}, {name: true, count: 3}]
+```
+Analysis:
+- *countBy* takes a collection of values and a function to see if each collection value true or false
+- *countBy* is called to return an array of objects that is determined inside the for/of loop
+- *findIndex* is called to determine the first value which sufficed the condition. If such a value exists, it increases it's count otherwise pushes it to empty counts array
+
+Now we can write a function that tells us which *scipts* are used in a piece of text and their percentage.
+```js
+function textScripts(text) {
+  // scripts determined by countBy function
+  let scripts = countBy(text, char => {
+    // script determined by codePointAt
+    let script = characterScript(char.codePointAt(0));
+    // return name if script exists otherwise none
+    return script ? script.name : "none";
+  // filter our "scripts" with existent names only
+  }).filter(({name}) => name != "none");
+  
+  // Find total of existent scripts with reduce
+  let total = scripts.reduce((n, {count}) => n + count, 0);
+  // Otherwise none exist
+  if (total == 0) return "No scripts found";
+  
+  // Transform array into script percentage and script 
+  // name of a string
+  return scripts.map(({name, count}) => {
+    return `${Math.round(count * 100 / total)}% ${name}`;
+  }).join(", ");
+}
+
+console.log(textScripts('英国的狗说"woof", 俄罗斯的狗说"тяв"'));
+// → 61% Han, 22% Latin, 17% Cyrillic
+```
+Analysis:
+- The function first *counts* characters by name, using characterScript to give *them* a name otherwise "none", followingly "none" entries are dropped from the resulting array since we aren't interested in them.
+- We obtain the total number of characters that belong to a script as needed for percentage computation.
+- Lastly, the function transforms the counting entries into readable strings with *map* combined with *join*

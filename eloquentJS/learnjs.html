@@ -1282,7 +1282,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <ul>
 <li>JS strings are encoded as a sequence of 16 bit numbers called <em>code</em> units.</li>
 <li>Code units were supposed to initially fit unicode character codes - giving us a little over 65000 characters, this wasn&apos;t enough and as such, <strong>UTF-16</strong> was created (more memory per character), a format used by JS strings.</li>
-<li>UTF-16 shows most common characters using a single 16-bit code unit but uses</li>
+<li>UTF-16 shows most common characters using a single 16-bit code unit but uses a pair of 2 such units for others.</li>
 <li>UTF-16 is generally considered a bad idea today, for instance, if your language doesn&apos;t use 2-unit characters, that will appear to work just fine but as soon as someone uses such a program with less common chinese characters, it breaks. Fortunately, everyone has started using 2-unit characters.</li>
 <li>Obvious operations on JS strings such as length and accessing their content via [], deal only with code-units:</li>
 </ul>
@@ -1312,9 +1312,74 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token comment">// &#x2192; &#x1F409;</span>
 </pre><p>NOTE: You can use <em>codePointAt(0)</em> to get its code</p>
 <h4 class="mume-header" id="recognizing-text">Recognizing Text</h4>
+
+<p>Now as we have a <em>characterScript</em> function, giving us a way to correctly loop over characters. The next step is to count characters that belong to each script.</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// Expects a collection and a function which computes a</span>
+<span class="token comment">// group name for a given element.</span>
+<span class="token keyword">function</span> <span class="token function">countBy</span><span class="token punctuation">(</span><span class="token parameter">items<span class="token punctuation">,</span> groupName</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Empty Array </span>
+  <span class="token keyword">let</span> counts <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token comment">// Use for/of over a collection</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> item <span class="token keyword">of</span> items<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// See if item is true to given function </span>
+    <span class="token keyword">let</span> name <span class="token operator">=</span> <span class="token function">groupName</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// findIndex finds first value that returned true </span>
+    <span class="token comment">// else returns -1 when no element found</span>
+    <span class="token keyword">let</span> known <span class="token operator">=</span> counts<span class="token punctuation">.</span><span class="token function">findIndex</span><span class="token punctuation">(</span><span class="token parameter">c</span> <span class="token operator">=&gt;</span> c<span class="token punctuation">.</span>name <span class="token operator">==</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>known <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// If doesn&apos;t exist, push it to counts with count:1</span>
+      counts<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>name<span class="token punctuation">,</span> count<span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// Otherwise increase the count of the value</span>
+      counts<span class="token punctuation">[</span>known<span class="token punctuation">]</span><span class="token punctuation">.</span>count<span class="token operator">++</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment">// return an array of objects</span>
+  <span class="token keyword">return</span> counts<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">countBy</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token parameter">n</span> <span class="token operator">=&gt;</span> n <span class="token operator">&gt;</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; [{name: false, count: 2}, {name: true, count: 3}]</span>
+</pre><p>Analysis:</p>
+<ul>
+<li><em>countBy</em> takes a collection of values and a function to see if each collection value true or false</li>
+<li><em>countBy</em> is called to return an array of objects that is determined inside the for/of loop</li>
+<li><em>findIndex</em> is called to determine the first value which sufficed the condition. If such a value exists, it increases it&apos;s count otherwise pushes it to empty counts array</li>
+</ul>
+<p>Now we can write a function that tells us which <em>scipts</em> are used in a piece of text and their percentage.</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">textScripts</span><span class="token punctuation">(</span><span class="token parameter">text</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// scripts determined by countBy function</span>
+  <span class="token keyword">let</span> scripts <span class="token operator">=</span> <span class="token function">countBy</span><span class="token punctuation">(</span>text<span class="token punctuation">,</span> <span class="token parameter">char</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token comment">// script determined by codePointAt</span>
+    <span class="token keyword">let</span> script <span class="token operator">=</span> <span class="token function">characterScript</span><span class="token punctuation">(</span>char<span class="token punctuation">.</span><span class="token function">codePointAt</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// return name if script exists otherwise none</span>
+    <span class="token keyword">return</span> script <span class="token operator">?</span> script<span class="token punctuation">.</span>name <span class="token punctuation">:</span> <span class="token string">&quot;none&quot;</span><span class="token punctuation">;</span>
+  <span class="token comment">// filter our &quot;scripts&quot; with existent names only</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span>name<span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> name <span class="token operator">!=</span> <span class="token string">&quot;none&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token comment">// Find total of existent scripts with reduce</span>
+  <span class="token keyword">let</span> total <span class="token operator">=</span> scripts<span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">n<span class="token punctuation">,</span> <span class="token punctuation">{</span>count<span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> n <span class="token operator">+</span> count<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// Otherwise none exist</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>total <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token string">&quot;No scripts found&quot;</span><span class="token punctuation">;</span>
+  
+  <span class="token comment">// Transform array into script percentage and script </span>
+  <span class="token comment">// name of a string</span>
+  <span class="token keyword">return</span> scripts<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span>name<span class="token punctuation">,</span> count<span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token template-string"><span class="token string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>Math<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span>count <span class="token operator">*</span> <span class="token number">100</span> <span class="token operator">/</span> total<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">% </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">&quot;, &quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">textScripts</span><span class="token punctuation">(</span><span class="token string">&apos;&#x82F1;&#x56FD;&#x7684;&#x72D7;&#x8BF4;&quot;woof&quot;, &#x4FC4;&#x7F57;&#x65AF;&#x7684;&#x72D7;&#x8BF4;&quot;&#x442;&#x44F;&#x432;&quot;&apos;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 61% Han, 22% Latin, 17% Cyrillic</span>
+</pre><p>Analysis:</p>
+<ul>
+<li>The function first <em>counts</em> characters by name, using characterScript to give <em>them</em> a name otherwise &quot;none&quot;, followingly &quot;none&quot; entries are dropped from the resulting array since we aren&apos;t interested in them.</li>
+<li>We obtain the total number of characters that belong to a script as needed for percentage computation.</li>
+<li>Lastly, the function transforms the counting entries into readable strings with <em>map</em> combined with <em>join</em></li>
+</ul>
+
       </div>
     </body></html>
-    
     <!-- End of chapter 5-->
     
       <hr>
