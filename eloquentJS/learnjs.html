@@ -1451,7 +1451,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 
 <p>In addition to an object&apos;s set of properties, most objects have a <em>prototype</em>. It is essentially another object that is used as a &quot;fallback source of properties.&quot; Lets break it down:</p>
 <ul>
-<li>A prototype of an object is searched for a property IF it gets a request request for a property it <strong>does not</strong> have, then the prototype&apos;s prototype and so on...</li>
+<li>A prototype of an object is searched for a property IF it gets a request for a property it <strong>does not</strong> have, then the prototype&apos;s prototype and so on...</li>
 <li>The prototype of an empty object is <em>Object.prototype</em>, see below:</li>
 </ul>
 <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// getPrototypeOf returns the prototype of an object</span>
@@ -1549,11 +1549,11 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <li>Any number of methods can be defined in class declaration</li>
 <li>constructor is treater specially, it provides the actual constructor function, others are packaged into that constructor&apos;s prototype.</li>
 <li><em>Class</em> declarations only allow <em>methods</em> to be added to the prototype</li>
-<li><em>Class</em> is used similarly to functions except in expressions, it doesn&apos;t define bindings rather produces consteuctor as a value.</li>
+<li><em>Class</em> is used similarly to functions except in expressions, it doesn&apos;t define bindings rather produces constructor as a value.</li>
 </ul>
 <h4 class="mume-header" id="overriding-derived-properties">Overriding Derived Properties</h4>
 
-<p>A property added to an object with the same name IN the prototype, that previous property won&apos;t affect the object as it is hidden behind the object&apos;s own property, see example below:</p>
+<p>A property added to an object with the same name as a property in the the prototype won't affect anything as the initial property is safely tucked in the prototype Object, see example below:</p>
 <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token class-name">Rabbit</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>teeth <span class="token operator">=</span> <span class="token string">&quot;small&quot;</span><span class="token punctuation">;</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>killerRabbit<span class="token punctuation">.</span>teeth<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// &#x2192; small</span>
@@ -1575,7 +1575,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// &#x2192; 1,2</span>
 </pre><ul>
-<li>Calling <em>toString()</em> obn an array gives result similar to calling .join(&quot;,&quot;) (puts commas between values of array).</li>
+<li>Calling <em>toString()</em> on an array gives result similar to calling .join(&quot;,&quot;) (puts commas between values of array).</li>
 <li>Calling <em>prototype.toString</em> with an array produces different strings as it doesn&apos;t know about arrays, it would return the following:</li>
 </ul>
 <pre data-role="codeBlock" data-info="js" class="language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token class-name">Object</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -1597,7 +1597,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token comment">// &#x2192; Is toString&apos;s age known? true</span>
 </pre><p>Analysis:<br>
 In our object, we certainly did not list anybody named &apos;<em>toString</em>&apos; in our map but since objects derive from <strong>Object.prototype</strong>, it looks like the property is there. As using plain objects AS maps is dangerous, there are ways to fix this:</p>
-<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// 1. Pass null to Object.create which prevents =resulting</span>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// 1. Pass null to Object.create which prevents resulting</span>
 <span class="token comment">// object deriving from Object.prototype</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;toString&quot;</span> <span class="token keyword">in</span> Object<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// &#x2192; false</span>
@@ -1676,7 +1676,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token comment">// &#x2192; a jute rope</span>
 </pre><h4 class="mume-header" id="the-iterator-interface">The Iterator Interface</h4>
 
-<p>The object given to a for/of loop is expected to be iterable meaning it has a method named with the <em>Symbol.iterator symbol</em> (defined and stored as a property of thr Symbol function)</p>
+<p>The object given to a for/of loop is expected to be iterable meaning it has a method named with the <em>Symbol.iterator symbol</em> (defined and stored as a property of the Symbol function)</p>
 <p>When called, that method should return an object that provides a second interface - <em>iterator</em> which has a next method that returns the <em>next</em> result which itself should be an object with a <em>value</em> property (providing next value if exists) and a <em>done</em> property (false for no more results).</p>
 <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">let</span> okIterator <span class="token operator">=</span> <span class="token string">&quot;OK&quot;</span><span class="token punctuation">[</span>Symbol<span class="token punctuation">.</span>iterator<span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>okIterator<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -1741,6 +1741,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 Let&apos;s set <em>matrix</em> class to be iterable and loop through it:</p>
 <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token class-name">Matrix</span><span class="token punctuation">.</span>prototype<span class="token punctuation">[</span>Symbol<span class="token punctuation">.</span>iterator<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">MatrixIterator</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 <span class="token comment">// Now we can loop over the matrix with for/of</span>
 <span class="token keyword">let</span> matrix <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Matrix</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">x<span class="token punctuation">,</span> y</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token template-string"><span class="token string">`value </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>x<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">,</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>y<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> <span class="token punctuation">{</span>x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> value<span class="token punctuation">}</span> <span class="token keyword">of</span> matrix<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -1750,7 +1751,6 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token comment">// &#x2192; 1 0 value 1,0</span>
 <span class="token comment">// &#x2192; 0 1 value 0,1</span>
 <span class="token comment">// &#x2192; 1 1 value 1,1</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
 </pre><h4 class="mume-header" id="getters-setters-and-statics">Getters, Setters, and Statics</h4>
 
 <p><em>Interfaces</em> often consist mostly of <strong>methods</strong>, but it is also okay to include properties that hold non-function values. For example, Map objects have a <em>size</em> property that tells you how many <em>keys</em> are stored in them.</p>
@@ -1795,7 +1795,64 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <p>Inside a <em>class declaration</em>, methods that have <strong>static</strong> written before their name are stored on the <em>constructor</em>. So the Temperature class allows you to write Temperature.fromFahrenheit(100) to create a temperature using degrees Fahrenheit.</p>
 <h4 class="mume-header" id="inheritance">Inheritance</h4>
 
+<p>Lets say we now need a data structure like a <em>Matrix</em> but rather symmetrical, we could write it from scratch BUT that&apos;ll repeat previous code so instead we&apos;ll do the following:</p>
+<ul>
+<li>Make a <em>new</em> class using JS&apos;s prototype system, which builds on the old class but with new definitions for some properties. The prototype for the new class is derived from the old BUT adds a new definition, in our case, for the set method.</li>
+<li>This is known as <strong>inheritance</strong>. A new class inheriting properties and behaviour from the old class.</li>
+</ul>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// extend says class should be based of Matrix class</span>
+<span class="token keyword">class</span> <span class="token class-name">SymmetricMatrix</span> <span class="token keyword">extends</span> <span class="token class-name">Matrix</span> <span class="token punctuation">{</span>
+<span class="token function">constructor</span><span class="token punctuation">(</span>size<span class="token punctuation">,</span> <span class="token function-variable function">element</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">x<span class="token punctuation">,</span> y</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> undefined<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">super</span><span class="token punctuation">(</span>size<span class="token punctuation">,</span> size<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">x<span class="token punctuation">,</span> y</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>x <span class="token operator">&lt;</span> y<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token function">element</span><span class="token punctuation">(</span>y<span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span> <span class="token keyword">return</span> <span class="token function">element</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
+<span class="token keyword">set</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>x <span class="token operator">!=</span> y<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span>y<span class="token punctuation">,</span> x<span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">let</span> matrix <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SymmetricMatrix</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">x<span class="token punctuation">,</span> y</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token template-string"><span class="token string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>x<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">,</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>y<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>matrix<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 3,2</span>
+</pre><p>Analysis:</p>
+<ul>
+<li><em>extend</em> keyword indicates that the class shouldn&apos;t be directly based on the default <em>Object</em> prototype but rather on some other class, this is called the <em>superclass</em> whereas the derived class (new class) is the <em>subclass</em>.</li>
+<li>The constructor calls its superclass&apos;s constructor through the &apos;super&apos; keyword, this is necessary as the new object needs to behave as a matrix.</li>
+<li>To ensure the matrix is symmetrical, the constructor wraps the element function to swap the coordinates for values below diagonal.</li>
+<li>The set method also uses <em>super</em> but in this case it is to call a specific method from the superclass&apos;s set of methods, this.set would just refer to the <em>new</em> set method which wouldn&apos;t work.</li>
+</ul>
+<p><strong>Super</strong> just provides a way to call methods as they were defined in the superclass.</p>
+<p>Alongside encapsulation and polymorphism, inheritance is a fundamental part of the object-oriented tradition, but is more controversial than the latter two:</p>
+<ul>
+<li>Inheritance ties classes together, thus creating more tangle unlike encapsulation and polymorphism.</li>
+<li>When inheriting from a class, you would need some knowledge on how it works than when simply using it.</li>
+</ul>
+<h4 class="mume-header" id="the-instanceof-operator">The Instanceof Operator</h4>
+
+<p>It is occasionally useful to know whether an object was derived from a specific class:</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>
+<span class="token keyword">new</span> <span class="token class-name">SymmetricMatrix</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token keyword">instanceof</span> <span class="token class-name">SymmetricMatrix</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; true</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">SymmetricMatrix</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token keyword">instanceof</span> <span class="token class-name">Matrix</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; true</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Matrix</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token keyword">instanceof</span> <span class="token class-name">SymmetricMatrix</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; false</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token keyword">instanceof</span> <span class="token class-name">Array</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; true</span>
+</pre><ul>
+<li>The operator will see through inherited types, so a <em>SymmetricMatrix</em> is an instance of <em>Matrix</em>. The operator can also be applied to standard constructors like Array. Almost every object is an instance of Object.</li>
+</ul>
+
+    </div>
+  </body></html>
+<!-- End chapter 6 notes-->
+<!-- Start chapter 7 notes: -->
     </div>
   </body></html>
 

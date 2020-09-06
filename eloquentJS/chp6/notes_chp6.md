@@ -431,3 +431,55 @@ As shown above, the class automatically converts to and from celsius in the fahr
 Inside a *class declaration*, methods that have __static__ written before their name are stored on the *constructor*. So the Temperature class allows you to write Temperature.fromFahrenheit(100) to create a temperature using degrees Fahrenheit.
 
 #### Inheritance
+Lets say we now need a data structure like a *Matrix* but rather symmetrical, we could write it from scratch BUT that'll repeat previous code so instead we'll do the following: 
+- Make a *new* class using JS's prototype system, which builds on the old class but with new definitions for some properties. The prototype for the new class is derived from the old BUT adds a new definition, in our case, for the set method.
+- This is known as __inheritance__. A new class inheriting properties and behaviour from the old class.
+```js
+// extend says class should be based of Matrix class
+class SymmetricMatrix extends Matrix {
+  constructor(size, element = (x, y) => undefined) {
+    super(size, size, (x, y) => {
+      if (x < y) return element(y, x);
+      else return element(x, y);
+    });
+  }
+
+  set(x, y, value) {
+    super.set(x, y, value);
+    if (x != y) {
+      super.set(y, x, value);
+    }
+  }
+}
+
+let matrix = new SymmetricMatrix(5, (x, y) => `${x},${y}`);
+console.log(matrix.get(2, 3));
+// → 3,2
+```
+Analysis:
+- *extend* keyword indicates that the class shouldn't be directly based on the default *Object* prototype but rather on some other class, this is called the *superclass* whereas the derived class (new class) is the *subclass*.
+- The constructor calls its superclass's constructor through the 'super' keyword, this is necessary as the new object needs to behave as a matrix. 
+- To ensure the matrix is symmetrical, the constructor wraps the element function to swap the coordinates for values below diagonal.
+- The set method also uses *super* but in this case it is to call a specific method from the superclass's set of methods, this.set would just refer to the *new* set method which wouldn't work. 
+
+__Super__ just provides a way to call methods as they were defined in the superclass.
+
+Alongside encapsulation and polymorphism, inheritance is a fundamental part of the object-oriented tradition, but is more controversial than the latter two:
+- Inheritance ties classes together, thus creating more tangle unlike encapsulation and polymorphism.
+- When inheriting from a class, you would need some knowledge on how it works than when simply using it.
+
+#### The Instanceof Operator
+It is occasionally useful to know whether an object was derived from a specific class: 
+```js
+console.log(
+  new SymmetricMatrix(2) instanceof SymmetricMatrix);
+// → true
+console.log(new SymmetricMatrix(2) instanceof Matrix);
+// → true
+console.log(new Matrix(2, 2) instanceof SymmetricMatrix);
+// → false
+console.log([1] instanceof Array);
+// → true
+```
+- The operator will see through inherited types, so a *SymmetricMatrix* is an instance of *Matrix*. The operator can also be applied to standard constructors like Array. Almost every object is an instance of Object.
+

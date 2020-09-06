@@ -670,6 +670,59 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <p>Inside a <em>class declaration</em>, methods that have <strong>static</strong> written before their name are stored on the <em>constructor</em>. So the Temperature class allows you to write Temperature.fromFahrenheit(100) to create a temperature using degrees Fahrenheit.</p>
 <h4 class="mume-header" id="inheritance">Inheritance</h4>
 
+<p>Lets say we now need a data structure like a <em>Matrix</em> but rather symmetrical, we could write it from scratch BUT that&apos;ll repeat previous code so instead we&apos;ll do the following:</p>
+<ul>
+<li>Make a <em>new</em> class using JS&apos;s prototype system, which builds on the old class but with new definitions for some properties. The prototype for the new class is derived from the old BUT adds a new definition, in our case, for the set method.</li>
+<li>This is known as <strong>inheritance</strong>. A new class inheriting properties and behaviour from the old class.</li>
+</ul>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// extend says class should be based of Matrix class</span>
+<span class="token keyword">class</span> <span class="token class-name">SymmetricMatrix</span> <span class="token keyword">extends</span> <span class="token class-name">Matrix</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span>size<span class="token punctuation">,</span> <span class="token function-variable function">element</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">x<span class="token punctuation">,</span> y</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> undefined<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">super</span><span class="token punctuation">(</span>size<span class="token punctuation">,</span> size<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">x<span class="token punctuation">,</span> y</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>x <span class="token operator">&lt;</span> y<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token function">element</span><span class="token punctuation">(</span>y<span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">else</span> <span class="token keyword">return</span> <span class="token function">element</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">set</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>x <span class="token operator">!=</span> y<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span>y<span class="token punctuation">,</span> x<span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">let</span> matrix <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SymmetricMatrix</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">x<span class="token punctuation">,</span> y</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token template-string"><span class="token string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>x<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">,</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>y<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>matrix<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; 3,2</span>
+</pre><p>Analysis:</p>
+<ul>
+<li><em>extend</em> keyword indicates that the class shouldn&apos;t be directly based on the default <em>Object</em> prototype but rather on some other class, this is called the <em>superclass</em> whereas the derived class (new class) is the <em>subclass</em>.</li>
+<li>The constructor calls its superclass&apos;s constructor through the &apos;super&apos; keyword, this is necessary as the new object needs to behave as a matrix.</li>
+<li>To ensure the matrix is symmetrical, the constructor wraps the element function to swap the coordinates for values below diagonal.</li>
+<li>The set method also uses <em>super</em> but in this case it is to call a specific method from the superclass&apos;s set of methods, this.set would just refer to the <em>new</em> set method which wouldn&apos;t work.</li>
+</ul>
+<p><strong>Super</strong> just provides a way to call methods as they were defined in the superclass.</p>
+<p>Alongside encapsulation and polymorphism, inheritance is a fundamental part of the object-oriented tradition, but is more controversial than the latter two:</p>
+<ul>
+<li>Inheritance ties classes together, thus creating more tangle unlike encapsulation and polymorphism.</li>
+<li>When inheriting from a class, you would need some knowledge on how it works than when simply using it.</li>
+</ul>
+<h4 class="mume-header" id="the-instanceof-operator">The Instanceof Operator</h4>
+
+<p>It is occasionally useful to know whether an object was derived from a specific class:</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>
+  <span class="token keyword">new</span> <span class="token class-name">SymmetricMatrix</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token keyword">instanceof</span> <span class="token class-name">SymmetricMatrix</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; true</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">SymmetricMatrix</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token keyword">instanceof</span> <span class="token class-name">Matrix</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; true</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Matrix</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token keyword">instanceof</span> <span class="token class-name">SymmetricMatrix</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; false</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token keyword">instanceof</span> <span class="token class-name">Array</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &#x2192; true</span>
+</pre><ul>
+<li>The operator will see through inherited types, so a <em>SymmetricMatrix</em> is an instance of <em>Matrix</em>. The operator can also be applied to standard constructors like Array. Almost every object is an instance of Object.</li>
+</ul>
 
       </div>
       
