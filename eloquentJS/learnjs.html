@@ -69,6 +69,7 @@
               <a class="dropdown-item" href=#chapter-4-objects-and-arrays>Chapter 4</a>
               <a class="dropdown-item" href=#chapter-5-higher-order-functions>Chapter 5</a>
               <a class="dropdown-item" href=#chapter-6-the-secret-life-of-objects>Chapter 6</a>
+              <a class="dropdown-item" href=#chapter-7-project-a-robot>Chapter 7</a>
 
             </div>
           </div>        </li>
@@ -1853,6 +1854,267 @@ console<span class="token punctuation">.</span><span class="token function">log<
   </body></html>
 <!-- End chapter 6 notes-->
 <!-- Start chapter 7 notes: -->
+</head>
+<body for="html-export">
+  <div class="mume markdown-preview  ">
+  <hr>
+<h2 class="mume-header" id="chapter-7-project-a-robot">Chapter 7: Project: A robot</h2>
+
+<p>This chapter&apos;s project is to build an <em>automaton</em>, a little program which performs a task in the virtual world. A mail delivery robot picking up and delivering parcels</p>
+<h4 class="mume-header" id="the-project">The Project:</h4>
+
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">/*    Written by Author of Eloquent Javascript and annotated by 
+  Abdullah Ahmed 3rd Year Computer Science Student UNSW
+*/</span>
+<span class="token comment">// Roads is an array object where each element consists of 2 places seperated by a dash</span>
+<span class="token keyword">var</span> roads <span class="token operator">=</span> <span class="token punctuation">[</span>
+<span class="token comment">// Start location-End location</span>
+<span class="token string">&quot;Alice&apos;s House-Bob&apos;s House&quot;</span><span class="token punctuation">,</span>   <span class="token string">&quot;Alice&apos;s House-Cabin&quot;</span><span class="token punctuation">,</span>
+<span class="token string">&quot;Alice&apos;s House-Post Office&quot;</span><span class="token punctuation">,</span>   <span class="token string">&quot;Bob&apos;s House-Town Hall&quot;</span><span class="token punctuation">,</span>
+<span class="token string">&quot;Daria&apos;s House-Ernie&apos;s House&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;Daria&apos;s House-Town Hall&quot;</span><span class="token punctuation">,</span>
+<span class="token string">&quot;Ernie&apos;s House-Grete&apos;s House&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;Grete&apos;s House-Farm&quot;</span><span class="token punctuation">,</span>
+<span class="token string">&quot;Grete&apos;s House-Shop&quot;</span><span class="token punctuation">,</span>          <span class="token string">&quot;Marketplace-Farm&quot;</span><span class="token punctuation">,</span>
+<span class="token string">&quot;Marketplace-Post Office&quot;</span><span class="token punctuation">,</span>     <span class="token string">&quot;Marketplace-Shop&quot;</span><span class="token punctuation">,</span>
+<span class="token string">&quot;Marketplace-Town Hall&quot;</span><span class="token punctuation">,</span>       <span class="token string">&quot;Shop-Town Hall&quot;</span>
+<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token comment">// Takes the array: roads as edges and splits each element upon the dash</span>
+<span class="token keyword">function</span> <span class="token function">buildGraph</span><span class="token punctuation">(</span><span class="token parameter">edges</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+<span class="token keyword">let</span> graph <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// creates an empty object  `graph`</span>
+<span class="token comment">// Function within function </span>
+<span class="token keyword">function</span> <span class="token function">addEdge</span><span class="token punctuation">(</span><span class="token parameter"><span class="token keyword">from</span><span class="token punctuation">,</span> to</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>graph<span class="token punctuation">[</span><span class="token keyword">from</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">// If I have no entry from that location</span>
+    graph<span class="token punctuation">[</span><span class="token keyword">from</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">// if property named same as &apos;from&apos; doesn&apos;t exist, </span>
+    <span class="token comment">// create it to be an array.</span>
+    graph<span class="token punctuation">[</span><span class="token keyword">from</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>to<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// push the value of  `to` in that array</span>
+
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span> <span class="token comment">// If I do have an entry from that location &apos;to&apos;</span>
+    
+  <span class="token comment">// if property named same as &apos;from&apos; exists, push the value of &apos;to&apos; </span>
+  <span class="token comment">// to the array.</span>
+    graph<span class="token punctuation">[</span><span class="token keyword">from</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>to<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// Since roads is undirected and the datastructure we create is directed &apos;to and from&apos;</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> <span class="token punctuation">[</span><span class="token keyword">from</span><span class="token punctuation">,</span> to<span class="token punctuation">]</span> <span class="token keyword">of</span> edges<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token parameter">road</span> <span class="token operator">=&gt;</span> road<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">&quot;-&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// We add an edge to both: start and the end allowing us to go both ways</span>
+  <span class="token function">addEdge</span><span class="token punctuation">(</span><span class="token keyword">from</span><span class="token punctuation">,</span> to<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">addEdge</span><span class="token punctuation">(</span>to<span class="token punctuation">,</span> <span class="token keyword">from</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">return</span> graph<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// The graph data base we create from roads</span>
+<span class="token keyword">var</span> roadGraph <span class="token operator">=</span> <span class="token function">buildGraph</span><span class="token punctuation">(</span>roads<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/* Some theory: 
+What is state? When we look at our program at the processes it is undergoing and the 
+functions that are being called, all these things being manipulated and stored in 
+memory is referred to as state: Consider where we are and where we go.
+- If we travel somewhere else, we have modified state --&gt; new environment
+- Globals store state as eveything has to store state, we cannot get rid of it
+- There is a slight problem with globals as states and their behaviour of modification, 
+  the scope at which they store state is removed and WE want to have control of state 
+*/</span>
+<span class="token comment">/*
+VillageState: is a class that represents where we are and where we are going
+- It has one method: move() which essentially is a function, each of which 
+expects a &apos;this&apos;, e.g. in our case: this.place, this.parcels, ...
+&apos;this&apos; is our state
+- The constructor sets up the initial state of the object, the first function. Note:
+the second we call VillageState, we&apos;re giving it a place and &apos;parcels&apos;
+- Every subsequent method gets a &apos;this.&apos; that was made in the constructor
+Place and Parcels: 
+- We don&apos;t know what place and parcels is at the moment and we soon try to figure that out 
+place: looks like its gonna be a string (as a key)
+parcels: looks like an array/list because he uses the map method on it, specifically 
+an array of objects (look at the return values AND the &apos;p.place&apos;)
+Calling VillageState: 
+Returns a new state and thus move() is seen as a pure function, it does not 
+change some global state/ doesn&apos;t modify it neither is there any side effects. As such we 
+keep calling and nothing changes.
+- Makes program alot easier to reason about
+- Makes program much more resilient to bugs
+- Makes it alot slower 
+*/</span>
+<span class="token keyword">var</span> VillageState <span class="token operator">=</span> <span class="token keyword">class</span> <span class="token class-name">VillageState</span> <span class="token punctuation">{</span>
+<span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter">place<span class="token punctuation">,</span> parcels</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>place <span class="token operator">=</span> place<span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>parcels <span class="token operator">=</span> parcels<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token function">move</span><span class="token punctuation">(</span><span class="token parameter">destination</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>roadGraph<span class="token punctuation">[</span><span class="token keyword">this</span><span class="token punctuation">.</span>place<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span>destination<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token comment">// p = parcel</span>
+    <span class="token keyword">let</span> parcels <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>parcels<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token parameter">p</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>p<span class="token punctuation">.</span>place <span class="token operator">!=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>place<span class="token punctuation">)</span> <span class="token keyword">return</span> p<span class="token punctuation">;</span>
+      <span class="token keyword">return</span> <span class="token punctuation">{</span>place<span class="token punctuation">:</span> destination<span class="token punctuation">,</span> address<span class="token punctuation">:</span> p<span class="token punctuation">.</span>address<span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token parameter">p</span> <span class="token operator">=&gt;</span> p<span class="token punctuation">.</span>place <span class="token operator">!=</span> p<span class="token punctuation">.</span>address<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">VillageState</span><span class="token punctuation">(</span>destination<span class="token punctuation">,</span> parcels<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token comment">/*
+Usage:
+let first = new VillageState(
+&quot;Post Office&quot;,
+[{place: &quot;Post Office&quot;, address: &quot;Alice&apos;s House&quot;}]
+);
+let next = first.move(&quot;Alice&apos;s House&quot;);
+
+console.log(next.place);
+// &#x2192; Alice&apos;s House
+console.log(next.parcels);
+// &#x2192; []
+console.log(first.place);
+// &#x2192; Post Office
+*/</span>
+
+<span class="token comment">/*
+runRobot(): --&gt; We need to know what the 3 parameters mean 
+- memory: memory is the state of the robot, history of what it knows and has done 
+- state: state is VillageState, the state of the virtual world, how do we know this?
+  We are shown state = state.move() which is a dead giveaway that state --&gt; villageState
+- robot: is some function that returns an object (defined as action) given state 
+  and memory
+- In our function, the method, &apos;move&apos; returns a whole new object
+*/</span>
+<span class="token keyword">function</span> <span class="token function">runRobot</span><span class="token punctuation">(</span><span class="token parameter">state<span class="token punctuation">,</span> robot<span class="token punctuation">,</span> memory</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> turn <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span><span class="token punctuation">;</span> turn<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>state<span class="token punctuation">.</span>parcels<span class="token punctuation">.</span>length <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`Done in </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>turn<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> turns`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">break</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">let</span> action <span class="token operator">=</span> <span class="token function">robot</span><span class="token punctuation">(</span>state<span class="token punctuation">,</span> memory<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  state <span class="token operator">=</span> state<span class="token punctuation">.</span><span class="token function">move</span><span class="token punctuation">(</span>action<span class="token punctuation">.</span>direction<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  memory <span class="token operator">=</span> action<span class="token punctuation">.</span>memory<span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`Moved to </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>action<span class="token punctuation">.</span>direction<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token comment">/* Pretty self explanatory function here: 
+- randomPick() takes an array and returns a random element in the array
+- The index of this element is denoted by choice
+- random() gives a random decimal between 0 - inclusive and 1 exclusive
+- * array.length increases the ceiling, larger range
+*/</span>
+<span class="token keyword">function</span> <span class="token function">randomPick</span><span class="token punctuation">(</span><span class="token parameter">array</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token keyword">let</span> choice <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span> array<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">return</span> array<span class="token punctuation">[</span>choice<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">/*
+Remember: roadGraph was our graph generated from the roads which consists of a 
+place as a key and an array of addresses we can get to from it. In our case, we use:
+state.place and state.addresses.
+- randomRobot returns an object with a random direction by calling randomPick()
+- randomRobot() takes a VillageState as the parameter
+- state.place is the state we&apos;re currently at
+*/</span>
+<span class="token keyword">function</span> <span class="token function">randomRobot</span><span class="token punctuation">(</span><span class="token parameter">state</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token keyword">return</span> <span class="token punctuation">{</span>direction<span class="token punctuation">:</span> <span class="token function">randomPick</span><span class="token punctuation">(</span>roadGraph<span class="token punctuation">[</span>state<span class="token punctuation">.</span>place<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">/*
+VillageState.random takes a parcel count, if none given, it assumes 5 given
+- Whatever number you pick, it will call &apos;randomPick(Object.keys(roadGraph))&apos;
+- Object.keys generates a list of keys of given object, randomly with randomPick
+- In the do/while loop: It says that if we generated equal values for both place 
+  and address, generate another one. (We don&apos;t want the robot to pick up and drop off
+  a parcel at the same house) - solved an edge case.
+- We create a new parcel object with the place and address and push it to list of 
+    parcels
+- We return a new VillageState that starts off at the post office and a list of
+  however many parcels we give it, each of which include a place where we pick them 
+  up and drop them off
+- We would rather call these tasks, as there are 5 things to do contrastingly to &apos;parcels&apos;
+  which obscure our way of thinking and deem them as nouns. We could also do with replacing
+  place as pick-up and address as drop-off
+
+USAGE: runRobot(VillageState.random(), randomRobot);
+*/</span>
+VillageState<span class="token punctuation">.</span><span class="token function-variable function">random</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">parcelCount <span class="token operator">=</span> <span class="token number">5</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token keyword">let</span> parcels <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> parcelCount<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> address <span class="token operator">=</span> <span class="token function">randomPick</span><span class="token punctuation">(</span>Object<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span>roadGraph<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> place<span class="token punctuation">;</span>
+  <span class="token keyword">do</span> <span class="token punctuation">{</span>
+    place <span class="token operator">=</span> <span class="token function">randomPick</span><span class="token punctuation">(</span>Object<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span>roadGraph<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">while</span> <span class="token punctuation">(</span>place <span class="token operator">==</span> address<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  parcels<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>place<span class="token punctuation">,</span> address<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">VillageState</span><span class="token punctuation">(</span><span class="token string">&quot;Post Office&quot;</span><span class="token punctuation">,</span> parcels<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment">/*
+Define a constant mailRoute as opposed to a random route generated by prior functions
+*/</span>
+<span class="token keyword">var</span> mailRoute <span class="token operator">=</span> <span class="token punctuation">[</span>
+<span class="token string">&quot;Alice&apos;s House&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;Cabin&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;Alice&apos;s House&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;Bob&apos;s House&quot;</span><span class="token punctuation">,</span>
+<span class="token string">&quot;Town Hall&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;Daria&apos;s House&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;Ernie&apos;s House&quot;</span><span class="token punctuation">,</span>
+<span class="token string">&quot;Grete&apos;s House&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;Shop&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;Grete&apos;s House&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;Farm&quot;</span><span class="token punctuation">,</span>
+<span class="token string">&quot;Marketplace&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;Post Office&quot;</span>
+<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token comment">/*
+routeRobot() is a function which takes a villageState and memory: a list of locations
+the robot needs to visit, in this function, if it isn&apos;t given/null we assume it to be
+&apos;mailRoute&apos;. It returns an object which tells us the new place and slices previous one off
+USAGE: runRobot(VillageState.random(), routeRobot, []);
+*/</span>
+<span class="token keyword">function</span> <span class="token function">routeRobot</span><span class="token punctuation">(</span><span class="token parameter">state<span class="token punctuation">,</span> memory</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>memory<span class="token punctuation">.</span>length <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  memory <span class="token operator">=</span> mailRoute<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">return</span> <span class="token punctuation">{</span>direction<span class="token punctuation">:</span> memory<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> memory<span class="token punctuation">:</span> memory<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/* You don&apos;t have to understand this code as ot delves more into the depths of 
+datastructures and algorithms - graph theory:
+findRoute: Where am I? And where do I need to go to?
+- Adds all possibilities of every way it can get away from where it is. 
+- Every one of those states, it adds where it can go to from there, etc. 
+- As it adds these steps 1 at a time, as soon as it finds a possivility that satsifies 
+  all the conditions of hitting all the places it was going to; it stops 
+- Alot of the possibilities in the future are not considered
+*/</span> 
+<span class="token keyword">function</span> <span class="token function">findRoute</span><span class="token punctuation">(</span><span class="token parameter">graph<span class="token punctuation">,</span> <span class="token keyword">from</span><span class="token punctuation">,</span> to</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token comment">// A list of objects which starts with a location given as: from, and </span>
+<span class="token comment">// initialise an empty route</span>
+<span class="token keyword">let</span> work <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>at<span class="token punctuation">:</span> <span class="token keyword">from</span><span class="token punctuation">,</span> route<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token comment">// Consider till the end of &apos;work&apos; list </span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> work<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Create an object at instance of current element of work</span>
+  <span class="token keyword">let</span> <span class="token punctuation">{</span>at<span class="token punctuation">,</span> route<span class="token punctuation">}</span> <span class="token operator">=</span> work<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token comment">// Take the graph&apos;s current place </span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> place <span class="token keyword">of</span> graph<span class="token punctuation">[</span>at<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// if that current place is equal to the destination &apos;to&apos;, return route list with</span>
+    <span class="token comment">// additional element: place (being the final)</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>place <span class="token operator">==</span> to<span class="token punctuation">)</span> <span class="token keyword">return</span> route<span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span>place<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// Otherwise we haven&apos;t reached final yet</span>
+    <span class="token comment">// Non-backtracking: Makes sure the places it has visited won&apos;t appear again</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>work<span class="token punctuation">.</span><span class="token function">some</span><span class="token punctuation">(</span><span class="token parameter">w</span> <span class="token operator">=&gt;</span> w<span class="token punctuation">.</span>at <span class="token operator">==</span> place<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// Increase the work array with new object element </span>
+      work<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>at<span class="token punctuation">:</span> place<span class="token punctuation">,</span> route<span class="token punctuation">:</span> route<span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span>place<span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token comment">/*
+this function takes a village Object
+*/</span>
+<span class="token keyword">function</span> <span class="token function">goalOrientedRobot</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span>place<span class="token punctuation">,</span> parcels<span class="token punctuation">}</span><span class="token punctuation">,</span> route</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>route<span class="token punctuation">.</span>length <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> parcel <span class="token operator">=</span> parcels<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>parcel<span class="token punctuation">.</span>place <span class="token operator">!=</span> place<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    route <span class="token operator">=</span> <span class="token function">findRoute</span><span class="token punctuation">(</span>roadGraph<span class="token punctuation">,</span> place<span class="token punctuation">,</span> parcel<span class="token punctuation">.</span>place<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    route <span class="token operator">=</span> <span class="token function">findRoute</span><span class="token punctuation">(</span>roadGraph<span class="token punctuation">,</span> place<span class="token punctuation">,</span> parcel<span class="token punctuation">.</span>address<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">return</span> <span class="token punctuation">{</span>direction<span class="token punctuation">:</span> route<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> memory<span class="token punctuation">:</span> route<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</pre>
+  </div>
+</body></html>
+<!-- End chapter 7 notes-->
+<!-- Start chapter 8 notes-->
     </div>
   </body></html>
 
