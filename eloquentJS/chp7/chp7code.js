@@ -41,7 +41,7 @@ var roads = [
   }
   // The graph data base we create from roads
   var roadGraph = buildGraph(roads);
-  
+  console.log(roadGraph)
   /* Some theory: 
     What is state? When we look at our program at the processes it is undergoing and the 
     functions that are being called, all these things being manipulated and stored in 
@@ -122,6 +122,7 @@ keep calling and nothing changes.
         console.log(`Done in ${turn} turns`);
         break;
       }
+      console.log(state.parcels);
       let action = robot(state, memory);
       state = state.move(action.direction);
       memory = action.memory;
@@ -232,15 +233,24 @@ keep calling and nothing changes.
       }
     }
   }
-  
+  /*
+    this function takes a village Object
+  */
   function goalOrientedRobot({place, parcels}, route) {
     if (route.length == 0) {
       let parcel = parcels[0];
       if (parcel.place != place) {
         route = findRoute(roadGraph, place, parcel.place);
+        // console.log(route)
+
       } else {
         route = findRoute(roadGraph, place, parcel.address);
+        // console.log(route)
+
       }
     }
+    // console.log(JSON.stringify({place, parcels}))
     return {direction: route[0], memory: route.slice(1)};
   }
+
+  runRobot(VillageState.random(), goalOrientedRobot, []);
