@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- FAVICON: -->
+    <link rel="icon" type="image/png" href="../pictures/favicon.png"/>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v4.1.1">
+    <title>JS</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/navbar-fixed/">
+
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  	<link href="../js/prism.css" rel="stylesheet" />
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <!-- OLD style sheet: (from template)-->
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
+    <!-- ALL bootstrap classes: https://www.w3schools.com/bootstrap/bootstrap_ref_all_classes.asp-->
+    <!-- Load up your own custom style sheet-->
+ 
+    <!-- Custom styles for this template -->
+    <link href="navbar-top-fixed.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/custom.css">
+    <link rel="stylesheet" type="text/css" href="./custom.css"> 
+
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <a class="navbar-brand" href="../index.html">Home</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+    <ul class="navbar-nav mr-auto">
+      <!-- Links to our pages-->
+      <li class="nav-item">
+        <div class="btn-group">
+          <a class="nav-link" href="../eloquentJS/learnjs.html"> JavaScript</a>
+
+          <button type="button" class="btn btn-dropdown dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="eloquentJS/learnjs.html">
+            <span class="sr-only" >Toggle Dropdown</span>
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="../eloquentJS/learnjs.html#chapter-1-values-types-and-operators">Chapter 1</a>
+            <a class="dropdown-item" href="../eloquentJS/learnjs.html#chapter-2-program-structure">Chapter 2</a>
+            <a class="dropdown-item" href="../eloquentJS/learnjs.html#chapter-3-functions">Chapter 3</a>
+            <a class="dropdown-item" href="../eloquentJS/learnjs.html#chapter-4-objects-and-arrays">Chapter 4</a>
+            <a class="dropdown-item" href="../eloquentJS/learnjs.html#chapter-5-higher-order-functions">Chapter 5</a>
+            <a class="dropdown-item" href=../eloquentJS/learnjs.html#chapter-6-the-secret-life-of-objects>Chapter 6</a>
+            <a class="dropdown-item" href=../eloquentJS/learnjs.html#chapter-7-project-a-robot>Chapter 7</a>
+
+          </div>
+        </div>     
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../Algos/Algospage.html">Algos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../2511/2511page.html">COMP2511</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../3311/3311page.html">COMP3311</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="../project/project.html">Project</a>
+      </li>
+    </ul>
+
+  </div>
+</nav>
+<!-- INSERT writing and content: (use md files)-->
+<body>
+  <!-- TYPOGRAPHY -->
+<div class="container">
+    <h1  class="border-bottom">Project: reciPieces<small>  by Abdullah </small></h1>
+    <p class="lead">
+    Below is the current project I'm working on as of Sep 2020 <i>reciPieces
+    </i> <small>by Abdullah and Harris</small>.</i> 
+    <!-- Beginning paragraph: -->
+
+    <!-- Follwowing parapgraphs -->
+    
+
+    <!-- Whenever we float, clear it-->
+    <div class="clearfix"></div>
+    <hr>
+
+    <!-- BLOCKQUOTE -->
+    <blockquote class="blockquote">
+        <p>“Wanna order pizza?”</p>
+            <footer class="blockquote-footer"> Abdullah <cite title="Source Title">Every friday</cite></footer>
+    </blockquote>
+    <hr>
+    <!-- Insert the project documentation: -->
+</head>
+<body for="html-export">
+  <div class="mume markdown-preview">
+    <h1 class="mume-header" id="recipieces-application">
+      reciPieces application
+    </h1>
+
+    <h2 class="mume-header" id="changelog">Changelog</h2>
+
+    <ul>
+      <li>Coming soon (hopefully not)</li>
+    </ul>
+    <h2 class="mume-header" id="overview">Overview</h2>
+
+    <p>
+      We want to cut down on fast food expenditure and start learning to cook
+      at home but whenever we try to cook something, we usually never have
+      ingredients required to make the recipe.
+    </p>
+    <p>
+      This is where <strong><em>reciPieces</em></strong> comes in.<br />
+      It is essentially a vanilla javascript based application which takes in
+      a list of ingredients you currently have in your home and matches them
+      with a recipe of your choice, but also listings of
+      <em>cookable</em> recipes based on current ingredients.
+    </p>
+    <ol>
+      <li>
+        <p>Ability to login, register if not registered, and log out</p>
+      </li>
+      <li>
+        <p>Ability to add a recipe</p>
+      </li>
+      <li>
+        <p>Ability to add current ingredients you own</p>
+      </li>
+      <li>
+        <p>Ability to display current ingredients</p>
+      </li>
+      <li>
+        <p>Ability to display a recipe (optional - all)</p>
+      </li>
+      <li>
+        <p>Ability to delete a recipe from recipes</p>
+      </li>
+      <li>
+        <p>Ability to delete an ingredient from current ingredients</p>
+      </li>
+      <li>
+        <p>
+          A <em>matching</em> function which matches current ingredients to a
+          recipe&apos;s<br />
+          ingredients and outputs highest match
+        </p>
+      </li>
+      <li>
+        <p>Ability to reset password if forgotten it</p>
+      </li>
+      <li>
+        <p>Scrape the web for better matching results</p>
+      </li>
+    </ol>
+    <p><strong>Note: 7-8 are optional.</strong></p>
+    <h2 class="mume-header" id="progress-check-in">Progress check-in</h2>
+
+    <h2 class="mume-header" id="iteration-1-test-driven-development">
+      Iteration 1: Test Driven Development
+    </h2>
+
+    <h3 class="mume-header" id="task">Task</h3>
+
+    <p>In this iteration, you are expected to:</p>
+    <ol>
+      <li>
+        <p>
+          Create tests for all of the functions in the agreed upon interface.
+        </p>
+        <p>
+          These should all be in files of the formn <code>*_test.js</code>.
+          See below for more information.
+        </p>
+      </li>
+      <li>
+        <p>
+          Write assumptions that you feel you are making in your
+          interpretation of the specification and of the functions provided.
+        </p>
+        <p>Write these in markdown in <code>assumptions.md</code>.</p>
+      </li>
+    </ol>
+    <p>
+      We are <strong>not</strong> expected to begin developing or completing
+      the actual functions themselves as of yet.
+    </p>
+    <p>
+      The first iteration does not include all capabilities. Further
+      capabilities will be introduced in subsequent iterations.
+    </p>
+    <p>
+      The <code>assumptions.md</code> file described above should be in the
+      root of your repository. If you&apos;ve not written markdown before
+      (which we assume most of you haven&apos;t), it&apos;s not necessary to
+      research the format. Markdown is essentially plain text with a few extra
+      features for basic formatting. You can just stick with plain text if you
+      find that easier.
+    </p>
+    <h2 class="mume-header" id="interface-specifications">
+      Interface specifications:
+    </h2>
+
+    <h3 class="mume-header" id="data-types">Data types</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Variable name</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>named exactly <strong>email</strong></td>
+          <td>string</td>
+        </tr>
+        <tr>
+          <td>named exactly <strong>id</strong></td>
+          <td>integer</td>
+        </tr>
+        <tr>
+          <td>named exactly <strong>password</strong></td>
+          <td>string</td>
+        </tr>
+        <tr>
+          <td>named exactly <strong>token</strong></td>
+          <td>string</td>
+        </tr>
+        <tr>
+          <td>named exactly <strong>user</strong></td>
+          <td>
+            Object containing u_id, email, name_first, name_last, handle_str
+          </td>
+        </tr>
+        <tr>
+          <td>named exactly <strong>users</strong></td>
+          <td>
+            List of <em>objects</em>, where each dictionary contains types
+            u_id, email, name_first, name_last, handle_str
+          </td>
+        </tr>
+        <tr>
+          <td>named exactly <strong>recipe</strong></td>
+          <td>
+            <em>Object</em> Containing list of ingredients, type imageURL,
+            title, method and rating - All are strings except rating
+          </td>
+        </tr>
+        <tr>
+          <td>named exactly <strong>ingredient</strong></td>
+          <td>
+            string in format: &quot;n [units] of [str]&quot; (n is integer,
+            units is a string, str is remainder of the string) - This could
+            also be an object instead.
+          </td>
+        </tr>
+        <tr>
+          <td>named exactly <strong>ingredients</strong></td>
+          <td>List of ingredients</td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 class="mume-header" id="interface">Interface</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Function Name</th>
+          <th>Parameters</th>
+          <th>Return type</th>
+          <th>Exceptions</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>auth_login</td>
+          <td>(email, password)</td>
+          <td>{ u_id, token }</td>
+          <td>
+            <strong>Error</strong>: when any of:
+            <ul>
+              <li>
+                Email entered is not a valid email using the method provided
+                <a
+                  href="https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript"
+                  >here</a
+                >
+                (unless you feel you have a better method)
+              </li>
+              <li>Email entered does not belong to a user</li>
+              <li>Password is not correct</li>
+            </ul>
+          </td>
+          <td>
+            Given a registered users&apos; email and password and generates a
+            valid token for the user to remain authenticated - This is handled
+            by <strong>firebase</strong>&apos;s authentication method
+          </td>
+        </tr>
+        <tr>
+          <td>auth_logout</td>
+          <td>(token)</td>
+          <td>{ is_success }</td>
+          <td>N/A</td>
+          <td>
+            Given an active token, invalidates the taken to log the user out.
+            If a valid token is given, and the user is successfully logged
+            out, it returns true, otherwise false.
+          </td>
+        </tr>
+        <tr>
+          <td>auth_register</td>
+          <td>(email, password, name_first, name_last)</td>
+          <td>{ u_id, token }</td>
+          <td>
+            <strong>Error</strong> when any of:
+            <ul>
+              <li>
+                Email entered is not a valid email using the method provided
+                <a
+                  href="https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript"
+                  >here</a
+                >
+                (unless you feel you have a better method).
+              </li>
+              <li>Email address is already being used by another user</li>
+              <li>Password entered is less than 6 characters long</li>
+              <li>name_first not is between 1 and 50 characters in length</li>
+              <li>name_last is not between 1 and 50 characters in length</li>
+            </ul>
+          </td>
+          <td>
+            Given a user&apos;s first and last name, email address, and
+            password, create a new account for them and return a new token for
+            authentication in their session. A handle is generated that is the
+            concatentation of a lowercase-only first name and last name. If
+            the concatenation is longer than 20 characters, it is cutoff at 20
+            characters. If the handle is already taken, you may modify the
+            handle in any way you see fit to make it unique. - This is handled
+            by <strong>firebase</strong>&apos;s authentication
+          </td>
+        </tr>
+        <tr>
+          <td>add_recipe</td>
+          <td>(ingredients, type, imageURL, title, method rating)</td>
+          <td></td>
+          <td>
+            <strong>Error</strong> When any of:
+            <ul>
+              <li>Recipe already exists</li>
+              <li>Invalid format</li>
+              <li>Rating is below 0</li>
+              <li>[<strong>Add more potential error cases</strong>]</li>
+            </ul>
+          </td>
+          <td>
+            Given a bunch of <strong>strings</strong> and a
+            <strong>rating</strong> integer, some of which - may be optional ,
+            adds an object or map which contains the inputted information
+            regarding the recipe to the database a user has which stores their
+            desired recipes
+          </td>
+        </tr>
+        <tr>
+          <td>add_ingredients</td>
+          <td>(ingredient)</td>
+          <td></td>
+          <td>
+            <strong>Error</strong> When any of:
+            <ul>
+              <li>String greater than 50 characters</li>
+              <li>Empty ingredient string</li>
+              <li>Incorrect format</li>
+              <li><strong>[Add more potential error cases]</strong></li>
+            </ul>
+          </td>
+          <td>
+            Given a non-empty <strong>string</strong> in the following format:
+            <em>&quot;n [units] of str&quot;</em>, it should store this onto a
+            user&apos;s current ingredients database
+          </td>
+        </tr>
+        <tr>
+          <td>delete_recipe</td>
+          <td>(title)</td>
+          <td></td>
+          <td>
+            <strong>Error</strong> When any of:
+            <ul>
+              <li>Empty title string</li>
+              <li>Title not found</li>
+            </ul>
+          </td>
+          <td>
+            Given a <strong>title</strong> of the <em>recipe</em>, delete that
+            recipe from the database
+          </td>
+        </tr>
+        <tr>
+          <td>display_recipe</td>
+          <td>(title)</td>
+          <td>{ recipe }</td>
+          <td>
+            <strong>Error</strong> When any of:
+            <ul>
+              <li>Empty title string</li>
+              <li>Title not found</li>
+            </ul>
+          </td>
+          <td>
+            Given a title of the recipe, return the recipe and diplay it in
+            object format
+          </td>
+        </tr>
+        <tr>
+          <td>display_ingredients</td>
+          <td></td>
+          <td>[ingredients]</td>
+          <td>
+            <strong>Error</strong> When any of:
+            <ul>
+              <li><strong>[Add more potential error cases]</strong></li>
+            </ul>
+          </td>
+          <td>
+            Returns a <strong>list</strong> of current ingredients the user
+            owns
+          </td>
+        </tr>
+        <tr>
+          <td>delete_ingredient</td>
+          <td>(ingredient)</td>
+          <td></td>
+          <td>
+            <strong>Error</strong> When any of:
+            <ul>
+              <li>Ingredient not found</li>
+              <li><strong>[Add more potential error cases]</strong></li>
+            </ul>
+          </td>
+          <td>
+            Deletes an <strong>ingredient</strong> from the list of
+            ingredients, specified by the last part of ingredient string, i.e.
+            <em>don&apos;t need to specify n and [units]</em>
+          </td>
+        </tr>
+        <tr>
+          <td>find_recipes</td>
+          <td>(), (type), (rating)</td>
+          <td>[{ recipe1 }, { recipe2 }, { recipe3 }, ...]</td>
+          <td>
+            <strong>Error</strong> When any of:
+            <ul>
+              <li>Empty recipes/ingredients databases</li>
+              <li><strong>[Add more potential error cases]</strong></li>
+            </ul>
+          </td>
+          <td>
+            Matches the <em>current ingredients</em> you have with recipes in
+            the database and returns a <em>list</em> sorted by:
+            <ul>
+              <li>(No argument) - best percentage word match</li>
+              <li>(type) -Best percentage word match &amp;&amp; type</li>
+              <li>(rating) -Best percentage word match &amp;&amp; rating</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+<!-- End iteration 1-->
+<!-- Insert iteration 2 -->
+
+<!-- End iteration 2-->
+</html>
+    <hr>
+
+<div class="footer">
+  <div class="table">
+    <ul id="horizontal-list">
+      <li><a href="https://www.youtube.com/" class="fa fa-youtube"></a></li>
+      <li><a href="https://www.reddit.com/r/cscareerquestions/" class="fa fa-reddit"></a></li>
+      <li><a href="https://github.com/abdullah527382" class="fa fa-github"></a></li>
+    </ul>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+      <script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+</html>
