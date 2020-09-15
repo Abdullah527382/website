@@ -125,7 +125,324 @@
       Content will mostly be notes and tutorial exercises. Labs and assignments won't be posted till end of course. 
     <!-- Beginning paragraph: -->
     <hr> 
+  </head>
+  <body for="html-export">
+    <div class="mume markdown-preview  ">
+    <h2 class="mume-header" id="week-1">Week 1</h2>
 
+<h4 class="mume-header" id="this-weeks-topics">This week&apos;s topics:</h4>
+
+<ul>
+<li>Data Modeling</li>
+<li>ER Data Model</li>
+<li>Relational Data Model</li>
+<li>ER-to-relational Mapping</li>
+</ul>
+<h4 class="mume-header" id="upcoming-topics">Upcoming topics:</h4>
+
+<ul>
+<li>SQL Data Definition Language</li>
+</ul>
+<h4 class="mume-header" id="db-overview">DB Overview:</h4>
+
+<p><strong>Database application development:</strong></p>
+<ol>
+<li>Analyse application requirements</li>
+<li>Develop a data model meeting these requirements</li>
+<li>Check data model for redundancy</li>
+<li>Implement the data model as relational schema</li>
+<li>Define operations on this model</li>
+<li>Implement operations via SQL and procedural PLs (languages)</li>
+<li>Construct a program interface to these operations</li>
+<li>Monitor performance and tune the schema/operations</li>
+</ol>
+<p>(At some point we would wanna populate the database, could be via the interface)<br>
+We will only consider 2,4,6,7,3</p>
+<p><strong>Client-Server architecture</strong>:<br>
+The typical environment for a DBMS consists of a an actual database which is connected to the server (both of these make the DBMS), the server is a Query engine connecting to clients, examples include: psql (shell for sql commands), python/psycopg2, Java/JDBC, etc.</p>
+<p><strong>Note</strong>:</p>
+<ul>
+<li>Python itself doesn&apos;t have a database link, rather various db links have been created for it, an example listed above; psycopg2.</li>
+<li>An <strong>example</strong>: Some program <a href="http://query.py">query.py</a> contains a sql query, it is sent to the server/query engine via the psycopg2 interface, the query engine then runs the query, looks at the data on the disk, formulates an answer to your query, then sent back as a stream of tuples to your terminal window</li>
+</ul>
+<p>This is how such multiuser databases work i.e. postgreSQl, oracle, mySQL etc.</p>
+<p><strong>Non Client-Server architecture</strong>:<br>
+SQLite is an example of a non client-server system, rather it has notions of a client and a query engine but they are not seperate from each other.</p>
+<p>The <strong>sqlite3</strong> command is a shell in the same sense as psql, it is also compiled with the query engine (seen as a library which is already compiled in with the sqlite shell), which invokes the subsequent commands to the data on the disk, the results are then sent back to the user.</p>
+<p>There is also an API defined for use (to ineract with the query engine library) from programming languages, e.g. python</p>
+<h4 class="mume-header" id="data-modellings">Data Modellings</h4>
+
+<p>What is it? A design process which converts requirements into a data model<br>
+The aims of data modelling are to:</p>
+<ul>
+<li>Describe the info contained within the db</li>
+<li>Describe the relationships between data items</li>
+<li>Describes constraints on data</li>
+</ul>
+<p>There are 2 main kinds of data models. These are logical and physical, the former is abstract and for conceptual design e.g. UML, ER. etc., the latter is record based - tuples, e.g. relational, SQL, etc.</p>
+<p>The strategy is to design using an abstract model e.g. ER but then map to a physical model, e.g. SQL schema from relational</p>
+<p><img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/data-models/Pics/er-rel/data-modelling.png" alt="Strategy"></p>
+<p><strong>Exercise</strong>:<br>
+Consider the Gmail system, develop an informal data model for it by identifying the:</p>
+<ul>
+<li>Data items involved - objects, attributes</li>
+<li>Relationships between these data items</li>
+<li>Constraints on the data and relationship</li>
+</ul>
+<pre data-role="codeBlock" data-info class="language-"><code>Objects:
+messages - title, content, sender*, timestamp, ...
+users - gmail-address, name, password ...
+labels/tags - owner, name, colours, parent*
+settings - name, value, user*, ...
+
+Relationships:
+sender ... messages - users
+recipients ... messages - mail-address
+has-label ... messages - labels
+hierarchy ... child label - parent label
+
+Constraints:
+gmail-addresses are uniqu/distinct
+every message has a timestamp
+every message has a sender
+message content isn&apos;t empty
+etc.
+</code></pre><p>There is no single &quot;best&quot; design for a given application.</p>
+<p>Most important <strong>aspects</strong> of a design (data model):</p>
+<ul>
+<li>correctness (satisfies requirements accurately)</li>
+<li>completeness (all reqs covered, all assumptions explicit)</li>
+<li>consistency (no contradictory statements)</li>
+</ul>
+<p>Potential <strong>inadequacies</strong> in a design:</p>
+<ul>
+<li>omits information that needs to be included</li>
+<li>contains redundant information (&#x21D2; inconsistency)</li>
+<li>leads to an inefficient implementation</li>
+<li>violates syntactic or semantic rules of data model</li>
+</ul>
+<hr>
+<h4 class="mume-header" id="er-data-modelling">ER Data Modelling:</h4>
+
+<p>The world is viewed as a collection of inter-related entities, ER has 3 major modelling constructs:</p>
+<ul>
+<li>Attribute: value describing a property of interest</li>
+<li>Entity: Collection of attributes describing object of interest, made up of several attributes</li>
+<li>Relationship: Association between entitites - objects</li>
+</ul>
+<p>In an ER diagram, the ovals represents attributes, diamonds are relationships and rectanges are entities. <strong>Arrows</strong> represent unique connections whereas <strong>thick lines</strong> could represent sharing. The underline (keys) and hash represent unique attributes</p>
+<p><strong>Key (superkey)</strong> - any set of attributes</p>
+<ul>
+<li>Indicated in ER diagrams by underlining</li>
+<li>Set of values which are distinct over an entity set</li>
+<li>Natural (name + address + birthday) or artificial (SSN)</li>
+</ul>
+<p><strong>Candidate key</strong> - Minimal superkey<br>
+<strong>Primary key</strong> - Candidate key chosen by DB designer</p>
+<p>Example of identifying keys:<br>
+Consider the example of a student, some possibilities are:<br>
+studentID, phone, email, (name, addressm d-o-b), etc.</p>
+<p>(...)</p>
+<p><strong>Subclasses and Inheritance:</strong><br>
+A subclass of entity set A is a set of entities:</p>
+<ul>
+<li>With all attributes of A + its own attributes</li>
+<li>Involved in all of A&apos;s relationships</li>
+</ul>
+<p>Properties of subclasses:</p>
+<ul>
+<li>Overlapping or disjoint (entity in multiple subclasses?)</li>
+<li>Total/partial (does every entity have to also be in a subclass)</li>
+</ul>
+<p>Examples:<br>
+<em>A person may be a doctor and/or patient or neither</em> (Partial participation)<br>
+<em>Every employee is either permanent OR works under a contract</em> (Total participation)</p>
+<p>A summary:<br>
+ER Model is popular for doing conceptual design</p>
+<ul>
+<li>High level and the models are easy to understand</li>
+<li>Good expressive power which can capture many details</li>
+</ul>
+<p>Basic constructs consist of entities, relationships and attributes</p>
+<p>Relational constraints:</p>
+<ul>
+<li>Total/partial, n:m / 1:n / 1:1</li>
+</ul>
+<p>Other constructs: Inheritance hierarchies, weak entities</p>
+<p>We should also consider that many notational variations of ER exist</p>
+<hr>
+<h4 class="mume-header" id="relational-model">Relational model:</h4>
+
+<p>Describes the world as <em>a collection of inter-connected relations/tables</em>, the relational model has 1 structuring mechanism: <strong>relations</strong> (used to model both entities and relationships).</p>
+<p>Each relation has a unique name within a given database and a set of attributes (column headings).<br>
+Each attribute has a unique name within a given relation and an associated domain (set of allowed values)</p>
+<p>Consider a relation R with n attributes:</p>
+<ul>
+<li>A relation schema -&gt; A set of attributes</li>
+<li>Tuple -&gt; List of values</li>
+<li>Instance of R -&gt; set of tuples</li>
+</ul>
+<p>An example of an instance of a relation - Account(branchName, accountNo, balance):</p>
+<pre data-role="codeBlock" data-info class="language-"><code>{
+(Sydney, A-101, 500),
+(Coogee, A-215, 700),
+(Parramatta, A-102, 400),
+(Rouse Hill, A-305, 350),
+(Brighton, A-201, 900),
+(Kingsford, A-222, 700)
+(Brighton, A-217, 750)
+}
+</code></pre><ul>
+<li>Domains are comprised of atomic values - ints, chars, dates, ..</li>
+<li>NULL belongs to all domains</li>
+<li>Each relation has a key</li>
+</ul>
+<p><strong>An ER diagram:</strong><br>
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/rel-model/Pics/er-rel/schemaER.png" alt="ERModel"></p>
+<p><strong>Relational schema:</strong><br>
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/rel-model/Pics/er-rel/schema.png" alt="RSchema"></p>
+<p><strong>Example Database Instance</strong>:<br>
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/rel-model/Pics/er-rel/rel-tables.png" alt="Instance"></p>
+<p><strong>Integrity contraints:</strong><br>
+To represent real-world problems, we will need to describe what <strong>values</strong> are/aren&apos;t allowed and what <strong>combinations</strong> of values are/aren&apos;t allowed.</p>
+<p><strong>Constraints</strong> are logical statements which do this:</p>
+<ul>
+<li>
+<p><strong>Domain constraints:</strong> Limit the set of values attributes can take, e.g. Employee.age is typically an integer</p>
+</li>
+<li>
+<p><strong>Key contraints:</strong> Identify attributes that uniquely identify tuples, e.g. Student(id,...) is guaranteed unique, Class(...,day,time,location,...) is unique too</p>
+</li>
+<li>
+<p><strong>Entity integrity</strong> constraints: Require keys to be fully defined, e.g. Class(...,Mon,2pm,Lyre,...) is well-defined but Class(...,NULL,2pm,Lyre,...) is not well-defined</p>
+</li>
+<li>
+<p><strong>Referential integrity</strong> constraints: Require references to other tables to be valid</p>
+<ul>
+<li>Describe references between relations (tables).</li>
+<li>Are related to a notion of a FK - Foreign Key:</li>
+<li>A set of attributes F in relation R1 is a <strong>foreign key</strong> for R2 if: The attributes in F correspond to the primary key of R2 and the value F in each tuple in R1 is NULL or occurs as a primary key in R2<br>
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/rel-model/Pics/er-rel/fkeys.png" alt="Keys"><br>
+Foreign keys are critical in relational DBs, they provide:
+<ul>
+<li>The glue that links individual relations</li>
+<li>The way to assemble query answers from multiple tables</li>
+<li>the relational representation of ER relationships</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>Relational DATABASES</strong>:<br>
+A relational database schema is:</p>
+<ul>
+<li>A set of relation schemas {R1, R2, R3,...}</li>
+<li>A set of integrity constraints</li>
+</ul>
+<p>A relational database instance is:</p>
+<ul>
+<li>Integrity constraints are all satisfied</li>
+<li>Set of relation instances {r1(R1), r2(R2), ...}<br>
+(SQL / language to express relational schemas)</li>
+</ul>
+<p>An important note:</p>
+<ul>
+<li>In relational DBs, all data must satisfy the constraints otherwise data would fail if they were to cause constraint violation</li>
+</ul>
+<p><strong>Describing relational schemas</strong><br>
+Now we want to use a language to express these schemas, SQL provides a Data Definition Language (DDL) for this:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>CREATE TABLE TableName (
+ attrName1 domain1 constraints1 ,
+ attrName2 domain2 constraints2 ,
+ ...
+ PRIMARY KEY (attri,attrj,...),
+ FOREIGN KEY (attrx,attry,...)
+             REFERENCES
+             OtherTable (attrm,attrn,...), ...
+);
+</code></pre><hr>
+<h4 class="mume-header" id="er-relational-mapping">ER Relational mapping:</h4>
+
+<p>As discussed earlier, a useful strategy for db design is to perfrom the initial data modelling using ER (conceptual), then transforming conceptual design into relational model</p>
+<p><strong>Relational Model vs ER Model</strong><br>
+Some similarities:</p>
+<ul>
+<li>attribute(ER) &#x2245; attribute(Rel), entity(ER) &#x2245; tuple(Rel)</li>
+<li>entity set(ER) &#x2245; relation(Rel), relationship(ER) &#x2245; relation(Rel)</li>
+</ul>
+<p>Some differences:</p>
+<ul>
+<li>Rel uses relations to model entities and relationships</li>
+<li>Rel has no composite or multi-valued attributes (only atomic)</li>
+<li>Rel has no object-oriented notions (e.g. subclasses, inheritance)</li>
+</ul>
+<p>Note:<br>
+Not all aspects of ER can be represented exactly in a relational schema, as such; Some aspects of relational schemas do NOT appear in ER, e.g. domains</p>
+<p><strong>Mapping strong entities</strong><br>
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-rel-mapping/Pics/er-rel/strongent.png" alt="Strong Entity"><br>
+Note: They key is preserved in the mapping</p>
+<p><strong>Mapping weak entities</strong><br>
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-rel-mapping/Pics/er-rel/mapwkent.png" alt="Weak entity"></p>
+<p><strong>Mapping N:M Relationships</strong><br>
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-rel-mapping/Pics/er-rel/mapnnrel.png" alt="N:M relationships"></p>
+<ul>
+<li>These will generalise to N:M:P:Q if multiple entities are involved</li>
+<li>Other multiplicitiesL 1:n:m need to be mapped the same as n:m :p:q</li>
+</ul>
+<p><strong>Mapping 1:N Relationships</strong><br>
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-rel-mapping/Pics/er-rel/map1nrel2.png" alt="1:N Relationship"></p>
+<p><strong>Mapping 1:1 Relationships</strong><br>
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-rel-mapping/Pics/er-rel/map11rel.png" alt="1:1 Relationship"></p>
+<p>No reason to favour one side - example:<br>
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-rel-mapping/Pics/er-rel/map11rel3.png" alt="1:1 Relationship"></p>
+<p><strong>Mapping composite attributes</strong><br>
+These are mapped by concatenation or flattening:<br>
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-rel-mapping/Pics/er-rel/mapstrent.png" alt="Composite"></p>
+<p><strong>Mapping Multi-Valued attributes (MVAs):</strong><br>
+These are mapped by a new table linking values to their entity<br>
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-rel-mapping/Pics/er-rel/mapmva.png" alt="MVAs"><br>
+These then become:<br>
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-rel-mapping/Pics/er-rel/mapmva1.png" alt="ERModel"><br>
+Further Representation:<br>
+The 2 entities:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>Person(12345, John, 12-feb-1990, [red,green,blue])
+Person(54321, Jane, 25-dec-1990, [green,purple])
+</code></pre><p>Would be represented as:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>Person(12345, John, 12-feb-1990)
+Person(54321, Jane, 25-dec-1990)
+FavColour(12345, red)
+FavColour(12345, green)
+FavColour(12345, blue)
+FavColour(54321, green)
+FavColour(54321, purple)
+</code></pre><p><strong>Mapping Subclasses</strong><br>
+There are 3 different approaches to mapping subclasses to tables:</p>
+<ul>
+<li>ER style:
+<ul>
+<li>Each entity becomes a seperate table</li>
+<li>containing attributes of subclass + FK to superclass table<br>
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-rel-mapping/Pics/er-rel/mapsubclass.png" alt="ER style"></li>
+</ul>
+</li>
+<li>Object-oriented
+<ul>
+<li>Each entity becomes a seperate table</li>
+<li>Inheriting all attributes from all superclasses<br>
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-rel-mapping/Pics/er-rel/mapsubclass2.png" alt="OO mapping"></li>
+</ul>
+</li>
+<li>Single table with nulls
+<ul>
+<li>Whole class hierarchy becomes one table</li>
+<li>Containing all attributes of all subclasses (NULL if unused)<br>
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-rel-mapping/Pics/er-rel/mapsubclass3.png" alt="Single-table-with-nulls"></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+  </body></html>
     <!-- Follwowing parapgraphs -->
     
 
