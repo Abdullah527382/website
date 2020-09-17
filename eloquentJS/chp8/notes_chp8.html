@@ -275,7 +275,7 @@ pre[data-line] .line-highlight[data-end]:after {
 <p>Consider some examples:</p>
 <ul>
 <li>Normally when you forget to put let in front of your binding, JS quietly creates a global binding and uses that. In strict mode however, an error is reported instead - This is quite helpful.</li>
-<li>Another change in strict mode is with the <em>this</em> binding, in strict mode - it hols the value; undefined (in functions that are not called as methods) whereas outside of strict mode, <em>this</em> refers to the global scope object. So if you accidentally call a method/constructor incorrectly in strict mode, JS will produce an error as soon as it tries to read something from <em>this</em> rather than writing to the global scope. Example below:</li>
+<li>Another change in strict mode is with the <em>this</em> binding, in strict mode - it holds the value; undefined (in functions that are not called as methods) whereas outside of strict mode, <em>this</em> refers to the global scope object. So if you accidentally call a method/constructor incorrectly in strict mode, JS will produce an error as soon as it tries to read something from <em>this</em> rather than writing to the global scope. Example below:</li>
 </ul>
 <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token comment">// Constructor function call without &quot;new&quot; keyword --&gt; it&apos;s &quot;this&quot; will not refer to a newly constructed object:</span>
 <span class="token keyword">function</span> <span class="token function">Person</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -294,13 +294,13 @@ console<span class="token punctuation">.</span><span class="token function">log<
 </pre><p>In short, putting &quot;use strict&quot; at the top of your program rarely hurts and might help you spot a problem.</p>
 <h4 class="mume-header" id="types">Types:</h4>
 
-<p>JavaScript only rehards types during the running of the program and even then often tries to implicitly convert values to the type it expects.</p>
+<p>JavaScript only regards types during the running of the program and even then often tries to implicitly convert values to the type it expects.</p>
 <p>Many mistakes come from being confused about the kind of value that goes into or comes out of a function, this is why types provide a useful framework for talking about programs.</p>
 <p>When the types of a program are known, it is possible for the computer to check them for you, pointing out mistakes before the program is run. There are several JavaScript dialects that add types to the language and check them. The most popular one is called <strong>TypeScript</strong>.</p>
 <h4 class="mume-header" id="testing">Testing:</h4>
 
 <p>If the language itself is no good in helping us identify mistakes, we&apos;ll have to find them the hard way - testing. A repetitive task such as testing should be done in an automated fashion - write programs which test another program.</p>
-<p>Tests usually take the form of little labeled programs that verify some aspect of your code. For example, a set of tests for the (standard, probably already tested by someone else) toUpperCase method might look like this:</p>
+<p>Tests usually take the form of little labeled programs that verify some aspect of your code. For example, a set of tests for the toUpperCase method might look like this:</p>
 <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token parameter">label<span class="token punctuation">,</span> body</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">body</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`Failed: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>label<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
@@ -337,7 +337,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <li>Sometimes its better to take the bad input and continue running</li>
 <li>Other times, its better to report to the user what went wrong and then give up</li>
 </ul>
-<p>Consider a program <code>prompNumber</code> which takes in user input (a number) and returns it, what should it return on non-numbers?<br>
+<p>Consider a program <code>promptNumber</code> which takes in user input (a number) and returns it, what should it return on non-numbers?<br>
 Common choices would be <code>null, undefined, -1</code>.</p>
 <p>Returning a special value is a good way to indicate an error, but consider the downsides:</p>
 <ul>
@@ -355,7 +355,7 @@ Common choices would be <code>null, undefined, -1</code>.</p>
 
 <p>When a function cannot proceed normally, what we would like to do is just stop what we are doing and immediately jump to a place that knows how to handle the problem. This is what exception <strong>handling</strong> does.</p>
 <p>Exceptions are a way to make it possible for code that runs into a problem to <em>raise/throw</em> an exception (can be any value). Raising one kinda resembles a super charged return from function, it jumps all the way down to the first call that started the current execution (unwinding the stack).</p>
-<p>The power of exceptions likes in the fact that you can set &quot;obstacles&quot; along the stack to <em>catch</em> the exception (as it is zooming down), once youv&apos;e caught this, you may do something to address the problem and then continue to run the program.</p>
+<p>The power of exceptions likes in the fact that you can set &quot;obstacles&quot; along the stack to <em>catch</em> the exception (as it is zooming down), once you&apos;ve caught this, you may do something to address the problem and then continue to run the program.</p>
 <pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">promptDirection</span><span class="token punctuation">(</span><span class="token parameter">question</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token function">prompt</span><span class="token punctuation">(</span>question<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span>result<span class="token punctuation">.</span><span class="token function">toLowerCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token string">&quot;left&quot;</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token string">&quot;L&quot;</span><span class="token punctuation">;</span>
@@ -432,6 +432,67 @@ Common choices would be <code>null, undefined, -1</code>.</p>
 </ul>
 <h4 class="mume-header" id="selective-catching">Selective Catching</h4>
 
+<p>When an exception makes its way all the way to the bottom of the stack without being caught, it is handled by the environment. Typically in browsers, descriptions of errors gets written to the JS consoles.</p>
+<p>When a <code>catch</code> body is entered, all we know is that <em>something</em> in our try body caused an exception (but we don&apos;t know what). JS doesn&apos;t provide direct support for selectively catching exceptions, rather you catch them all or none at all. Consider the example below:</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token punctuation">;</span><span class="token punctuation">;</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> dir <span class="token operator">=</span> <span class="token function">prompDirection</span><span class="token punctuation">(</span><span class="token string">&quot;Where?&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// &#x2190; typo!</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;You chose &quot;</span><span class="token punctuation">,</span> dir<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">break</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;Not a valid direction. Try again.&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre><p>Analysis:</p>
+<ul>
+<li>We have misspelt <code>promptDirection</code> which results in an undefined variable error, the catch block treats the binding error as bad input and hence buries the useful error message with its own within an infinite loop.</li>
+</ul>
+<p>We want to be able to catch specific kind of exceptions, we could perhaps do this by comparing the catch&apos;s <code>message</code> property against the error expected message BUT that is a bad way to write code.</p>
+<p>We should instead do the following:</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">class</span> <span class="token class-name">InputError</span> <span class="token keyword">extends</span> <span class="token class-name">Error</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">promptDirection</span><span class="token punctuation">(</span><span class="token parameter">question</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token function">prompt</span><span class="token punctuation">(</span>question<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>result<span class="token punctuation">.</span><span class="token function">toLowerCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token string">&quot;left&quot;</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token string">&quot;L&quot;</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>result<span class="token punctuation">.</span><span class="token function">toLowerCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token string">&quot;right&quot;</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token string">&quot;R&quot;</span><span class="token punctuation">;</span>
+  <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">InputError</span><span class="token punctuation">(</span><span class="token string">&quot;Invalid direction: &quot;</span> <span class="token operator">+</span> result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</pre><p>Analysis:</p>
+<ul>
+<li>We defined a new type of error.</li>
+<li>The new error class extends <code>Error</code>, it <em>inherits</em> the <code>Error</code> constructor which expects a string message as an argument.</li>
+<li><code>InputError</code> objects behave like <code>Error</code> objects except that they have a different class by which we recognize them.</li>
+</ul>
+<p>Use <code>instanceof</code> to identify the error:</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token punctuation">;</span><span class="token punctuation">;</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> dir <span class="token operator">=</span> <span class="token function">promptDirection</span><span class="token punctuation">(</span><span class="token string">&quot;Where?&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;You chose &quot;</span><span class="token punctuation">,</span> dir<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">break</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>e <span class="token keyword">instanceof</span> <span class="token class-name">InputError</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;Not a valid direction. Try again.&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token keyword">throw</span> e<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre><p>This will catch only instances of InputError and let unrelated exceptions through. If you reintroduce the typo, the undefined binding error will be properly reported.</p>
+<h4 class="mume-header" id="assertions">Assertions</h4>
+
+<p><em>Assertions</em> are checks inside a program that verify that something is the way it is supposed to be, they are used to find programmer mistakes.</p>
+<p>The function <code>firstElement</code> below should never take an empty array</p>
+<pre data-role="codeBlock" data-info="js" class="language-javascript"><span class="token keyword">function</span> <span class="token function">firstElement</span><span class="token punctuation">(</span><span class="token parameter">array</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>array<span class="token punctuation">.</span>length <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">&quot;firstElement called with []&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> array<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</pre><p>Analysis:</p>
+<ul>
+<li>Now the function won&apos;t return undefined but rather blow up your program as soon as you misuse it.</li>
+<li>It is best to reserve assertions for mistakes that are easy to make rather than every possible kind of bad input.</li>
+</ul>
 
       </div>
       

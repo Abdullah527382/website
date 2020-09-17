@@ -17,7 +17,7 @@ JavaScript can be made a little stricter by enabling strict mode. This is done b
 Consider some examples:
 
 - Normally when you forget to put let in front of your binding, JS quietly creates a global binding and uses that. In strict mode however, an error is reported instead - This is quite helpful.
-- Another change in strict mode is with the _this_ binding, in strict mode - it hols the value; undefined (in functions that are not called as methods) whereas outside of strict mode, _this_ refers to the global scope object. So if you accidentally call a method/constructor incorrectly in strict mode, JS will produce an error as soon as it tries to read something from _this_ rather than writing to the global scope. Example below:
+- Another change in strict mode is with the _this_ binding, in strict mode - it holds the value; undefined (in functions that are not called as methods) whereas outside of strict mode, _this_ refers to the global scope object. So if you accidentally call a method/constructor incorrectly in strict mode, JS will produce an error as soon as it tries to read something from _this_ rather than writing to the global scope. Example below:
 
 ```js
 // Constructor function call without "new" keyword --> it's "this" will not refer to a newly constructed object:
@@ -44,7 +44,7 @@ In short, putting "use strict" at the top of your program rarely hurts and might
 
 #### Types:
 
-JavaScript only rehards types during the running of the program and even then often tries to implicitly convert values to the type it expects.
+JavaScript only regards types during the running of the program and even then often tries to implicitly convert values to the type it expects.
 
 Many mistakes come from being confused about the kind of value that goes into or comes out of a function, this is why types provide a useful framework for talking about programs.
 
@@ -54,7 +54,7 @@ When the types of a program are known, it is possible for the computer to check 
 
 If the language itself is no good in helping us identify mistakes, we'll have to find them the hard way - testing. A repetitive task such as testing should be done in an automated fashion - write programs which test another program.
 
-Tests usually take the form of little labeled programs that verify some aspect of your code. For example, a set of tests for the (standard, probably already tested by someone else) toUpperCase method might look like this:
+Tests usually take the form of little labeled programs that verify some aspect of your code. For example, a set of tests for the toUpperCase method might look like this:
 
 ```js
 function test(label, body) {
@@ -96,7 +96,7 @@ When your program is going to be used by anyone else, you usually want the the p
 - Sometimes its better to take the bad input and continue running
 - Other times, its better to report to the user what went wrong and then give up
 
-Consider a program `prompNumber` which takes in user input (a number) and returns it, what should it return on non-numbers?
+Consider a program `promptNumber` which takes in user input (a number) and returns it, what should it return on non-numbers?
 Common choices would be `null, undefined, -1`.
 
 Returning a special value is a good way to indicate an error, but consider the downsides:
@@ -120,7 +120,7 @@ When a function cannot proceed normally, what we would like to do is just stop w
 
 Exceptions are a way to make it possible for code that runs into a problem to _raise/throw_ an exception (can be any value). Raising one kinda resembles a super charged return from function, it jumps all the way down to the first call that started the current execution (unwinding the stack).
 
-The power of exceptions likes in the fact that you can set "obstacles" along the stack to _catch_ the exception (as it is zooming down), once youv'e caught this, you may do something to address the problem and then continue to run the program.
+The power of exceptions likes in the fact that you can set "obstacles" along the stack to _catch_ the exception (as it is zooming down), once you've caught this, you may do something to address the problem and then continue to run the program.
 
 ```js
 function promptDirection(question) {
@@ -203,3 +203,84 @@ Analysis:
 - After the finally block runs, the stack continues unwinding
 
 #### Selective Catching
+
+When an exception makes its way all the way to the bottom of the stack without being caught, it is handled by the environment. Typically in browsers, descriptions of errors gets written to the JS consoles.
+
+When a `catch` body is entered, all we know is that _something_ in our try body caused an exception (but we don't know what). JS doesn't provide direct support for selectively catching exceptions, rather you catch them all or none at all. Consider the example below:
+
+```js
+for (;;) {
+  try {
+    let dir = prompDirection("Where?"); // ← typo!
+    console.log("You chose ", dir);
+    break;
+  } catch (e) {
+    console.log("Not a valid direction. Try again.");
+  }
+}
+```
+
+Analysis:
+
+- We have misspelt `promptDirection` which results in an undefined variable error, the catch block treats the binding error as bad input and hence buries the useful error message with its own within an infinite loop.
+
+We want to be able to catch specific kind of exceptions, we could perhaps do this by comparing the catch's `message` property against the error expected message BUT that is a bad way to write code.
+
+We should instead do the following:
+
+```js
+class InputError extends Error {}
+
+function promptDirection(question) {
+  let result = prompt(question);
+  if (result.toLowerCase() == "left") return "L";
+  if (result.toLowerCase() == "right") return "R";
+  throw new InputError("Invalid direction: " + result);
+}
+```
+
+Analysis:
+
+- We defined a new type of error.
+- The new error class extends `Error`, it _inherits_ the `Error` constructor which expects a string message as an argument.
+- `InputError` objects behave like `Error` objects except that they have a different class by which we recognize them.
+
+Use `instanceof` to identify the error:
+
+```js
+for (;;) {
+  try {
+    let dir = promptDirection("Where?");
+    console.log("You chose ", dir);
+    break;
+  } catch (e) {
+    if (e instanceof InputError) {
+      console.log("Not a valid direction. Try again.");
+    } else {
+      throw e;
+    }
+  }
+}
+```
+
+This will catch only instances of InputError and let unrelated exceptions through. If you reintroduce the typo, the undefined binding error will be properly reported.
+
+#### Assertions
+
+_Assertions_ are checks inside a program that verify that something is the way it is supposed to be, they are used to find programmer mistakes.
+
+The function `firstElement` below should never take an empty array
+
+```js
+function firstElement(array) {
+  if (array.length == 0) {
+    throw new Error("firstElement called with []");
+  }
+  return array[0];
+}
+```
+
+Analysis:
+
+- Now the function won't return undefined but rather blow up your program as soon as you misuse it.
+- It is best to reserve assertions for mistakes that are easy to make rather than every possible kind of bad input.
