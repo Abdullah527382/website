@@ -597,10 +597,10 @@
     <hr>
   <!-- Begin content -->
 
-  </head>
-  <body for="html-export">
-    <div class="mume markdown-preview  ">
-    <h2 class="mume-header" id="week-1-introduction">Week 1 - introduction</h2>
+</head>
+<body for="html-export">
+  <div class="mume markdown-preview  ">
+  <h2 class="mume-header" id="week-1-introduction">Week 1 - introduction</h2>
 
 <h4 class="mume-header" id="11-what-is-the-internet">1.1 - What is the internet</h4>
 
@@ -625,7 +625,7 @@
 <ul>
 <li>Picture frames</li>
 <li>Internet fridges</li>
-<li>Smart lightbulbs</li>
+<li>Smart light bulbs</li>
 <li>Web-enabled toaster</li>
 <li>Web connected cars</li>
 </ul>
@@ -645,7 +645,7 @@ Infrastructure that provides service to applications:</p>
 <p>Provides programming interface to apps:</p>
 <ul>
 <li>Hooks that allow sending and receiving app programs to &quot;connect&quot; to the internet</li>
-<li>Provides service options, analagous to postal service</li>
+<li>Provides service options, analogous to postal service</li>
 </ul>
 <p><em>Consider Alice and Bob exchanging information on the internet, they use an API (Application Programming Interface) to send and receive info. Developers just write code for applications that run on the end systems and they don&apos;t need to worry about the inner workings of the internet.</em></p>
 <p><strong>Protocols</strong>:<br>
@@ -749,50 +749,520 @@ Radio - Signal carried in the EM spectrum i.e. no physical wires needed</p>
 </ul>
 <h4 class="mume-header" id="13-network-core">1.3 - Network core</h4>
 
-<p>A mesh of interconnected routers and switches<br>
-Two forms of switched networks</p>
-<ul>
-<li>
-<p><strong>Circuit switching</strong>: used in the legacy telephone networks e.g. consider wired telephones</p>
+<p>A mesh of interconnected routers and switches, there are two forms of <em>&apos;switched networks&apos;</em></p>
+<p><strong>Circuit switching</strong>: (used in the legacy telephone networks e.g. consider wired telephones)</p>
 <ul>
 <li>End-to-end allocation made between source and destination, there is no sharing (reserved links).</li>
-<li>Physical implementation: FDM vs TDM. FDM: each channel gets a certain frequency. TDM: Each of the users get a small percentage of the capacity</li>
-<li>Timing: There is a delay between connections, circuit doesn&apos;t get established immediately, depends on distance. When the circuit is established, the data rate is established, an endpoint can then start sending info and reaches other endpoint after some time. Once you are done, you tear down the circuit and free resources.</li>
-<li>Why not feasible?
+<li><strong>Physical implementation:</strong> FDM vs TDM. FDM: each channel gets a certain frequency. TDM: Each of the users get a small percentage of the capacity</li>
+<li><strong>Timing</strong>: There is a delay between connections, circuit doesn&apos;t get established immediately, depends on distance. When the circuit is established, the data rate is established, an endpoint can then start sending info and reaches other endpoint after some time. Once you are done, you tear down the circuit and free resources.</li>
+<li>Why not <strong>feasible</strong>?
 <ul>
-<li>Inefficient: Because the cicuits are used exclusively, communications is very bursty i.e. viewing a sequence of web pages. Dedicated circuit cannot be used or shared hence wasteful to dedicate resources and have periods of silence.</li>
-<li>Fixed Data rate: This isnt very useful, computers communcate at diverse rates for e,g, viewing a vdeo vs web browsing.</li>
+<li>Inefficient: Because the circuits are used exclusively, communication is very &apos;bursty&apos; i.e. viewing a sequence of web pages. Dedicated circuit cannot be shared hence wasteful to dedicate resources and have periods of silence.</li>
+<li>Fixed Data rate: This isn&apos;t very useful, computers communicate at diverse rates for e,g, viewing a video vs web browsing.</li>
 <li>Maintenance: not scalable, requires per communication sate needs to be maintained</li>
 </ul>
 </li>
 </ul>
+<p><strong>Packet switching:</strong> (used in the internet)</p>
+<ul>
+<li>Data is sent as chunks of formatted bits (packets - consist of a <strong>header</strong> and a <strong>payload</strong>)
+<ul>
+<li>The <em>header</em> is the first few bytes, it directs the data to the correct destination, it consists of things like the internet address, Age (TTL), checksum (protects header), etc. Think of header as an API</li>
+<li>The <em>payload</em> is the actual data being sent</li>
+</ul>
 </li>
-<li>
-<p><strong>Packet switching:</strong> used in the internet</p>
+<li>Switches <em>&#x201C;forward&#x201D;</em> packets based on their headers</li>
+<li><strong>Timing</strong>: PS also has delays, after it reaches the switch (which decides where the packet is heading - time delay at switch), there is a small delay at the switch, after that, the packet reaches the destination
+<ul>
+<li>The switch could just start transmitting as soon as it processes the header (cut-through switching), this speeds up the delay</li>
+</ul>
+</li>
+<li>Each packet travels independently</li>
+<li>No link resources are reserved in advance (packet switching leverages <strong>statistical multiplexing</strong> - relies on the <em>assumption</em> that not all flows burst at the same time).
+<ul>
+<li><em>What happens if the burst happens at the same time? Potential overload?</em><br>
+We create a <strong>queue/buffer</strong> in the packet switch, it allows us to store some of the packets during <em>transient overload</em>, when no packets are coming, we release the packets. Realistically we can only store a certain amount into the queue, sometimes (low chance) there is overload leading to packet drops.</li>
+</ul>
 </li>
 </ul>
-<h4 class="mume-header" id="14-delay-loos-throughput-in-networks">1.4 - Delay, loos, throughput in networks</h4>
+<p><strong>Packet switching vs Circuit switching</strong>:</p>
+<ul>
+<li>Packet switching:
+<ul>
+<li>Allows more users to use the network</li>
+<li>Great for <em>bursty</em> data (resource sharing and simpler)</li>
+<li>Excessive congestion possible (packet delay and loss), as such, protocols are needed for reliable data transfer</li>
+<li>Packet-switching is seen as on-demand allocation vs circuit switching: reserved resources</li>
+</ul>
+</li>
+</ul>
+<p><strong>The internet structure:</strong><br>
+Access ISPs (Internet Service providers) connect end systems to the the internet, they can be residential, company or university ISPs. Access ISPs are therefore interconnected so that any 2 hosts can send packets to each other.</p>
+<p><em>How would we connect millions of access ISPs together?</em></p>
+<ul>
+<li>We cannot connect ISPs to each other because that does not scale (O(N^2) Connections)</li>
+<li>Instead we can connect each access ISP to <em>global transit ISPs</em> (there are many of these ISPs as competitors), each of which are interconnected themselves through <strong>IXPs</strong> (Internet exchange points via <em>peering links</em>)
+<ul>
+<li><em>Region nets</em> also arise to connect access nets to ISPs</li>
+<li>Content providers such as Google, Microsoft, etc. may run their own network to bring services to end users</li>
+<li>Tier-1 commercial ISPs i.e. Sprint, AT&amp;T, etc. mix with Content provider networks</li>
+</ul>
+</li>
+</ul>
+<h4 class="mume-header" id="14-delay-loss-throughput-in-networks">1.4 - Delay, loss, throughput in networks</h4>
 
-<h4 class="mume-header" id="15-protocol-layers">1.5 - Protocol layers</h4>
+<p>Loss and delays occur when packets <em>queue</em> in router buffers</p>
+<ul>
+<li>Total incoming traffic (packet arrival rate) exceeds output link capacity</li>
+<li>When the packet reaches the head of the queue, it needs to be pushed out - transmission delay</li>
+</ul>
+<p><strong>4 Sources of packet delay</strong></p>
+<ul>
+<li><strong>d_proc</strong> (nodal processing)
+<ul>
+<li>Checks for bit errors, then determines output link</li>
+</ul>
+</li>
+<li><strong>d_queue</strong> (queueing delay - variable/unknown)
+<ul>
+<li>Dependent on congestion level of router</li>
+<li>It is the time spent at output link for transmission</li>
+<li>More insight:
+<ul>
+<li>The queues build up (packets get dropped) when the amount of bits arriving is greater than them leaving the router (bandwidth), <em>If interested checkout queue theory</em></li>
+<li>Traffic intensity = Incoming Traffic/Outgoing traffic</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>d_trans</strong> (transmission delay)
+<ul>
+<li>Depends on length of <strong>packet</strong> - L (in bits) and link bandwidth - R (bps)</li>
+<li>d_trans = L/R</li>
+</ul>
+</li>
+<li><strong>d_prop</strong> (Propagation delay - time taken for packet to actually move)
+<ul>
+<li>Depends on physical length of the <strong>link</strong>, The prop speed in medium 2*10^8m/s</li>
+<li>d_prop = d/s</li>
+</ul>
+</li>
+</ul>
+<p>Note: The link bandwidth is dependent on media/access-technology (and physics) you are using i.e. ADSL has limitations, same with fibre, wireless, etc. Bluetooth has lower bandwidth than wi-fi</p>
+<p><strong>Real internet delays and routes</strong></p>
+<ul>
+<li><code>Traceroute</code> provides delay measurement from source to router along end-end internet path towards dest
+<ul>
+<li>3 probe packets are sent to router <code>i</code> on path TOWARDS dest</li>
+<li>Router <code>i</code> will return packets to sender</li>
+<li>Sender times intervals between transmission and reply</li>
+<li>Usage:
+<ul>
+<li><code>* * *</code> means that either the probe packet is lost or that the dest router has disabled a response (companies sometimes don&apos;t like it when you can trace their network)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Example of <code>traceroute</code> from <code>gaia.cs.umass.edu</code> to <code>www.eurecom.fr</code></p>
+<pre data-role="codeBlock" data-info class="language-"><code>1 cs-gw (128.119.240.254) 1 ms 1 ms 2 ms
+2 border1-rt-fa5-1-0.gw.umass.edu (128.119.3.145) 1 ms 1 ms 2 ms
+3 cht-vbns.gw.umass.edu (128.119.3.130) 6 ms 5 ms 5 ms
+4 jn1-at1-0-0-19.wor.vbns.net (204.147.132.129) 16 ms 11 ms 13 ms
+5 jn1-so7-0-0-0.wae.vbns.net (204.147.136.136) 21 ms 18 ms 18 ms
+6 abilene-vbns.abilene.ucaid.edu (198.32.11.9) 22 ms 18 ms 22 ms
+7 nycm-wash.abilene.ucaid.edu (198.32.8.46) 22 ms 22 ms 22 ms 8 62.40.103.253 (62.40.103.253) 104 ms 109 ms 106 ms
+9 de2-1.de1.de.geant.net (62.40.96.129) 109 ms 102 ms 104 ms
+10 de.fr1.fr.geant.net (62.40.96.50) 113 ms 121 ms 114 ms
+11 renater-gw.fr1.fr.geant.net (62.40.103.54) 112 ms 114 ms 112 ms
+12 nio-n2.cssi.renater.fr (193.51.206.13) 111 ms 114 ms 116 ms
+13 nice.cssi.renater.fr (195.220.98.102) 123 ms 125 ms 124 ms
+14 r3t2-nice.cssi.renater.fr (195.220.98.110) 126 ms 126 ms 124 ms
+15 eurecom-valbonne.r3t2.ft.net (193.48.50.54) 135 ms 128 ms 133 ms
+16 194.214.211.25 (194.214.211.25) 126 ms 128 ms 126 ms
+17 * * *
+18 * * *
+19 fantasia.eurecom.fr (193.55.113.142) 132 ms 128 ms 136 ms
+</code></pre><p>End-to-end delay:</p>
+<ul>
+<li>Sum of all d_nodal along the path where d_nodal = d_proc + d_queue + d_trans + d_props</li>
+</ul>
+<p><strong>Throughput</strong>:<br>
+The rate (bits/s) at which bits transferred between sender and receiver, there are two types of throughput - instantaneous and average. We are more interested in the average throughput.</p>
+<ul>
+<li>Consider 2 throughputs in an N-N path: Rs (server) and Rc (client) connected by a router, we have to consider 2 cases:
+<ul>
+<li>Rs &lt; Rc ... The average end-end throughput will be Rs</li>
+<li>Rs &gt; Rc ... The average end-end throughput will be Rc, in this case a queue will build up at the midway router, even possible packet loss behavior</li>
+</ul>
+</li>
+<li>This limiting link is known as the bottleneck link</li>
+<li>In real world internet scenarios, the bottleneck link is much more complex as it can allow for sharing of connections</li>
+</ul>
+<h4 class="mume-header" id="15-protocol-layers-service-models">1.5 Protocol layers, service models</h4>
 
-<h4 class="mume-header" id="16-networks-under-attack-security">1.6 - Networks under attack: security</h4>
+<p><strong>Layering in networking</strong>:<br>
+What does it take to send the packet across?<br>
+Consider the layers below:</p>
+<ol>
+<li>Prepare data - <strong>Application</strong>
+<ul>
+<li>Supporting network applications (FTP, SMTP, HTTP, ...)</li>
+</ul>
+</li>
+<li>Ensure that packets get to the dst process - <strong>Transport</strong>
+<ul>
+<li>Uses 2 options: TCP, UDP</li>
+</ul>
+</li>
+<li>Deliver packets across the global network - <strong>Network</strong>
+<ul>
+<li>IP (defines actions of these messages), routing protocols</li>
+</ul>
+</li>
+<li>Delivery packets within local network to next hop - <strong>Link</strong>
+<ul>
+<li>Ethernet, 802.111 (wifi), PPP</li>
+</ul>
+</li>
+<li>Bits / packets on wire - <strong>Physical</strong>
+<ul>
+<li>bits &quot;on the wire&quot;</li>
+</ul>
+</li>
+</ol>
+<p>Note: Each layer depends on the layer below/supports the layer above and independent of others</p>
+<p><strong>Benefits of layering:</strong><br>
+Gives us way to create an abstraction, gIves us a middle API, whenever we create a new application, we can take use of that middle API. If we create a new transport medium, we can still use the transport layer.</p>
+<ul>
+<li>A lot of flexibility, Easily create new applications and protocols</li>
+<li>Create new ways to transmit data (All we have to do is create a new link layer)</li>
+<li>Prevent technology in one layer from affecting other layers</li>
+</ul>
+<p><strong>Downsides of layering</strong>:</p>
+<ul>
+<li>Layer N may duplicate lower level functionality</li>
+<li>information hiding may hurt performance e.g. packet loss due to corruption and congestion</li>
+<li>Each layer introduces its own header, this then adds extra overheads (increase in header size).
+<ul>
+<li>E.g. TCP, IP and ethernet headers add up to 54 bytes</li>
+</ul>
+</li>
+<li>Layer violations (when the gains too great to resist)
+<ul>
+<li>Private networks ... NAT</li>
+</ul>
+</li>
+<li>Layer violations (when network doesn&apos;t trust ends)
+<ul>
+<li>Firewalls</li>
+</ul>
+</li>
+</ul>
+<p><strong>Implementation of layers</strong>:<br>
+We need to implement layers across machines such as hosts, routers and switches</p>
+<ul>
+<li><strong>Hosts</strong> are running the applications, therefore we must place application layer protocol on the host. The hosts must also transmit the actual bits on the wire and hence all layers must exist at host</li>
+<li><strong>Routers</strong> take care of the <em>physical layer</em> (transmit bits on the wire), they also deliver packets onto next hop (<em>link layer</em>) and they participate in global delivery (<em>network layer</em>)</li>
+</ul>
+<h4 class="mume-header" id="16-networks-under-attack-security-optional">1.6 - Networks under attack: security (optional)</h4>
 
-<h4 class="mume-header" id="17-history">1.7 - History</h4>
+<h4 class="mume-header" id="17-history-optional">1.7 - History (optional)</h4>
 
 
-    </div>
-    
-    
-  
-  
-  
-  
-  
-  
-  
-  
+  </div>
+</body></html>
+<hr>
+<!-- week02 lecture notes-->
+</head>
+<body for="html-export">
+  <div class="mume markdown-preview  ">
+  <h2 class="mume-header" id="week-2-application-layer-principles-web-email">Week 2 - Application Layer (Principles, Web, Email)</h2>
 
-  </body></html>
+<h4 class="mume-header" id="21-principles-of-network-applications">2.1 - Principles of network applications</h4>
+
+<p>IPC - Interprocess Communication:<br>
+When we execute applications, at the basics we have processes that allow this</p>
+<ul>
+<li>Processes talk to each other through IPC</li>
+<li>On a single machine they would use shared memory</li>
+<li>On across multiple machines (e.g. global internet), they wold use other abstractions (message passing), i.e. <em>sockets</em>.</li>
+</ul>
+<p><strong>Sockets</strong>:<br>
+Process sends and receives messages to and from its socket, think of it like a <strong>door</strong>; <em>Sending process</em> shoves message out the door, it relies on transport infrastructure on the other side of the door to deliver <em>message</em> to <em>socket</em> (at receiving process)</p>
+<ul>
+<li>To receive messages, a process must have an <em>identifier</em></li>
+<li>Host device has a unique 32 bit <strong>IP address</strong>, this itself cannot be used to identify a process.
+<ul>
+<li>Rather we have to use a combination of IP address and <strong>port number</strong> to identify a process e.g. HTTP server (80), Mail server (25), etc.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Client-Server architecture</strong><br>
+Server:</p>
+<ul>
+<li>Exports well-defined request/response interface</li>
+<li>Long-lived process that waits for requests, needs to always be on</li>
+<li>Carry out process requested by client</li>
+<li>Permanent IP address and static ports e.g. http: 80</li>
+<li>Use data centres for scaling</li>
+<li>May communicate with other servers</li>
+</ul>
+<p>Client:</p>
+<ul>
+<li>Short-lived process that makes requests</li>
+<li>Is more of the user side of the app</li>
+<li>Dynamic IP address</li>
+<li>Do not communicate directly with each other</li>
+</ul>
+<p><strong>P2P architecture</strong></p>
+<ul>
+<li>No always-on server</li>
+<li>End systems are called peers and they directly communicate with each other, there is no hierarchy between them (symmetric responsibility). e.g. file sharing, bitTorrent, gaming, blockchain, etc. (any distributed system)</li>
+</ul>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Self scaling networks, each new peer that gets added brings new service capacity as well as new service demands e.g. in file sharing, a person may download but ALSO upload files</li>
+<li>Speed from <em>parellelism</em> and less contention</li>
+<li>Extremely reliable, e.g. if 1 peer dies, there are plenty of others to connect to (redundancy and fault tolerance)</li>
+<li>Geographic distribution e.g. peers all over the world are connected but you&apos;ll get connected to more local peers</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Decentralized control has some problems:
+<ul>
+<li>Peers may make mutually conflicting decisions e.g. in cryptocurrencies</li>
+<li>Uncertainty in state ... No shared memory</li>
+</ul>
+</li>
+<li>Distributed algorithms are complex</li>
+</ul>
+<p><strong>Application layer protocol</strong><br>
+We need to consider the</p>
+<ul>
+<li>Types of messages exchanged i.e. requests or responses</li>
+<li>Message syntax: The format of the messages</li>
+<li>Message semantics: When we define the message, we need ot define the fields as well</li>
+<li>Rules for when and how processes send/respond to messages</li>
+</ul>
+<p>Once we have defined our protocol we need to consider:</p>
+<p>If we want to <strong>open source</strong> our protocol or keep it proprietary, choosing the former would allow it to be defined in RFCs</p>
+<ul>
+<li>Benefits in open source: Anyone can create their own implementation (Client &amp; server in C-S architecture and Peer in P2P architecture) e.g. HTTP, SMTP --&gt; We can design our own browser with HTTP, email for SMTP</li>
+<li>Skype is an example of a proprietary, we can&apos;t design our own Skype client, similar with Slack, etc.</li>
+</ul>
+<p>We should also consider what transport service an app needs:<br>
+<strong>Data integrity:</strong></p>
+<ul>
+<li>Some apps e.g. web transactions, file transfer requires 100% reliable data transfer</li>
+<li>Other apps such as audio, video can tolerate some loss</li>
+</ul>
+<p><strong>Timing:</strong></p>
+<ul>
+<li>Some apps e.g. Interactive online games require low delay to be</li>
+</ul>
+<p><strong>Throughput:</strong></p>
+<ul>
+<li>Some apps require min amount of throughput to be effective e.g. video stream, dial up</li>
+<li>Other apps make use of whatever throughput they get (elastic apps e.g. Email)</li>
+</ul>
+<p><strong>Security:</strong></p>
+<ul>
+<li>Encryption, data integrity, etc.</li>
+</ul>
+<p><strong>Internet transport protocols services</strong><br>
+TCP service:</p>
+<ul>
+<li>reliable transport between sending and receiving process</li>
+<li>flow control: sender won&#x2019;t overwhelm receiver</li>
+<li>congestion control: throttle sender when network overloaded</li>
+<li>does not provide: timing, minimum throughput guarantee, security</li>
+<li>connection-oriented: setup required between client and server processes</li>
+</ul>
+<p>UDP service:</p>
+<ul>
+<li>unreliable data transfer between sending and receiving process</li>
+<li>does not provide: reliability, flow control, congestion control, timing, throughput guarantee, security, or connection setup</li>
+</ul>
+<p><strong>Why use UDP?</strong><br>
+The simplicity of UDP might be favorable for some applications rather than going through the whole process of setting up TCP connections</p>
+<h4 class="mume-header" id="22-web-and-http">2.2 Web and HTTP</h4>
+
+<p>WWW - a distributed database of &quot;pages&quot; linked through hypertext transport protocol.<br>
+Time Berners-lee at CERN first implemented HTTP - 1990.</p>
+<ul>
+<li>Web page consists of objects</li>
+<li>Object can be HTML file, JPEG image, etc.</li>
+<li>Web page consists of a base HTML-file which includes several referenced objects.</li>
+<li>Each object is addressable by a URL (uniform Resource Locator) consisting of a host name and a path:</li>
+</ul>
+<p>protocol://host-name[: port]/path</p>
+<ul>
+<li>Protocol: http, ftp, https, smtp, etc.</li>
+<li>Hostname: DNS name, IP address</li>
+<li>Port (http: 80, https: 443), we don&apos;t need to specify this because 80 and 443 is set as default</li>
+</ul>
+<p>HTTP: hypertext transfer protocol:</p>
+<ul>
+<li>Web&apos;s app layer protocol</li>
+<li>Client/server model -&gt; client: browser that requests, receives and displays web objects. Server: Web server sends objects in response to requests</li>
+<li>Uses TCP because of the inbuilt reliability (List the method...)</li>
+<li>HTTP is stateless and the server doesn&apos;t maintain and previous client information (cookies allows for a state)</li>
+<li>There are 2 types of HTTP messages: requests (ASCII - human readable), responses</li>
+<li>(...)</li>
+<li>The HTTP response message consists of the status line (protocol status code, status phrase), header lines and data</li>
+<li>HTTP is all text:
+<ul>
+<li>This makes the protocol simple (human readable, variable length data, no encoding issues, \r\n,..)</li>
+<li>Not the most efficient as: many protocols use binary fields, headers may come in any order and requires string parsing</li>
+<li>Non text content needs encoding</li>
+</ul>
+</li>
+<li>Request content types: GET, POST, HEAD, PUT, DELETE,...</li>
+</ul>
+<p><em>Why do we need to include Host name in requests when the server has already set up connection?</em></p>
+<p>Different URLs could be hosted on the same server</p>
+<p><strong>User-server State: cookies</strong></p>
+<p>Many websites use cookies, consider the 4 components:</p>
+<ol>
+<li>Cookie header line of HTTP response message</li>
+<li>Cookie header line in next HTTP request message</li>
+<li>Cookie file kept on user&apos;s host, managed by user&apos;s browser</li>
+<li>Back-end database at website</li>
+</ol>
+<p>Bad side of cookies:</p>
+<ul>
+<li>Cookies permit sites to learn a lot of you</li>
+<li>You may supply name and email to sites</li>
+</ul>
+<p><strong>Performance of HTTP</strong>:</p>
+<ul>
+<li>Page load time (PLT ) as the metric (from click until user sees page), this is the key measure of web performance</li>
+<li>Depends on many factors such as page content/struct, protocols involved, net bandwidth and RTT</li>
+</ul>
+<p>User goals and solutions:</p>
+<p>Users would want fast downloads (Improve HTTP) and high availability and as such content providers (cache/replicate the content into web caches helping users to access it faster) into want happy users and a cost effective infrastructure (web hosting, CDNs, datacentres).</p>
+<p>We can improve PLT by:</p>
+<ul>
+<li>Reducing content size for transfer</li>
+<li>Changing HTTP (better use of bandwidth, avoid repeated transfers of same content)</li>
+<li>Move content closer to client</li>
+</ul>
+<p><strong>Non-Persistent HTTP (1.0): response time</strong><br>
+RTT: Time for a small packet to travel from client to server and back</p>
+<p>The non-persistent HTTP <em>response time</em> is equal to 2*RTT (one RTT to establish the TCP connection and one RTT to request and receive an object) + file transmission time (time to transmit file - quite small)</p>
+<p>Non-Persistent connections have some flaws:</p>
+<ul>
+<li>Each TCP connection is closed after the server sends the object (i.e. connection doesn&apos;t persist) thus a brand new connection must be established for each of these connections. This places a significant burden on web servers (which are already handling hundreds of different clients simultaneously)</li>
+<li>As already mentioned, each object suffers a delay of 2*RTT + file-process-time</li>
+</ul>
+<p>Concurrent requests and responses:<br>
+These use multiple connections in <em>parallel</em> (no ordering of responses)</p>
+<p>The use of parallel connections shortens the response time.</p>
+<p>Disadvantages:</p>
+<ul>
+<li>Each transaction opens/closes a new connection, costing time and bandwidth.</li>
+<li>Each new connection has reduced performance because of TCP slow start.</li>
+<li>There is a practical limit on the number of open parallel connections</li>
+</ul>
+<p><strong>Persistent HTTP (1.1 - with pipelining)</strong></p>
+<ul>
+<li>Server leaves TCP connection open after sending response</li>
+<li>Subsequent HTTP messages between same client/server are sent over the same TCP connection</li>
+</ul>
+<p><em>With pipelining:</em> The client issues new request when previous response has been received, 1 RTT for each referenced object</p>
+<p><em>Without pipelining:</em> Client sends requests as soon as it encounters a referenced object (as less as 1 RTT for all ref. objects)</p>
+<p>We can improve PLT in this case by changing HTTP to avoid repeated transfers of same content, use caching and web-proxies</p>
+<p><strong>Web Caching:</strong><br>
+Caching definition - store data in cache memory, something that sits in the middle between the client and the server:</p>
+<p>A web cache is also called a proxy server --&gt; a network entity which satisfies HTTP requests on the behalf of an origin web server. It has its own disk storage and it keeps copies of recently requested objects within that storage</p>
+<p><strong>Caching example</strong><br>
+Suppose a browser is requesting the object <a href="http://www.someschool.edu/campus.gif">http://www.someschool.edu/campus.gif</a>, this is what happens:</p>
+<ol>
+<li>TCP connection established by the browser to the web cache and sends a HTTP request for the object to the cache</li>
+<li>Web cache sees if it has copy of the object stored locally.</li>
+</ol>
+<ul>
+<li>If it does: then the web cache returns the object within an HTTP response message to the client.</li>
+<li>Else:
+<ul>
+<li>The web cache opens a TCP connection to the origin server (<a href="http://www.someschool.edu">www.someschool.edu</a>) and sends a HTTP request for the object, after the server receives the request, it sends the object within an HTTP response to the web cache.</li>
+<li>The web cache receives the object, it then stores the copy to its local storage and sends a copy to the client over the TCP connection.</li>
+</ul>
+</li>
+</ul>
+<p>Benefits of using a web-cache:</p>
+<ul>
+<li>Web cache can substantially reduce the response time for a client request, consider the bottleneck bandwidths between client and origin and that of the cache.</li>
+<li>Web caches can substantially reduce traffic on an institution&#x2019;s access link to the Internet. This saves cost as the institution would not need to upgrade bandwidth</li>
+</ul>
+<p><strong>Conditional GET:</strong><br>
+Solves a problem that caches impose: An object residing in the cache may be stale i.e. the object houses in the web server may have been updated since the copy was cached at the client.</p>
+<p>HTTP has a mechanism that allows cache to verify that its objects are up to date -&gt; Called the &quot;conditional GET&quot; (HTTP request method which uses the GET method and the request messages includes an <em>If-Modified-Since: header line.</em>)</p>
+<p>An example:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>1) Proxy cache sends a request message to a Web server:
+
+GET /fruit/kiwi.gif HTTP/1.1
+Host: www.exotiquecuisine.com
+
+2)  Web server sends a response message with the requested object to the cache
+
+HTTP/1.1 200 OK
+Date: Sat, 3 Oct 2015 15:39:29
+Server: Apache/1.3.0 (Unix)
+Last-Modified: Wed, 9 Sep 2015 09:23:24
+Content-Type: image/gif
+(data data data data data ...)
+
+3) A week later, the same object is requested via cache (it may have now been modified in the past week, the cache performs an &apos;up-to-date check&apos;)
+
+GET /fruit/kiwi.gif HTTP/1.1
+Host: www.exotiquecuisine.com
+If-modified-since: Wed, 9 Sep 2015 09:23:24
+
+4)  Web server sends a response message to the cache:
+
+HTTP/1.1 304 Not Modified
+Date: Sat, 10 Oct 2015 15:39:29
+Server: Apache/1.3.0 (Unix)
+(empty entity body)
+
+</code></pre><p><strong>Improving HTTP performance via Replication:</strong><br>
+Instead of storing data in a single webserver, we can replicate popular websites across many machines</p>
+<ul>
+<li>Content becomes closer to clients</li>
+<li>Spreads loads on servers</li>
+</ul>
+<p>Imposes issues:</p>
+<ul>
+<li>When we want to direct client to particular replica</li>
+<li>Expensive</li>
+</ul>
+<p>We solve this via:</p>
+<ul>
+<li>Using DNS (returns different addresses based on client&apos;s geo location, server load, ...)</li>
+<li>Using CDNs (geographically distributed group of servers which work together to provide fast delivery of Internet content).
+<ul>
+<li>Helps cache content at the network edge (reduce hosting bandwidth)</li>
+<li>For more info: <a href="https://www.cloudflare.com/learning/cdn/what-is-a-cdn/">https://www.cloudflare.com/learning/cdn/what-is-a-cdn/</a></li>
+</ul>
+</li>
+</ul>
+<h4 class="mume-header" id="23-electronic-mail-smtp-pop3-imap">2.3 - Electronic mail (SMTP, POP3, IMAP)</h4>
+
+<p>Note: IMAP and POP3 are optional</p>
+<h4 class="mume-header" id="24-dns">2.4 - DNS</h4>
+
+<h4 class="mume-header" id="25-p2p-applications">2.5 P2P applications</h4>
+
+<h4 class="mume-header" id="26-video-streaming-and-cdns">2.6 Video streaming and CDNs</h4>
+
+<h4 class="mume-header" id="27-socket-programming-with-udp-and-tcp">2.7 Socket programming with UDP and TCP</h4>
+
+
+</div>
+</body></html>
+<!-- week03 lecture notes-->
     <!-- Follwowing parapgraphs -->
     
 

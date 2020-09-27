@@ -577,8 +577,544 @@ There are 3 different approaches to mapping subclasses to tables:</p>
     </div>
   </body></html>
     <!-- Follwowing parapgraphs -->
-    
+    <!-- WEEK02 LECTURE NOTES:-->
+    <hr>
+  </head>
+  <body for="html-export">
+    <div class="mume markdown-preview  ">
+    <h2 class="mume-header" id="week-2">Week 2</h2>
 
+<h4 class="mume-header" id="sql-vs-relational-model">SQL vs Relational Model:</h4>
+
+<p>The relational model is a formal system for describing and manipulating data whereas SQL is a programming language for describing and manipulating data.</p>
+<p>SQL extends the relational model in some ways but it also omits some aspects of the model i.e. some constraints.</p>
+<h4 class="mume-header" id="some-sql-history">Some SQL History:</h4>
+
+<p>Standardized in 1986 but developed at IBM in mid 1970s<br>
+Many DBMSs have been built around SQL: System-R, Oracle, Ingres, ...</p>
+<p>SQL has several sub-languages:</p>
+<ul>
+<li>Meta data definition language i.e. create table</li>
+<li>Meta data update language (modify the objects) i..e drop table</li>
+<li>Data update language i.e insert, update,...</li>
+<li>Query language i..e select ... from .. where</li>
+</ul>
+<h4 class="mume-header" id="sql-syntax">SQL Syntax</h4>
+
+<p>Syntax-wise it is similar to other languages:</p>
+<ul>
+<li>Has keywords, constants, etc.</li>
+<li>Differs with strings compared to other PLs
+<ul>
+<li>&apos;...&apos; are constant strings e.g. &apos;a&apos;, aabc&apos;, &apos;john&apos;&apos;s bag&apos;</li>
+<li>&quot;...&quot; allow non-alpha chars in <strong>identifiers</strong> and make ID&apos;s case sensitive</li>
+</ul>
+</li>
+</ul>
+<p>In the standard, all non-quoted identifiers map to upper case (not in PostgreSQL -&gt; maps to lower case).</p>
+<ul>
+<li>e.g. BankBranches = bankbranches are treated as BANKBRANCHES, this is not applied if they were to be wrapped in double quotes</li>
+</ul>
+<p>Definitions, queries and statements are composed of:</p>
+<ul>
+<li>Comments ... --comment to end of line</li>
+<li>identifiers (db objects such as tables, attributes, views,...Also meta objects such as types, functions, constraints,...) ... similar to regular PLs</li>
+<li>keywords ... a large set (e.g. CREATE, DROP, TABLE)</li>
+<li>data types ... small set of basic types - integer, date, etc.</li>
+<li>operators &amp; constants .. similar to regular PLs e.g. =, &lt;&gt;, &lt;, &lt;=, &gt;, &gt;=, AND, OR, NOT, ...</li>
+</ul>
+<p><strong>Names in SQL:</strong><br>
+Naming conventions:</p>
+<ul>
+<li>relation names: e.g. Branches, Students, ... (use plurals)</li>
+<li>attribute names: e.g. name, code, firstName, ...</li>
+<li>foreign keys: named after either or both of
+<ul>
+<li>table being referenced e.g. staff or staff_id, ...</li>
+<li>relationship being modelled e.g. teaches, ...</li>
+</ul>
+</li>
+</ul>
+<p><strong>Types and constants:</strong><br>
+Numeric types: INTEGER, REAL, NUMERIC(w,d)<br>
+<code>10 -1 3.14159 2e-5 6.022e23</code><br>
+String types: CHAR(n), VARCHAR(n), TEXT<br>
+<code>&apos;John&apos; &apos;some text&apos; &apos;!%#%!$&apos; &apos;O&apos;&apos;Brien&apos; &apos;&quot;&apos; &apos;[A-Z]{4}\d{4}&apos; &apos;a VeRy! LoNg String&apos;</code><br>
+PostgreSQL&apos;s extended strings with &apos;&apos; escapes:<br>
+<code>E&apos;\n&apos; E&apos;O\&apos;Brien&apos; E&apos;[A-Z]{4}\\d{4}&apos; E&apos;John&apos;</code><br>
+Type casting by using <code>Expr::Type</code>:<br>
+<code>e.g. &apos;10&apos;::integer</code><br>
+Logical Types: BOOLEAN, TRUE and FALSE (or true and false)<br>
+Time related types: DATE, TIME, TIMESTAMP, INTERVAL<br>
+<code>&apos;2008-04-13&apos; &apos;13:30:15&apos; &apos;2004-10-19 10:23:54&apos; &apos;Wed Dec 17 07:37:16 1997 PST&apos; &apos;10 minutes&apos; &apos;5 days, 6 hours, 15 seconds&apos;</code><br>
+PostgreSQL&apos;s non-standard types: geometric (point/line/...), currency, IP addresses, JSON, XML, objectIDs, ...</p>
+<p>Users defining their own types:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token comment">-- domains: constrained version of existing type</span>
+
+<span class="token keyword">CREATE</span> DOMAIN Name <span class="token keyword">AS</span> <span class="token keyword">Type</span> <span class="token keyword">CHECK</span> <span class="token punctuation">(</span> <span class="token keyword">Constraint</span> <span class="token punctuation">)</span>
+
+<span class="token comment">-- tuple types: defined for each table</span>
+
+<span class="token keyword">CREATE</span> <span class="token keyword">TYPE</span> Name <span class="token keyword">AS</span> <span class="token punctuation">(</span> AttrName AttrType<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">)</span>
+
+<span class="token comment">-- enumerated type: specify elements and ordering</span>
+
+<span class="token keyword">CREATE</span> <span class="token keyword">TYPE</span> Name <span class="token keyword">AS</span> <span class="token keyword">ENUM</span> <span class="token punctuation">(</span> <span class="token string">&apos;Label&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">)</span>
+</pre><p><strong>Defining Domains/Types</strong>:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token comment">-- positive integers</span>
+<span class="token keyword">CREATE</span> DOMAIN PosInt <span class="token keyword">AS</span> <span class="token keyword">integer</span> <span class="token keyword">CHECK</span> <span class="token punctuation">(</span><span class="token keyword">value</span> <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">-- a UNSW course code</span>
+<span class="token keyword">CREATE</span> DOMAIN CourseCode <span class="token keyword">AS</span> <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span>
+  <span class="token keyword">CHECK</span> <span class="token punctuation">(</span><span class="token keyword">value</span> <span class="token operator">~</span> <span class="token string">&apos;[A-Z]{4}[0-9]{4}&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">-- a UNSW student/staff ID</span>
+<span class="token keyword">CREATE</span> DOMAIN ZID <span class="token keyword">AS</span> <span class="token keyword">integer</span>
+  <span class="token keyword">CHECK</span> <span class="token punctuation">(</span><span class="token keyword">value</span> betweem <span class="token number">1000000</span> <span class="token operator">and</span> <span class="token number">9999999</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">-- standard UNSW grades (FL,PS,CR,DN,HD)</span>
+<span class="token keyword">CREATE</span> DOMAIN Grade <span class="token keyword">AS</span> <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
+  <span class="token keyword">CHECK</span> <span class="token punctuation">(</span><span class="token keyword">value</span> <span class="token operator">in</span> <span class="token punctuation">(</span><span class="token string">&apos;FL&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;PS&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;CR&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;DN&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;HD&apos;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">-- or</span>
+<span class="token keyword">CREATE</span> <span class="token keyword">TYPE</span> Grade <span class="token keyword">AS</span> <span class="token keyword">ENUM</span> <span class="token punctuation">(</span><span class="token string">&apos;FL&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;PS&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;CR&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;DN&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;HD&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p><strong>Tuples and set literals</strong><br>
+Tuple and set constants are both written as:</p>
+<p><code>( val1, val2, val3, ... )</code></p>
+<p>Examples:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> Student<span class="token punctuation">(</span>studeID<span class="token punctuation">,</span> name<span class="token punctuation">,</span> degree<span class="token punctuation">)</span>
+ <span class="token keyword">VALUES</span> <span class="token punctuation">(</span><span class="token number">2177364</span><span class="token punctuation">,</span> <span class="token string">&apos;Jack Smith&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;BSc&apos;</span><span class="token punctuation">)</span>
+        <span class="token comment">-- tuple literal</span>
+
+<span class="token keyword">CONSTRAINT</span> <span class="token keyword">CHECK</span> gender <span class="token operator">IN</span> <span class="token punctuation">(</span><span class="token string">&apos;male&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;female&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;unspecified&apos;</span><span class="token punctuation">)</span>
+                         <span class="token comment">-- set literal</span>
+</pre><h4 class="mume-header" id="sql-expressions">SQL expressions:</h4>
+
+<p>Expressions in SQL involve: objects, constants, operators</p>
+<ul>
+<li>Objects are typically names of attributes (or PLpgSQL variables)</li>
+<li>Operators may be symbols (e.g. +, =) or keywords (e.g. between)</li>
+<li>Constants are similar to other PLs</li>
+<li>Strings as discussed before are quite different &apos;...&apos; rather than &quot;...&quot; and no \n escape chars (besides non-standards) and dollar quoting: <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>O</mi><mo mathvariant="normal" lspace="0em" rspace="0em">&#x2032;</mo></msup><mi>B</mi><mi>r</mi><mi>i</mi><mi>e</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">O&apos;Brien</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.801892em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.801892em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">&#x2032;</span></span></span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">i</span><span class="mord mathdefault">e</span><span class="mord mathdefault">n</span></span></span></span></span> or <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mi>a</mi><mi>g</mi></mrow><annotation encoding="application/x-tex">tag</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.80952em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span></span></span></span>O&apos;Brien<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mi>a</mi><mi>g</mi></mrow><annotation encoding="application/x-tex">tag</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.80952em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span></span></span></span></li>
+</ul>
+<p><strong>Operators</strong>:<br>
+Comparison: <code>&lt; &gt; &lt;= &gt;= = &lt;&gt;</code>, PostgreSQL has != but no ==, We also use: <code>AND, OR, NOT</code><br>
+Note: String comparison (e.g. str1 &lt; str2) uses dictionary order</p>
+<p>Other:<br>
+SQL provides pattern matching with LIKE, NOT LIKE used in conjunction with %, _:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql">name <span class="token operator">LIKE</span> <span class="token string">&apos;Ja%&apos;</span>		<span class="token comment">--name begins with &apos;Ja&apos;</span>
+name <span class="token operator">LIKE</span> <span class="token string">&apos;_i%&apos;</span>		<span class="token comment">--name has &apos;i&apos; as 2nd letter</span>
+name <span class="token operator">LIKE</span> <span class="token string">&apos;%o%o%&apos;</span>	<span class="token comment">--name contains two &apos;o&apos;s</span>
+name <span class="token operator">LIKE</span> <span class="token string">&apos;%ith&apos;</span>	<span class="token comment">--name ends with &apos;ith&apos;</span>
+name <span class="token operator">LIKE</span> <span class="token string">&apos;John&apos;</span>	<span class="token comment">--name equals &apos;John&apos;</span>
+</pre><p>We can also use regexp-based pattern matching (~, !~):</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql">name <span class="token operator">~</span> <span class="token string">&apos;^Ja&apos;</span>		<span class="token comment">--name begins with &apos;Ja&apos;</span>
+name <span class="token operator">~</span> <span class="token string">&apos;^.i&apos;</span>		<span class="token comment">--name has &apos;i&apos; as 2nd letter</span>
+name <span class="token operator">~</span> <span class="token string">&apos;.*o.*o.*&apos;</span>	<span class="token comment">--name contains two &apos;o&apos;s</span>
+name <span class="token operator">~</span> <span class="token string">&apos;ith$&apos;</span>		<span class="token comment">--name ends with &apos;ith&apos;</span>
+name <span class="token operator">~</span> <span class="token string">&apos;John&apos;</span>		<span class="token comment">--name contains &apos;John&apos;</span>
+</pre><p>We should consult our local SQL manual for other operators and functions e.g.</p>
+<ul>
+<li>str1 || str2 ... return concatenation of str1 and str2</li>
+<li>lower(str) ... return lower-case version of str</li>
+<li>substring(str,start,count) ... extract substring from str</li>
+<li>Arithmetic operators: <code>+ - * / abs ceil floor power sqrt sin etc.</code></li>
+<li>Aggregations:
+<ul>
+<li>count(attr) ... number of rows in attr column</li>
+<li>sum(attr) ... sum of values for attr</li>
+<li>avg(attr) ... mean of values for attr</li>
+<li>min/max(attr) ... min/max of values for attr</li>
+</ul>
+</li>
+</ul>
+<p><strong>Conditional expressions:</strong><br>
+We test for NULL with <code>x IS NULL</code> OR <code>x IS NOT NULL</code><br>
+Other ways to handle NULL:<br>
+<code>coalesce(val1,val2,...valn)</code>:</p>
+<ul>
+<li>This returns first non-null value</li>
+</ul>
+<p>E.g.</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">select</span> <span class="token keyword">coalesce</span><span class="token punctuation">(</span>mark<span class="token punctuation">,</span><span class="token string">&apos;??&apos;</span><span class="token punctuation">)</span> <span class="token keyword">from</span> Marks <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+</pre><p><code>nullif(val1,val2)</code>:</p>
+<ul>
+<li>This returns NULL if val1 == val2</li>
+</ul>
+<p>E.g.</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">nullif</span><span class="token punctuation">(</span>mark<span class="token punctuation">,</span><span class="token string">&apos;??&apos;</span><span class="token punctuation">)</span>
+</pre><p>SQL also provides a generalized conditional expression:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">CASE</span>
+ <span class="token keyword">WHEN</span> test1 <span class="token keyword">THEN</span> result1
+ <span class="token keyword">WHEN</span> test2 <span class="token keyword">THEN</span> result2
+ <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+ <span class="token keyword">ELSE</span> result_n
+<span class="token keyword">END</span>
+</pre><p>E.g. case when mark&gt;=85 then &apos;HD&apos; ... else &apos;??&apos; end</p>
+<p>Tests that yield NULL are treated as FALSE</p>
+<p>If no ELSE, and all tests fail, CASE yields NULL</p>
+<h4 class="mume-header" id="sql-data-definition-language">SQL Data Definition Language</h4>
+
+<p>Relation schema: Defines an individual table (consisting of table name, attribute names, attribute domains, keys, ...)</p>
+<p>Database schema: A collection of Relation schemas (defines structure of the whole db and additional constraints).</p>
+<p>Given an informal schema:</p>
+<p align="center">
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/sql-ddl/Pics/sql/uni-rschema.png">
+</p>
+Our database needs more than what we have provided above (relation names, attr names, PKs, FKs). SQL has a DDL which can describe table names, names/domains for attrs, various constraint  types.
+<p>A simple stucture:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> TableName <span class="token punctuation">(</span>
+  attribute1   domain1   constraints1<span class="token punctuation">,</span>
+  attribute2   domain2   constraints2<span class="token punctuation">,</span>
+  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+  <span class="token keyword">table</span><span class="token operator">-</span><span class="token keyword">level</span> constraints<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">)</span>
+<span class="token comment">-- Remove table with: DROP TABLE TableName;</span>
+</pre><p>Defining the <strong>students</strong> table:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> Students <span class="token punctuation">(</span>
+  zid     <span class="token keyword">serial</span><span class="token punctuation">,</span>
+  family  <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  given   <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">40</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  d_o_b   <span class="token keyword">date</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  gender  <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">CHECK</span> <span class="token punctuation">(</span>gender <span class="token operator">in</span> <span class="token punctuation">(</span><span class="token string">&apos;M&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;F&apos;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  degree  <span class="token keyword">integer</span><span class="token punctuation">,</span>
+  <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span>zid<span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token keyword">FOREIGN</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span>degree<span class="token punctuation">)</span> <span class="token keyword">REFERENCES</span> Degrees<span class="token punctuation">(</span>did<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">-- This has much more info than the relation schema</span>
+</pre><p>Alternative example:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">CREATE</span> DOMAIN GenderType <span class="token keyword">AS</span>
+     <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">CHECK</span> <span class="token punctuation">(</span><span class="token keyword">value</span> <span class="token operator">in</span> <span class="token punctuation">(</span><span class="token string">&apos;M&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;F&apos;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> Students <span class="token punctuation">(</span>
+  zid     <span class="token keyword">serial</span> <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span><span class="token punctuation">,</span>
+          <span class="token comment">-- only works if primary key is one attr</span>
+  family  <span class="token keyword">text</span><span class="token punctuation">,</span>  <span class="token comment">-- no need to worry about max length</span>
+  given   <span class="token keyword">text</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  d_o_b   <span class="token keyword">date</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  gender  GenderType<span class="token punctuation">,</span>
+  degree  <span class="token keyword">integer</span> <span class="token keyword">REFERENCES</span> Degrees<span class="token punctuation">(</span>did<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p>Defining the <strong>courses</strong> table:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> Courses <span class="token punctuation">(</span>
+  cid    <span class="token keyword">serial</span><span class="token punctuation">,</span>
+  code   <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span> uhs <span class="token comment">-- uses regexp</span>
+                 <span class="token keyword">CHECK</span> <span class="token punctuation">(</span>code <span class="token operator">~</span> <span class="token string">&apos;[A-Z]{4}[0-9]{4}&apos;</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  term   <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span>
+                 <span class="token keyword">CHECK</span> <span class="token punctuation">(</span>term <span class="token operator">~</span> <span class="token string">&apos;[0-9]{2}T[0-3]&apos;</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  title  <span class="token keyword">text</span> <span class="token keyword">UNIQUE</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span>cid<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p>Defining the <strong>Enrolments</strong> <em>relationship</em></p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> Enrolments <span class="token punctuation">(</span>
+  student <span class="token keyword">integer</span><span class="token punctuation">,</span>
+  course  <span class="token keyword">integer</span><span class="token punctuation">,</span>
+  mark    <span class="token keyword">integer</span> <span class="token keyword">CHECK</span> <span class="token punctuation">(</span>mark <span class="token operator">BETWEEN</span> <span class="token number">0</span> <span class="token operator">AND</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  grade   GradeType<span class="token punctuation">,</span>
+  <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span>student<span class="token punctuation">,</span>course<span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token keyword">FOREIGN</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span>student<span class="token punctuation">)</span>
+                <span class="token keyword">REFERENCES</span> Students<span class="token punctuation">(</span>zid<span class="token punctuation">)</span>
+  <span class="token keyword">FOREIGN</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span>course<span class="token punctuation">)</span>
+                <span class="token keyword">REFERENCES</span> Courses<span class="token punctuation">(</span>cid<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p><strong>Data Integrity</strong>:<br>
+Constraints and types ensure that integrity of data is preserved i.e. No duplicate keys, attributes have valid values, etc... This is critical function of a DBMS</p>
+<p><strong>Another example</strong>:</p>
+<p align="center">
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/sql-ddl/Pics/sql/bank-rschema.png">
+</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> Accounts <span class="token punctuation">(</span>
+  acctNo  <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span><span class="token punctuation">,</span>
+  branch  <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">30</span><span class="token punctuation">)</span> <span class="token keyword">REFERENCES</span> Branches<span class="token punctuation">(</span>name<span class="token punctuation">)</span>
+                      <span class="token keyword">DEFAULT</span> <span class="token string">&apos;Central&apos;</span><span class="token punctuation">,</span>
+  owner   <span class="token keyword">integer</span> <span class="token keyword">REFERENCES</span> Customers<span class="token punctuation">(</span>custID<span class="token punctuation">)</span><span class="token punctuation">,</span>
+  balance <span class="token keyword">float</span> <span class="token keyword">DEFAULT</span> <span class="token number">0.0</span> <span class="token comment">-- Set as DEFAULT 0.0</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> Accounts<span class="token punctuation">(</span>acctNo<span class="token punctuation">,</span>owner<span class="token punctuation">)</span> <span class="token keyword">VALUES</span> <span class="token punctuation">(</span><span class="token string">&apos;A-456&apos;</span><span class="token punctuation">,</span><span class="token number">645342</span><span class="token punctuation">)</span>
+<span class="token comment">-- produces the tuple</span>
+Accounts<span class="token punctuation">(</span><span class="token string">&apos;A-456&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;Central&apos;</span><span class="token punctuation">,</span> <span class="token number">645342</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">)</span>
+</pre><p><strong>Defining Keys:</strong><br>
+<strong>Primary keys</strong> imply NOT NULL UNIQUE for all attributes in key, if it is 1 attr, then defined as attr constraint else defined in table constraint.</p>
+<p><strong>Foreign Keys</strong>, can omit the FOREIGN KEY keywords in attr constraint, we should always specify the corresponding PK attr in FK constraint e.g.</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql">customer <span class="token keyword">integer</span>
+      <span class="token keyword">FOREIGN</span> <span class="token keyword">KEY</span> <span class="token keyword">REFERENCES</span> Customers<span class="token punctuation">(</span>customerNo<span class="token punctuation">)</span>
+</pre><p>Example of fails:</p>
+<ul>
+<li>Defining primary keys assures entity integrity, below fails because no course specified</li>
+</ul>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> Enrolments<span class="token punctuation">(</span>student<span class="token punctuation">,</span>course<span class="token punctuation">,</span>mark<span class="token punctuation">,</span>grade<span class="token punctuation">)</span>
+     <span class="token keyword">VALUES</span> <span class="token punctuation">(</span><span class="token number">5123456</span><span class="token punctuation">,</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span> <span class="token boolean">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><ul>
+<li>Defining foreign keys assures referential integrity. Below fails if no customer with given ID or branch &apos;nowhere&apos;</li>
+</ul>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> Accounts<span class="token punctuation">(</span>acctNo<span class="token punctuation">,</span> owner<span class="token punctuation">,</span> branch<span class="token punctuation">,</span> balance<span class="token punctuation">)</span>
+          <span class="token keyword">VALUES</span> <span class="token punctuation">(</span><span class="token string">&apos;A-123&apos;</span><span class="token punctuation">,</span> <span class="token number">765432</span><span class="token punctuation">,</span> <span class="token string">&apos;Nowhere&apos;</span><span class="token punctuation">,</span> <span class="token number">5000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p>Deletion is a bit more tricky because tuples refer to other tuples, in such cases we could: 1. Reject the deletion (Common method), 2. set-NULL the FKs in account records, 3. Cascade the deletion then remove Acct records (BAD)</p>
+<p><strong>Attribute value constraints</strong><br>
+NOT NULL and UNIQUE are special constraints on attributes.<br>
+We use the below mechanism for specifying <strong>attribute constraints</strong>:<br>
+<code>attrName type CHECK ( Condition )</code> where condition is a boolean expression<br>
+Example:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> Example
+<span class="token punctuation">(</span>
+ gender <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>  <span class="token keyword">CHECK</span> <span class="token punctuation">(</span>gender <span class="token operator">IN</span> <span class="token punctuation">(</span><span class="token string">&apos;M&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;F&apos;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+ Xvalue <span class="token keyword">integer</span>  <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+ Yvalue <span class="token keyword">integer</span>  <span class="token keyword">CHECK</span> <span class="token punctuation">(</span>Yvalue <span class="token operator">&gt;</span> Xvalue<span class="token punctuation">)</span><span class="token punctuation">,</span>
+ Zvalue <span class="token keyword">float</span>    <span class="token keyword">CHECK</span> <span class="token punctuation">(</span>Zvalue <span class="token operator">&gt;</span>
+                        <span class="token punctuation">(</span><span class="token keyword">SELECT</span> <span class="token function">MAX</span><span class="token punctuation">(</span>price<span class="token punctuation">)</span>
+                         <span class="token keyword">FROM</span>   Sells<span class="token punctuation">)</span>
+                <span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p>Constraint in an SQL table can be optionally <em>named</em><br>
+<code>CONSTRAINT constraintName constraint</code></p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> Example
+<span class="token punctuation">(</span>
+ gender <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">CONSTRAINT</span> GenderCheck
+                <span class="token keyword">CHECK</span> <span class="token punctuation">(</span>gender <span class="token operator">IN</span> <span class="token punctuation">(</span><span class="token string">&apos;M&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;F&apos;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+ Xvalue <span class="token keyword">integer</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+ Yvalue <span class="token keyword">integer</span> <span class="token keyword">CONSTRAINT</span> XYOrder
+                <span class="token keyword">CHECK</span> <span class="token punctuation">(</span>Yvalue <span class="token operator">&gt;</span> Xvalue<span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><h4 class="mume-header" id="relational-database-management-systems">Relational Database Management Systems:</h4>
+
+<p>RDBMS is a software designed to support large scale data intensive apps, allows for a high level description of the data. We have high-level access/retrieval to this data that is stored efficiently. It supports multiple simultaneous users and operations. It is also maintains reliable access to the stored data, DBs provide persistent storage</p>
+<p>In this course, we will be using PostgreSQL (client-server DBMS) and SQLite (serverless DBMS)</p>
+<p><strong>Managing databases:</strong><br>
+Shell commands to <em>create/remove</em> dbs:</p>
+<ul>
+<li><code>createdb dbname</code> ... create a new totally empty database</li>
+<li><code>dropdb dbname</code> ... remove all data associated with a DB</li>
+</ul>
+<p>Shell commands to <em>dump/restore</em> database contents:</p>
+<ul>
+<li><code>pg_dump dbname &gt; dumpfile</code></li>
+<li><code>psql dbname -f dumpfile</code></li>
+</ul>
+<p><strong>Managing tables:</strong></p>
+<p>SQL statements:</p>
+<p><code>CREATE TABLE table ( Attributes+Constraints )</code><br>
+<code>ALTER TABLE table TableSchemaChanges</code><br>
+<code>DROP TABLE table(s) [ CASCADE ]</code><br>
+<code>TRUNCATE TABLE table(s) [ CASCADE ]</code></p>
+<p>Note: The TRUNCATE TABLE command deletes the data inside a table, but not the table itself.</p>
+<p>The CASCADE keyword will:</p>
+<ul>
+<li>Drop objects with DROP keyword</li>
+<li>Truncates tables with TRUNCATE keyword</li>
+</ul>
+<p><strong>Managing Tuples</strong><br>
+SQL statements:</p>
+<ul>
+<li><code>INSERT INTO table ( Attrs ) VALUES Tuple(s)</code></li>
+<li><code>DELETE FROM table WHERE condition</code></li>
+<li><code>UPDATE table SET AttrValueChanges WHERE condition</code></li>
+</ul>
+<p>Note:</p>
+<ul>
+<li><code>Attrs = ( attr1,, ... attrn )</code> and <code>Tuple = ( val1,, ... valn )</code></li>
+<li>AttrValueChanges is a comma-separated list of: attrnames which are expressions (Each list element assigns a new value to a given attribute).</li>
+</ul>
+<p>Example below:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> Student <span class="token punctuation">(</span>
+  zid     <span class="token keyword">serial</span><span class="token punctuation">,</span> <span class="token comment">-- Automatically geenrates unique integer values</span>
+  family  <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  given   <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">40</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  d_o_b   <span class="token keyword">date</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+  gender  <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">check</span> <span class="token punctuation">(</span>gender <span class="token operator">in</span> <span class="token punctuation">(</span><span class="token string">&apos;M&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;F&apos;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  degree  <span class="token keyword">integer</span><span class="token punctuation">,</span>
+  <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span>zid<span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token keyword">FOREIGN</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span>degree<span class="token punctuation">)</span> <span class="token keyword">REFERENCES</span> Degrees<span class="token punctuation">(</span>did<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><h4 class="mume-header" id="mapping-er-to-sql">Mapping ER to SQL:</h4>
+
+<p>SQL schemas are essentially more detailed versions of relational schemas.</p>
+<p>The mapping is much the same, except that</p>
+<ul>
+<li>You need to provide more details on allowed values</li>
+<li>You can map some ideas from ER that are not in relational schemas</li>
+</ul>
+<p>Differences between SQL and ER models:</p>
+<ul>
+<li>SQL uses tables to model entities and relationships</li>
+<li>SQL has no composite or multi-valued attributes (only atomic)</li>
+<li>SQL has no object-oriented notions (e.g. subclasses, inheritance)</li>
+</ul>
+<p><strong>EXAMPLES</strong>:<br>
+<strong>Mapping strong entities:</strong></p>
+<p align="center">
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-sql-mapping/Pics/er-sql/strongent.png">
+</p>
+<p><strong>Mapping weak entities:</strong></p>
+<p align="center">
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-sql-mapping/Pics/er-sql/mapwkent.png">
+</p>
+<p><strong>Mapping N:M Relationships</strong>:</p>
+<p align="center">
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-sql-mapping/Pics/er-rel/mapnnrel.png">
+</p>
+```sql
+create table Customers (
+  custNo  serial primary key,
+  name    text not null,
+  address text  -- don&apos;t need to know customer&apos;s address
+);
+create table Accounts (
+  acctNo   char(5) check (acctNo ~ &apos;[A-Z]-[0-9]{3}&apos;),
+  title    text not null,    -- acctNos are like &apos;A-123&apos;
+  balance  float default 0.0,
+  primary key (acctNo)
+);
+create table Owns (
+  customer_id integer references Customers(custNo),
+  account_id  char(5) references Accounts(acctNo),
+  last_accessed timestamp,
+  primary key (customer_id, account_id)
+);
+```
+<p><strong>Mapping 1:N Relationships</strong></p>
+<p align="center">
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-sql-mapping/Pics/er-rel/map1nrel2.png">
+</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">create</span> <span class="token keyword">table</span> Branches <span class="token punctuation">(</span>
+  branchNo <span class="token keyword">serial</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span>
+  address  <span class="token keyword">text</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  assets   currency
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">create</span> <span class="token keyword">table</span> Customers <span class="token punctuation">(</span>
+  custNo  <span class="token keyword">serial</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span>
+  name    <span class="token keyword">text</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  address <span class="token keyword">text</span><span class="token punctuation">,</span>
+  hasHome <span class="token keyword">integer</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span> <span class="token comment">-- total participation</span>
+  joined  <span class="token keyword">date</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  <span class="token keyword">foreign</span> <span class="token keyword">key</span> <span class="token punctuation">(</span>hasHome<span class="token punctuation">)</span> <span class="token keyword">references</span> Branches<span class="token punctuation">(</span>branchNo<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><hr>
+<p><strong>Mapping 1:1 Relationships</strong></p>
+<p align="center">
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-sql-mapping/Pics/er-rel/map11rel.png">
+</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">create</span> <span class="token keyword">table</span> Branches <span class="token punctuation">(</span>
+  branchNo <span class="token keyword">serial</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span>
+  address  <span class="token keyword">text</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  assets   currency          <span class="token comment">-- a new branch</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>                             <span class="token comment">--    may have no accounts</span>
+<span class="token keyword">create</span> <span class="token keyword">table</span> Managers <span class="token punctuation">(</span>
+  empNo    <span class="token keyword">serial</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span>
+  name     <span class="token keyword">text</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  salary   currency <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span> <span class="token comment">-- when first employed,</span>
+                              <span class="token comment">--    must have a salary</span>
+  manages  <span class="token keyword">integer</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>  <span class="token comment">-- total participation</span>
+  <span class="token keyword">foreign</span> <span class="token keyword">key</span> <span class="token punctuation">(</span>manages<span class="token punctuation">)</span> <span class="token keyword">references</span> Branches<span class="token punctuation">(</span>branchNo<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><hr>
+<p><strong>Mapping n-way Relationships</strong></p>
+<p align="center">
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-sql-mapping/Pics/er-sql/map-n-way.png">
+</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">create</span> <span class="token keyword">table</span> Customers <span class="token punctuation">(</span>
+  custNo   <span class="token keyword">serial</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">create</span> <span class="token keyword">table</span> Accounts <span class="token punctuation">(</span>
+  acctNo   <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">create</span> <span class="token keyword">table</span> ATMs <span class="token punctuation">(</span>
+  atmID    <span class="token keyword">serial</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span>
+  cash     currency <span class="token keyword">check</span> <span class="token punctuation">(</span>cash <span class="token operator">&gt;=</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  location <span class="token keyword">text</span> <span class="token operator">not</span> <span class="token boolean">null</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">create</span> <span class="token keyword">table</span> Withdrawal <span class="token punctuation">(</span>
+  customer_id  <span class="token keyword">integer</span> <span class="token keyword">references</span> Customers<span class="token punctuation">(</span>custNo<span class="token punctuation">)</span><span class="token punctuation">,</span>
+  account_id   <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token keyword">references</span> Accounts<span class="token punctuation">(</span>acctNo<span class="token punctuation">)</span><span class="token punctuation">,</span>
+  atm_id       <span class="token keyword">integer</span> <span class="token keyword">references</span> ATMs<span class="token punctuation">(</span>atmID<span class="token punctuation">)</span><span class="token punctuation">,</span>
+  amount       currency <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  <span class="token keyword">when</span>         <span class="token keyword">timestamp</span> <span class="token keyword">default</span> <span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token keyword">primary</span> <span class="token keyword">key</span>  <span class="token punctuation">(</span>customer_id<span class="token punctuation">,</span>account_id<span class="token punctuation">,</span>atm_id<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><hr>
+<p><strong>Mapping Composite Attributes</strong></p>
+<p align="center">
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-sql-mapping/Pics/er-rel/mapstrent.png">
+</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token comment">-- Version 1: concatenated</span>
+<span class="token keyword">create</span> <span class="token keyword">table</span> People <span class="token punctuation">(</span>
+  ssn     <span class="token keyword">integer</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span>
+  name    <span class="token keyword">text</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  address <span class="token keyword">text</span> <span class="token operator">not</span> <span class="token boolean">null</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">-- Version 2: flattened</span>
+<span class="token keyword">create</span> <span class="token keyword">table</span> People <span class="token punctuation">(</span>
+  ssn     <span class="token keyword">integer</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span>
+  given   <span class="token keyword">text</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  family  <span class="token keyword">text</span><span class="token punctuation">,</span>
+  number  <span class="token keyword">integer</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  street  <span class="token keyword">text</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  suburb  <span class="token keyword">text</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  pcode   <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span> <span class="token operator">not</span> <span class="token boolean">null</span> <span class="token keyword">check</span> <span class="token punctuation">(</span>pcode <span class="token operator">~</span> <span class="token string">&apos;[0-9]{4}&apos;</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><hr>
+<p><strong>Mapping Multi-valued Attributes (MVAs)</strong></p>
+<p align="center">
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-sql-mapping/Pics/er-rel/mapmva.png">
+</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">create</span> <span class="token keyword">table</span> People <span class="token punctuation">(</span>
+  ssn      <span class="token keyword">integer</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span>
+  name     <span class="token keyword">text</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  birthday <span class="token keyword">date</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">create</span> <span class="token keyword">table</span> FavColour <span class="token punctuation">(</span>
+  person_id <span class="token keyword">integer</span> <span class="token keyword">references</span> People<span class="token punctuation">(</span>ssn<span class="token punctuation">)</span><span class="token punctuation">,</span>
+  colour    <span class="token keyword">text</span><span class="token punctuation">,</span>
+  <span class="token keyword">primary</span> <span class="token keyword">key</span> <span class="token punctuation">(</span>person_id<span class="token punctuation">,</span>colour<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><hr>
+<p><strong>Mapping Subclasses</strong><br>
+The preferred approach out of the 3 is: ER Style</p>
+<p align="center">
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-sql-mapping/Pics/er-rel/mapsubclass.png">
+</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">create</span> <span class="token keyword">table</span> People <span class="token punctuation">(</span>
+  ssn     <span class="token keyword">integer</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span>
+  name    <span class="token keyword">text</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  address <span class="token keyword">text</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">create</span> <span class="token keyword">table</span> Employees <span class="token punctuation">(</span>
+  person_id <span class="token keyword">integer</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span>
+  salary    currency <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  position  <span class="token keyword">text</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  <span class="token keyword">foreign</span> <span class="token keyword">key</span> <span class="token punctuation">(</span>person_id<span class="token punctuation">)</span> <span class="token keyword">references</span> People<span class="token punctuation">(</span>ssn<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">create</span> <span class="token keyword">table</span> Managers <span class="token punctuation">(</span>
+  employee_id <span class="token keyword">integer</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span>
+  bonus       currency<span class="token punctuation">,</span>
+  <span class="token keyword">foreign</span> <span class="token keyword">key</span> <span class="token punctuation">(</span>employee_id<span class="token punctuation">)</span>
+              <span class="token keyword">references</span> Employees<span class="token punctuation">(</span>person_id<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p><strong>MORE on mapping subclasses:</strong></p>
+<p align="center">
+<img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-sql-mapping/Pics/er-sql/map-disjoint.png">
+</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">create</span> <span class="token keyword">table</span> Employees <span class="token punctuation">(</span>
+  empID   <span class="token keyword">serial</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span>
+  name    <span class="token keyword">text</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  address <span class="token keyword">text</span> <span class="token operator">not</span> <span class="token boolean">null</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">create</span> <span class="token keyword">table</span> Permanents <span class="token punctuation">(</span>
+  employee_id <span class="token keyword">integer</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span>
+  salary      currency <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  <span class="token keyword">foreign</span> <span class="token keyword">key</span> <span class="token punctuation">(</span>employee_id<span class="token punctuation">)</span> <span class="token keyword">references</span> Employees<span class="token punctuation">(</span>empID<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">create</span> <span class="token keyword">table</span> Casuals <span class="token punctuation">(</span>
+  employee_id <span class="token keyword">integer</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span>
+  pay_rate    currency <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  <span class="token keyword">foreign</span> <span class="token keyword">key</span> <span class="token punctuation">(</span>employee_id<span class="token punctuation">)</span> <span class="token keyword">references</span> Employees<span class="token punctuation">(</span>empID<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p>NOTE: This doesn&apos;t capture participation or disjoint-ness</p>
+
+    </div>
+  </body></html>
+
+    <!-- WEEK03 LECTURE NOTES-->
+    <!-- WEEK4 LECTURE NOTES-->
     <br>
   <hr>
 <div class="footer">

@@ -256,7 +256,207 @@
       </tbody>
     </table>
     <!-- CONTENT:-->
+  </head>
+  <body for="html-export">
+    <div class="mume markdown-preview  ">
+    <h3 class="mume-header" id="week-1-lecture">Week 1 lecture:</h3>
 
+<hr>
+<h4 class="mume-header" id="basics-of-java">Basics of Java:</h4>
+
+<p>We will be touching upon:</p>
+<ul>
+<li>Creating simple classes</li>
+<li>Structure of java classes</li>
+<li>etc.</li>
+</ul>
+<p>A simple java program</p>
+<pre data-role="codeBlock" data-info="java" class="language-java"><span class="token comment">// Public means it is available to all classes</span>
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util</span><span class="token punctuation">.</span><span class="token class-name">Scanner</span><span class="token punctuation">;</span>
+<span class="token comment">// args is referring to [] of strings (array)</span>
+<span class="token comment">// static means that the variable will be  stored in the method area</span>
+<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// println is a method which prints the &apos;output&apos; of system</span>
+  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;Hello World!&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">int</span> counter <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token comment">// str is assigned to every string in args collection</span>
+  <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token class-name">String</span> str <span class="token operator">:</span> args<span class="token punctuation">)</span><span class="token punctuation">{</span>
+      <span class="token comment">// ++ is increment</span>
+      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">printIn</span><span class="token punctuation">(</span><span class="token operator">++</span>counter <span class="token operator">+</span> <span class="token string">&quot;&gt;&quot;</span> <span class="token operator">+</span> str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">int</span> year <span class="token operator">=</span> <span class="token number">2000</span><span class="token punctuation">;</span>
+  <span class="token comment">// Calling the isLeap function</span>
+  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span> <span class="token function">isLeap</span><span class="token punctuation">(</span>year<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// Scanner() takes a file argument</span>
+  <span class="token comment">// in = instance hence Scanner is a class</span>
+  <span class="token comment">// new refers to new object of class:</span>
+  <span class="token class-name">Scanner</span> in <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Scanner</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>in<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token class-name">String</span> str2 <span class="token operator">=</span> in<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">int</span> val1 <span class="token operator">=</span> in<span class="token punctuation">.</span><span class="token function">nextInt</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot; &gt;&gt; &quot;</span> <span class="token operator">+</span> str2<span class="token punctuation">.</span><span class="token function">toUpperCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  in<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</pre><p>Some Notes:</p>
+<ul>
+<li>
+<p>In java, array is an object (essentially everything is), placing a dot afterwards will show us the methods that a certain object has.</p>
+</li>
+<li>
+<p>Unlike in C, we don&apos;t have to declare size of array, rather since array is an object, it will automatically increase in size as we add more.</p>
+</li>
+</ul>
+<hr>
+<h4 class="mume-header" id="objected-oriented-programming-in-java">Objected Oriented Programming in Java</h4>
+
+<p>As opposed to procedural programming e.g. C where functions are grouped to form programs, OOP does the following:</p>
+<ul>
+<li>Uses and creates own user-defined types called classes</li>
+<li>Classes contain data and methods (procedures)</li>
+<li>An instance of a class is an object, which has attributes (data) and behaviors (methods) encapsulated into it.</li>
+</ul>
+<p><strong>Designing a class:</strong><br>
+Whenever we want to create a class, we should consider a few things: The classes&apos; methods, keeping data private, always initializing data, breaking up classes with too many responsibilities, etc.</p>
+<p><strong>Objects</strong>:<br>
+Are created by instantiating a class, example below:</p>
+<pre data-role="codeBlock" data-info="java" class="language-java"><span class="token class-name">Circle</span> c <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Circle</span> <span class="token punctuation">(</span> <span class="token punctuation">)</span> <span class="token punctuation">;</span>
+<span class="token keyword">double</span> a<span class="token punctuation">;</span>
+<span class="token comment">// Then access the data:</span>
+<span class="token comment">// Initialize our circle to have centre (2, 5)</span>
+<span class="token comment">// and radius 1.</span>
+<span class="token comment">// Assuming, x, y and r are not private</span>
+c<span class="token punctuation">.</span>x <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+c<span class="token punctuation">.</span>y <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+c<span class="token punctuation">.</span>r <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token comment">// Access methods:</span>
+a <span class="token operator">=</span> c<span class="token punctuation">.</span><span class="token function">area</span><span class="token punctuation">(</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p><strong>Super classes, Objects, and the Class Hierarchy</strong><br>
+Every class has a superclass, by default if superclass isn&apos;t defined then it is the class <code>Object</code></p>
+<p>Often we&apos;ll need to override the following methods: <code>toString(), equals(), hasCode()</code></p>
+<p>Abstract classes:<br>
+These are classes which define only a part of an implementation i.e. these extended classes have some methods from the superclass. This is done so that the programmer knows the interface definition of an object.</p>
+<ul>
+<li>An abstract class cannot be instantiated whereas it&apos;s subclass can if it overrides each of its superclass&apos; abstract methods (but also provides an implementation for all of them, if not then that subclass is also abstract)</li>
+</ul>
+<p><strong>Interfaces in Java</strong><br>
+These are similar to abstract classes where all methods defined within the interface are implicitly abstract.</p>
+<ul>
+<li>Variables defined in an <em>interface</em> must be static and final i.e. constants</li>
+<li>Classes can implement an <em>interface</em> (more than 1 actually), to do this; a class uses the <code>implements</code> keyword and then provides implementation for all abstract methods of the interface</li>
+<li>Example below</li>
+</ul>
+<pre data-role="codeBlock" data-info="java" class="language-java"><span class="token comment">// interface</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">Animal</span> <span class="token punctuation">{</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">animalSound</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// interface method (does not have a body)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// interface method (does not have a body)</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Pig &quot;implements&quot; the Animal interface</span>
+<span class="token keyword">class</span> <span class="token class-name">Pig</span> <span class="token keyword">implements</span> <span class="token class-name">Animal</span> <span class="token punctuation">{</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">animalSound</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// The body of animalSound() is provided here</span>
+  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;The pig says: wee wee&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// The body of sleep() is provided here</span>
+  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;Zzz&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">class</span> <span class="token class-name">MyMainClass</span> <span class="token punctuation">{</span>
+<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token class-name">Pig</span> myPig <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Pig</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// Create a Pig object</span>
+  myPig<span class="token punctuation">.</span><span class="token function">animalSound</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  myPig<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre><p><strong>Extending Interfaces</strong><br>
+Interfaces can have sub-interfaces just like classes can have subclasses</p>
+<ul>
+<li>A sub-interface inherits all abstract methods and constants of its super-interface.</li>
+</ul>
+<p><strong>Method Overriding and Polymorphism</strong><br>
+Polymorphism:</p>
+<ul>
+<li>An object&#x2019;s ability to decide what method to apply to itself, depending on where it is in the inheritance hierarchy, is usually called polymorphism.</li>
+</ul>
+<p>When a class defines a method using the <strong>same</strong> name, return type, and by the number, type, and position of its arguments as a method in its <code>superclass</code>,<br>
+the method in the class <em>overrides</em> the method in the <code>superclass</code>. This is the new definition of the method that is invoked for an object of the class, and NOT the superclass&apos; definition.<br>
+Note:</p>
+<ul>
+<li>We may refer to the overridden method using <code>super</code> keyword.</li>
+<li>We cannot call super.super.someMethod -&gt; Not legal</li>
+</ul>
+<pre data-role="codeBlock" data-info="java" class="language-java"><span class="token keyword">class</span> <span class="token class-name">Animal</span> <span class="token punctuation">{</span>
+ <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">move</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;Animals can move&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Dog</span> <span class="token keyword">extends</span> <span class="token class-name">Animal</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Method overriding</span>
+ <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">move</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;Dogs can walk and run&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">}</span>
+ <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">bark</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;Dogs can bark&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestDog</span> <span class="token punctuation">{</span>
+
+ <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span> args<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">Animal</span> a <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Animal</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// Animal reference and object</span>
+    <span class="token class-name">Animal</span> b <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Dog</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// Animal reference but Dog object</span>
+
+    a<span class="token punctuation">.</span><span class="token function">move</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// runs the method in Animal class</span>
+    b<span class="token punctuation">.</span><span class="token function">move</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// runs the method in Dog class</span>
+    b<span class="token punctuation">.</span><span class="token function">bark</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre><p>This will produce errors for <code>b.bark()</code> since there is no such bark method in class <code>Animal</code> and <code>b</code> is of type <code>Animal</code></p>
+<p><strong>Method Overloading</strong><br>
+Defining methods with the same name and different argument or return types is called method overloading. A method signature consists of - its name, return type, number, type and <em>position of its argumens</em>, e.g.</p>
+<pre data-role="codeBlock" data-info="java" class="language-java"><span class="token keyword">double</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">)</span>
+<span class="token keyword">double</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">,</span> <span class="token keyword">double</span><span class="token punctuation">)</span>
+<span class="token keyword">double</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">)</span>
+<span class="token keyword">double</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">)</span>
+<span class="token keyword">double</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">,</span> <span class="token keyword">double</span><span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">)</span>
+</pre><p><strong>Data Hiding and Encapsulation</strong><br>
+We can hide the data within the class and make it available only through the methods. This is done through <em>Visibility Modifiers</em> of which Java has 5 access modifiers:</p>
+<ul>
+<li>public -&gt; visible to the world</li>
+<li>private -&gt; visible to the class only</li>
+<li>protected -&gt; visible to the package and all subclasses</li>
+<li>No modifier (default) -&gt; visible to the package</li>
+</ul>
+<p><strong>Constructors</strong></p>
+<p>A constructor in Java is a <em>special method</em> that is used to initialize objects. The constructor is called when an object of a class is created. It can be used to set initial values for object attributes:</p>
+<ul>
+<li>If the first statement in a constructor is not a call to super() or this(), a call to super () is implicitly inserted.</li>
+</ul>
+<pre data-role="codeBlock" data-info="java" class="language-java"><span class="token comment">// Create a MyClass class</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyClass</span> <span class="token punctuation">{</span>
+<span class="token keyword">int</span> x<span class="token punctuation">;</span>  <span class="token comment">// Create a class attribute</span>
+
+<span class="token comment">// Create a class constructor for the MyClass class</span>
+<span class="token keyword">public</span> <span class="token class-name">MyClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  x <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>  <span class="token comment">// Set the initial value for the class attribute x</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token class-name">MyClass</span> myObj <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MyClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Create an object of class MyClass (This will call the constructor)</span>
+  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>myObj<span class="token punctuation">.</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Print the value of x</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Outputs 5</span>
+</pre>
+    </div>
+  </body></html>
+<!-- WEEK02 STUFF-->
 
     <hr>
     <br>
