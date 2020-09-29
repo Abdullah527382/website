@@ -952,26 +952,24 @@ SQL statements:</p>
 <p align="center">
 <img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-sql-mapping/Pics/er-rel/mapnnrel.png">
 </p>
-```sql
-create table Customers (
-  custNo  serial primary key,
-  name    text not null,
-  address text  -- don&apos;t need to know customer&apos;s address
-);
-create table Accounts (
-  acctNo   char(5) check (acctNo ~ &apos;[A-Z]-[0-9]{3}&apos;),
-  title    text not null,    -- acctNos are like &apos;A-123&apos;
-  balance  float default 0.0,
-  primary key (acctNo)
-);
-create table Owns (
-  customer_id integer references Customers(custNo),
-  account_id  char(5) references Accounts(acctNo),
-  last_accessed timestamp,
-  primary key (customer_id, account_id)
-);
-```
-<p><strong>Mapping 1:N Relationships</strong></p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">create</span> <span class="token keyword">table</span> Customers <span class="token punctuation">(</span>
+  custNo  <span class="token keyword">serial</span> <span class="token keyword">primary</span> <span class="token keyword">key</span><span class="token punctuation">,</span>
+  name    <span class="token keyword">text</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>
+  address <span class="token keyword">text</span>  <span class="token comment">-- don&apos;t need to know customer&apos;s address</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">create</span> <span class="token keyword">table</span> Accounts <span class="token punctuation">(</span>
+  acctNo   <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token keyword">check</span> <span class="token punctuation">(</span>acctNo <span class="token operator">~</span> <span class="token string">&apos;[A-Z]-[0-9]{3}&apos;</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  title    <span class="token keyword">text</span> <span class="token operator">not</span> <span class="token boolean">null</span><span class="token punctuation">,</span>    <span class="token comment">-- acctNos are like &apos;A-123&apos;</span>
+  balance  <span class="token keyword">float</span> <span class="token keyword">default</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+  <span class="token keyword">primary</span> <span class="token keyword">key</span> <span class="token punctuation">(</span>acctNo<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">create</span> <span class="token keyword">table</span> Owns <span class="token punctuation">(</span>
+  customer_id <span class="token keyword">integer</span> <span class="token keyword">references</span> Customers<span class="token punctuation">(</span>custNo<span class="token punctuation">)</span><span class="token punctuation">,</span>
+  account_id  <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token keyword">references</span> Accounts<span class="token punctuation">(</span>acctNo<span class="token punctuation">)</span><span class="token punctuation">,</span>
+  last_accessed <span class="token keyword">timestamp</span><span class="token punctuation">,</span>
+  <span class="token keyword">primary</span> <span class="token keyword">key</span> <span class="token punctuation">(</span>customer_id<span class="token punctuation">,</span> account_id<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p><strong>Mapping 1:N Relationships</strong></p>
 <p align="center">
 <img src="https://cgi.cse.unsw.edu.au/~cs3311/20T3/lectures/er-sql-mapping/Pics/er-rel/map1nrel2.png">
 </p>
@@ -1112,7 +1110,6 @@ The preferred approach out of the 3 is: ER Style</p>
 
     </div>
   </body></html>
-
     <!-- WEEK03 LECTURE NOTES-->
     <!-- WEEK4 LECTURE NOTES-->
     <br>
