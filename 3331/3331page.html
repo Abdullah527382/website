@@ -1250,22 +1250,657 @@ Instead of storing data in a single webserver, we can replicate popular websites
 </ul>
 <h4 class="mume-header" id="23-electronic-mail-smtp-pop3-imap">2.3 - Electronic mail (SMTP, POP3, IMAP)</h4>
 
-<p>Note: IMAP and POP3 are optional</p>
+<p>E-mail is an <em>asynchronous</em> communication medium&#x2014;people send and read<br>
+messages when it is convenient for them,</p>
+<p>There are 3 major components of the internet mail system, which are:</p>
+<ul>
+<li>User agents:
+<ul>
+<li>Allow users to read, reply to, forward, save, and compose<br>
+messages, examples would be Gmail, Apple mail, outlook, ...</li>
+</ul>
+</li>
+<li>Mail servers:</li>
+<li>Simple Mail Transfer Protocol (SMTP).</li>
+</ul>
+<p><strong>Mail Servers</strong><br>
+Form the <strong>core</strong> of the e-mail infrastructure. A user&apos;s <em>mailbox</em> resides in one of the mail servers, when a user wants to access the messages, the mail server (containing there messages) <em>authenticates</em> the user.</p>
+<p>Users must deal with failures in other user&apos;s mail servers, if there server cannot receive mail, the sender&apos;s server will hold the message in a queue and attempt to transfer later.</p>
+<p>After some time, if there is no success, the server removes the message and notifies the sender.</p>
+<p><strong>SMTP</strong></p>
+<p>SMTP is the principal application-layer protocol for Internet electronic mail. It uses the reliable data transfer service of TCP to transfer mail from the sender&#x2019;s mail server to the recipient&#x2019;s mail server.</p>
+<p>Just like other App-layer protocols, SMTP has client and server sides which execute on sender&apos;s and recipient&apos;s mail servers respectively.</p>
+<p>SMTP transfer messages from sender&apos;s mail server to recipients&apos; mail server, though it has many wonderful qualities, it also has some archaic characteristics:</p>
+<ul>
+<li>The body of all mail messages are restricted to simple 7-bit ASCII, this is a pain in today&apos;s age of multimedia (requiring binary multimedia to be encoded before sending over SMTP, then decoded)</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>There is no intermediate mail servers for sending mail even if the 2 mail servers are located at opposite ends of the world.</li>
+</ul>
+<p>Consider an example - SMTP client (C) and an SMTP server (S) :</p>
+<pre data-role="codeBlock" data-info class="language-"><code>S: 220 hamburger.edu
+C: HELO crepes.fr
+S: 250 Hello crepes.fr, pleased to meet you
+C: MAIL FROM: &lt;alice@crepes.fr&gt;
+S: 250 alice@crepes.fr ... Sender ok
+C: RCPT TO: &lt;bob@hamburger.edu&gt;
+S: 250 bob@hamburger.edu ... Recipient ok
+C: DATA
+S: 354 Enter mail, end with &#x201D;.&#x201D; on a line by itself
+C: Do you like ketchup?
+C: How about pickles?
+C: .
+S: 250 Message accepted for delivery
+C: QUIT
+S: 221 hamburger.edu closing connection
+</code></pre><p><em>Analysis</em>:</p>
+<ul>
+<li>The mail servers are <a href="http://crepes.fr">crepes.fr</a>, <a href="http://hamburger.edu">hamburger.edu</a></li>
+<li>The client issued 5 commands: HELO, MAIL FROM , RCPT TO , DATA ,<br>
+and QUIT</li>
+<li>The single period meant end of message</li>
+<li>The server&apos;s replies to each command have some reply code</li>
+<li>SMTP Uses persistent connections, (send multiple messages over same TCP connection)</li>
+</ul>
+<p>Comparison with HTTP:</p>
+<p>Similarities:</p>
+<ul>
+<li>Both protocols are used to transfer files from 1 host to another</li>
+<li>Both use persistent HTTP, SMTP use persistent connections</li>
+</ul>
+<p>Differences:</p>
+<ul>
+<li>HTTP is a <em>Pull protocol</em> - a user loads a web page, HTTP is then used to &apos;pull&apos; the information from the server. TCP connection is initiated by the machine which receives the file WHEREAS SMTP is a <em>Push protocol</em> - the sending mail server pushes the file to the receiving mail server. TCP connection is initiated by the machine which sends the file</li>
+<li>SMTP requires a message to be in 7-bit ASCII format, otherwise it is encoded into 7-bit ASCII. HTTP Does not impose this restriction.</li>
+<li>SMTP places all of the message&apos;s objects into 1 message whereas HTTP encapsulates each object in its own HTTP response message.</li>
+</ul>
+<p>Note: Use <code>telnet serverName 25</code> for experimenting</p>
+<p><strong>Mail Access Protocols</strong></p>
+<p>Since a mail server manages mailboxes and runs the client/server sides of SMTP, then if a user&apos;s mail server were to reside locally on his/her PC, then their PC would have to be always on. This is impractical, instead a user runs a <em>User Agent</em> on a local PC but accesses its mailbox stored on an &apos;always-on&apos; shared mail server, typically maintained by the user&apos;s ISP.</p>
+<p>The <strong>2 step procedure</strong> is required since a sender&apos;s user agent does not dialogue directly with the recipient&apos;s mail server, and if it did, there would be potential recourse to an unreachable destination.</p>
+<ul>
+<li>Consider Alice and Bob, Alice&#x2019;s user agent uses SMTP to push the e-mail message into her mail server, then Alice&#x2019;s mail server uses SMTP (as an SMTP client) to relay the e-mail message to Bob&#x2019;s mail server</li>
+</ul>
+<p>But how do we obtain mail from our mail server to the user agent IF SMTP is a push protocol?</p>
+<ul>
+<li>By introducing special mail access protocol (IMAP, POP3, etc.) that transfers messages from a user&apos;s mail server to their local PC</li>
+</ul>
 <h4 class="mume-header" id="24-dns">2.4 - DNS</h4>
 
+<p>Hostnames, an identifier for a host &#x2014; such as <a href="http://www.facebook.com">www.facebook.com</a>, <a href="http://www.google.com">www.google.com</a>.</p>
+<p>Because hostnames can consist of<br>
+variable-length alphanumeric characters, they would be difficult to process by routers. For these reasons, hosts are also identified by so-called IP addresses e.g. 121.7.106.83.</p>
+<p>People prefer the mnemonic hostnames while routers prefer the fixed-length hierarchical structured IP addresses</p>
+<p>We need a directory service that reconciles these preferences, translating hostnames to IP addresses. This is the main task of the Domain Name Server (DNS)</p>
+<p><strong>Domain Name Server</strong></p>
+<p>The DNS is (1) A distributed database implemented in a hierarchy of DNS servers and (2) Application layer protocol which allows hosts to query the distributed database, this protocol runs over UDP and uses port 53</p>
+<p>Commonly employed by other protocols including HTP, SMTP to translate user-supplied hostnames to IP addresses.</p>
+<p>Consider what happens when a browser - HTTP Client running on some user&apos;s host, requests the URL.</p>
+<p>In order for the user&apos;s host to be able to send an HTTP request to the web server, the user&apos;s host must first obtain the IP address of the hostname.</p>
+<p>Example:</p>
+<ol>
+<li>The same user machine runs the client side of the DNS application.</li>
+<li>The browser extracts the hostname, <a href="http://www.someschool.edu">www.someschool.edu</a> , from the URL and passes the hostname to the client side of the DNS application.</li>
+<li>The DNS client sends a query containing the hostname to a DNS server.</li>
+<li>The DNS client eventually receives a reply, which includes the IP address for the hostname.</li>
+<li>Once the browser receives the IP address from DNS, it can initiate a TCP connection to the HTTP server process located at port 80 at that IP address.</li>
+</ol>
+<p>From this example, we see that DNS adds a delay, fortunately, as we discuss below, the desired IP address is often cached in a <strong>nearby</strong> DNS server (reduces network traffic and avg DNS delay)</p>
+<p><strong>DNS services and structure</strong></p>
+<p>DNS provides a few other important services in addition to translating hostnames to IP addresses:</p>
+<p>Host aliasing:</p>
+<ul>
+<li>A host can have one or more alias names, the original hostname is then referred to as the canonical hostname. DNS can be invoked to obtain canonical hostname as well as IP address for a supplied alias.</li>
+</ul>
+<p>Mail server aliasing:</p>
+<ul>
+<li>Hostnames of mail servers can be more complicated than seen in email addresses. DNS can be invoked by a mail application to obtain canonical hostname and IP address. A company&apos;s mail server and web server can have identical aliased hostnames.</li>
+</ul>
+<p>Load distribution:</p>
+<ul>
+<li>Among replicated servers e.g. replicated web servers, DNS is used to perform load distribution. Some sites are replicated over multiple servers each with their own IP address (a set of IP addresses for a canonical hostname). When a client makes a DNS query for a name mapped to a set of addresses, the server responds with a rotated set.
+<ul>
+<li>An application of this rotation is: Multiple mail serves can have the same alias name.</li>
+</ul>
+</li>
+</ul>
+<p>why not centralize DNS?</p>
+<ul>
+<li>single point of failure</li>
+<li>traffic volume</li>
+<li>distant centralized database</li>
+<li>maintenance</li>
+</ul>
+<p>It just doesn&apos;t scale, it is indeed a distributed, hierarchial database.</p>
+<p><strong>Hierarchy</strong></p>
+<p>DNS uses a large number of servers, organized in a hierarchial fashion, distributed globally. There are 3 <strong>classes</strong> of DNS servers - root, top-level domain (TLD) and authoritative.</p>
+<p><strong>DNS Root servers &amp; diagram</strong><br>
+Over 400 root name servers all over the world, managed by 13 different organizations. Root name servers provide IP addresses of the TLD servers.</p>
+<p><strong>TLD, authoritative servers</strong><br>
+TLD:</p>
+<ul>
+<li>For each of the top-level domains such as com, org, net, etc. and all of the country top-level domains e.g. UK, FR, CA, etc. there is a TLD server</li>
+</ul>
+<p>Authoritative:</p>
+<ul>
+<li>Every organization with publicly accessible hosts must provide publicly accessible DNS Records that map names of those hosts to IP addresses (housed in the organization&apos;s authoritative DNS server or ISP).</li>
+</ul>
+<p><strong>Local DNS name Server</strong></p>
+<p>Does not belong to a hierarchy. Each ISP has a local DNS server, when a host connects, the ISP provides them with addresses of 1 or more of its local DNS servers. A local DNS server is typically &apos;close&apos; to the host</p>
+<p>When a host makes DNS query, the query is sent to its local DNS server</p>
+<p>DNS name resolution (Iterated vs Recursive):<br>
+<em>Iterated</em>: The contacted server replies with name of server to contact<br>
+<em>Recursive</em>: The contacted server doesn&apos;t return with a name of a server to contact, rather it contacts the server itself.</p>
+<p>Both recurse/iterate till they find name of authoritative name server.</p>
+<p><strong>DNS: Caching and Updating</strong><br>
+The idea behind DNS caching:<br>
+In a query chain (as discussed above), when a DNS server receives a DNS reply (e.g. containing a mapping from a hostname to an IP address), it can &quot;cache&quot; the mapping it its local memory.</p>
+<p>These cache entries <em>disappear</em> (timeout) after some time (TTL). TLD servers are typically cached in local name servers (as a result, root servers aren&apos;t visited often).</p>
+<p>These entries also may be out-of-date e.g. when host changes IP address, the TTLs will have to expire for internet to recognize new IP address</p>
+<p><strong>DNS records X</strong></p>
+<p>RR format: (name, value, type, ttl)<br>
+Types<br>
+A:</p>
+<ul>
+<li>Name is hostname</li>
+<li>Value is IP address</li>
+</ul>
+<p>NS:</p>
+<ul>
+<li>Name is domain</li>
+<li>Value is hostname of authoritative name server for the domain</li>
+</ul>
+<p>CNAME:</p>
+<ul>
+<li>Name is alias name for canonical name</li>
+<li>Value is canonical name</li>
+</ul>
+<p>MX:</p>
+<ul>
+<li>Value is name of MAILSERVER</li>
+</ul>
+<p><strong>Messages</strong><br>
+The first 12 bytes is the header section.</p>
+<p>Query and reply messages both with the same message format<br>
+ID is a 16 bit number for a query, a reply to a query uses the same number</p>
+<p>Flags:</p>
+<ul>
+<li>A 1-bit query/reply flag is used to tell whether the message is a query (0) or a reply (1)</li>
+<li>A 1-bit authoritative flag is set in a reply message when a DNS server is an authoritative server for a queried name</li>
+<li>A 1-bit recursion-desired flag is set when a client desires that the DNS server perform recursion (when it doesn&apos;t have the record).</li>
+<li>A 1-bit recursion-available flag is set in a reply when a DNS server supports recursion.</li>
+</ul>
+<p>There are 4 types of data sections which follow the header:</p>
+<ul>
+<li>Question section - contains info about the query including <strong>name</strong> being queried and a <strong>type</strong> field e.g. A, MX, etc.</li>
+<li>Reply from a DNS server - contains resource records (RRs) for a name originally queried (name, value, type, ttl), a reply can return multiple RRs because a hostname can have multiple IPs</li>
+<li>The authority section contains - records of other authoritative servers.</li>
+<li>Additional section - contains other helpful records</li>
+</ul>
+<p>Note: Use dig HOST_NAME</p>
+<p><strong>Insertion of records</strong></p>
+<ol>
+<li>We register the domain name at a registrar (Commercial entity which verifies uniqueness of a domain name and enters it into a DNS database)</li>
+<li>Provide names, IP addresses of our primary, secondary authoritative DNS servers. The registrar makes sure that a type NS and A record is entered into the appropriate TLD servers</li>
+</ol>
+<p>We have to make sure that a type A RR for the webserver domain name and type MX RR for the mail server are entered.</p>
+<p><strong>Updating DNS records</strong><br>
+Note: Remember that old records may be cached in other<br>
+DNS servers (for up to TTL).</p>
+<p>More recently, an UPDATE option has been added to the DNS protocol to allow data to be dynamically added or deleted from the database via DNS<br>
+messages</p>
+<p><strong>Reverse DNS</strong></p>
+<p>We consider IP address first, then the domain name. A special record type (PTR) is sed to store the reverse DNS entries. This is used in:</p>
+<ul>
+<li>Troubleshooting tools such as <code>traceroute</code> or <code>ping</code></li>
+<li>SMTP servers for validating IP addresses</li>
+<li>Tracking users, etc.</li>
+</ul>
+<p><strong>Attacking DNS</strong></p>
+<p>DDoS attacks</p>
+<ul>
+<li>Bombard root servers with traffic</li>
+<li>traffic filtering</li>
+</ul>
+<p>Redirect attacks</p>
+<ul>
+<li>DNS poisoning: Send bogus replies to DNS server, which caches</li>
+</ul>
+<p>Exploit DNS for DDoS</p>
+<ul>
+<li>Send queries with spoofed source address: target IP</li>
+</ul>
+<p>Cache poisoning:</p>
+<ul>
+<li>Do not allow DNS servers to cache IP address mappings unless they are from authoritative name servers</li>
+</ul>
 <h4 class="mume-header" id="25-p2p-applications">2.5 P2P applications</h4>
 
+<p><strong>Architecture</strong></p>
+<ul>
+<li>No always on server</li>
+<li>End systems communicate directly</li>
+<li>Peers are intermittently connected to each other</li>
+<li>Some examples include file distribution e.g. BitTorrent, Streaming (KanKan), Cryptocurrency (bitcoin)</li>
+</ul>
+<p><strong>File distribution times</strong></p>
+<p><em>Consider distributing a file of size F from one server to N peers in both client-server and P2P architectures.</em></p>
+<p>Both the P2P and Client-server architecture has each client download a file copy, for client the server must upload N files (a file to N peers) whereas in P2P, the server must upload AT LEAST 1 copy.</p>
+<p>The total upload capacity of the system as a whole is equal to the upload rate of the server + upload rates of each peer.</p>
+<p>As a result, client-server has distribution time increase <strong>linearly</strong> and without bound as N peers increase, whereas in the P2P architecture, it is always less than some bound (F/u) but also less then client-server.</p>
+<p><strong>An example - Bit Torrent</strong></p>
+<p>P2P file distribution protocol where a file is divided into 256KB chunks and peers in the torrent send/receive these chunks.</p>
+<p><em>Tracker</em> - Tracks peer in participating torrent<br>
+<em>Torrent</em> - Group of peers exchanging chunks of a file, .torrent files contain address of trackers for the file AND a list of file chunks (and their cryptographic hashes).</p>
+<p><em>Requesting Chunks</em>:</p>
+<ul>
+<li>At any give time, different peers have different subsets of file chunks. Peers request chunks from other peers in rarest first order</li>
+</ul>
+<p><em>Sending Chunks</em>:</p>
+<ul>
+<li>A peer p sends chunks to 4 other peers that send chunks to p at the highest rate. Every 30 seconds, another peer is randomly selected to send chunks (optimistically unchoking).</li>
+</ul>
+<p><strong>DHT - Getting rid of server/tracker</strong><br>
+A DHT is a distributed P2P database which has (key, value) pairs representing tracker info. Removes the reliance of a centralized tracker.</p>
+<p>Peers can query and insert the pairs into a DHT. Keys are also assigned to peers (with closest ID)</p>
 <h4 class="mume-header" id="26-video-streaming-and-cdns">2.6 Video streaming and CDNs</h4>
 
+<p><strong>Video</strong>:<br>
+A sequence of images displayed at constant rate, each image is represented by an array of pixel values.</p>
+<p>Spatial coding: Send colour value and the number of repeated values - N<br>
+Temporal coding: Send differences from previous frame instead of complete frame</p>
+<p>CBR (Constant bit rate) is the fixed video encoding rate. VBR (Variable bit rate) is determined by video encoding rate changes as an amount of <em>spatial</em> (Within image) and <em>temporal</em> (between images) coding changes</p>
+<p><strong>DASH</strong>:<br>
+Dynamic, Adaptive Streaming over HTTP (DASH) is a method to stream multimedia from a server to a client.</p>
+<p>Server:</p>
+<ul>
+<li>Divides video file into multiple chunks, each is stored and encoded at different rates</li>
+<li>The <em>Manifest file</em> provides URLs for different chunks</li>
+</ul>
+<p>Client:</p>
+<ul>
+<li>Periodically measures server-to-client bandwidth</li>
+<li>Consults the manifest file and requests 1 chunk ata time based on current bandwidth</li>
+<li>Responsible for choosing <em>when</em> to request the chunk, <em>what</em> encoding rate to request and <em>where</em> to request the chunk</li>
+</ul>
+<p><strong>Content Distribution Networks (CDNs)</strong></p>
+<p>Used to stream content to hundreds of thousands of simultaneous users, CDNs are used to store the copies of multimedia at various geographical locations.</p>
+<p>Q: The role of a CDN provider&apos;s authoritative DNS name server in a CDN is:</p>
+<ul>
+<li>To map the query for each CDN object to the CDN server closest to the requestor</li>
+</ul>
 <h4 class="mume-header" id="27-socket-programming-with-udp-and-tcp">2.7 Socket programming with UDP and TCP</h4>
 
+<p><strong>Socket programming/with UDP</strong></p>
+<ul>
+<li>There is no connection between client and server, the client attaches the IP dest address and port number to each packet, the server extracts the client&apos;s IP address and port number from received packet.</li>
+<li>In UDP, transmitted data may be lost of received in incorrect order</li>
+</ul>
+<pre data-role="codeBlock" data-info="python" class="language-python"><span class="token comment"># Client pseudocode</span>
+socket <span class="token operator">=</span> createSocket<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-</div>
+<span class="token keyword">while</span> <span class="token boolean">True</span><span class="token punctuation">:</span>
+data <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+send<span class="token punctuation">(</span>data<span class="token punctuation">,</span> SERVER_PORT_NUMBER<span class="token punctuation">)</span><span class="token punctuation">;</span>
+response <span class="token operator">=</span> receive<span class="token punctuation">(</span>SERVER_PORT_NUMBER<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+socket<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment"># Server pseudocode</span>
+socket <span class="token operator">=</span> createSocket<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+socket<span class="token punctuation">.</span>bind<span class="token punctuation">(</span>SERVER_PORT_NUMBER<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">while</span> <span class="token boolean">True</span><span class="token punctuation">:</span>
+request <span class="token operator">=</span> receive<span class="token punctuation">(</span>CLIENT<span class="token punctuation">,</span> SERVER_PORT_NUMBER<span class="token punctuation">)</span><span class="token punctuation">;</span>
+data <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+send<span class="token punctuation">(</span>CLIENT<span class="token punctuation">,</span> data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+socket<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p><strong>Socket programming/with TCP</strong></p>
+<ul>
+<li>In TCP, the client must contact a server that is already running and waiting for a connection.</li>
+<li>The client contacts the server by creating a TCP socket, specifying the IP address and port number of the server process.</li>
+</ul>
+<pre data-role="codeBlock" data-info="python" class="language-python"><span class="token comment"># Client pseudocode</span>
+socket <span class="token operator">=</span> createSocket<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+socket<span class="token punctuation">.</span>connect<span class="token punctuation">(</span>SERVER_IP<span class="token punctuation">,</span> SERVER_PORT_NUMBER<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+data <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+socket<span class="token punctuation">.</span>send<span class="token punctuation">(</span>data<span class="token punctuation">,</span> SERVER_PORT_NUMBER<span class="token punctuation">)</span><span class="token punctuation">;</span>
+response <span class="token operator">=</span> socket<span class="token punctuation">.</span>receive<span class="token punctuation">(</span>SERVER_PORT_NUMBER<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+socket<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment"># Server pseudocode</span>
+socket <span class="token operator">=</span> createSocket<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+socket<span class="token punctuation">.</span>bind<span class="token punctuation">(</span>SERVER_PORT_NUMBER<span class="token punctuation">)</span><span class="token punctuation">;</span>
+os<span class="token punctuation">.</span>register<span class="token punctuation">(</span>socket<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">while</span> <span class="token boolean">True</span><span class="token punctuation">:</span>
+connectionSocket <span class="token operator">=</span> socket<span class="token punctuation">.</span>acceptConnection<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+request <span class="token operator">=</span> socket<span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+data <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+socket<span class="token punctuation">.</span>write<span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+connectionSocket<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+socket<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p><strong>Sources</strong>:</p>
+<ul>
+<li>Kurose Computer Networking Textbook pages <strong>112 -&gt; 207</strong></li>
+<li><a href="https://lukakerr.github.io/uni/3331-notes">https://lukakerr.github.io/uni/3331-notes</a></li>
+<li><a href="https://webcms3.cse.unsw.edu.au/COMP3331/20T3/resources/52098">https://webcms3.cse.unsw.edu.au/COMP3331/20T3/resources/52098</a></li>
+<li><a href="https://webcms3.cse.unsw.edu.au/COMP3331/20T3/resources/52146">https://webcms3.cse.unsw.edu.au/COMP3331/20T3/resources/52146</a></li>
+<li></li>
+</ul>
+
+  </div>
 </body></html>
+<hr>
 <!-- week03 lecture notes-->
-    <!-- Follwowing parapgraphs -->
-    
+</head>
+<body for="html-export">
+  <div class="mume markdown-preview  ">
+  <h2 class="mume-header" id="week-4-transport-layer">Week 4 - Transport Layer</h2>
 
+<h4 class="mume-header" id="31-transport-services">3.1 - Transport services</h4>
+
+<p>Provide logical communication between app processes running on different hosts</p>
+<p>Transport protocols run in end systems where:</p>
+<ul>
+<li>The <em>Sender side</em> breaks the app messages into <em>segments</em>, then passed to the network layer</li>
+<li>The <em>receiver side</em> reassembles the segments into messages, then passed to the application layer</li>
+</ul>
+<h4 class="mume-header" id="32-multiplexing-and-de-multiplexing">3.2 - Multiplexing and De-multiplexing</h4>
+
+<p>Multiplexing at sender:</p>
+<ul>
+<li>Handle data from multiple sockets</li>
+<li>Adds transport header</li>
+</ul>
+<p>Receiver demultiplexing:</p>
+<ul>
+<li>Uses the header info to deliver received segments to correct socket</li>
+</ul>
+<p><strong>Connectionless demultiplexing</strong></p>
+<p>When the host receives a UDP segment, it checks dest port number and directs the segments to the socket with that port number</p>
+<p>This also applies to IP datagrams with different <strong>source</strong> IP addresses/port numbers, they too will be directed to the same socket (via same dest port number).</p>
+<p><strong>Connection-oriented demultiplexing</strong></p>
+<p>A TCP socket is identified by a 4-tuple: <code>(sourceIP, sourcePort, destIP, destPort)</code>. All 4 values are used to direct segments to the correct sockets.</p>
+<p>A server may support many simultaneous TCP sockets where each socket is identified by its own 4-tuple.</p>
+<h4 class="mume-header" id="33-connectionless-transport-udp">3.3 - Connectionless transport: UDP</h4>
+
+<p><strong>UDP: User Datagram Protocol</strong></p>
+<p>A &quot;best effort&quot; internet transport protocol. During transport, UDP segments may get lost or be delivered out of order. UDP is connection-less i.e. there is no handshake required between the sender and receiver, each UDP segment is handled independently of others.</p>
+<p>A UDP segment header consists of:</p>
+<ul>
+<li>Source port number</li>
+<li>Dest port number</li>
+<li>Length (in bytes, includes header)</li>
+<li>Checksum (error checking, optional)</li>
+<li>Payload</li>
+</ul>
+<p>A UDP segment header is 8 bytes in size.</p>
+<p><strong>Checksum</strong></p>
+<p>Goal of checksum: To detect errors in transmitted segments</p>
+<p>The sender:</p>
+<ul>
+<li>Treats segment contents as a sequence of 16-bit integers (including header fields)</li>
+<li>Computes a checksum using addition of segment contents (1&apos;s complement sum)</li>
+<li>Places the checksum value into UDP checksum field</li>
+</ul>
+<p>The receiver:</p>
+<ul>
+<li>Adds all the received content together as 16-bit integers</li>
+<li>Adds the value computed to the checksum</li>
+<li>If the result is not <code>1111 1111 1111 1111</code>, there are errors</li>
+</ul>
+<p><strong>UDP Applications</strong></p>
+<p>Used where latency is sensitive/time critical</p>
+<ul>
+<li>Quick request/response (DNS, DHCP)</li>
+<li>Network management (SNMP)</li>
+<li>Routing updates (RIP)</li>
+<li>Voice/video chat</li>
+<li>Gaming (especially FPS)</li>
+</ul>
+<h4 class="mume-header" id="34-principles-of-reliable-data-transfer">3.4 - Principles of reliable data transfer</h4>
+
+<p><strong>RDT 1.0</strong></p>
+<p>For RDT 1.0, there is an underlying channel that is perfectly reliable, free of bit errors and no loss of packets. The transport layer does nothing.</p>
+<p align="center">
+<img src="https://lukakerr.github.io/assets/img/3331/rdt1.0.svg">
+</p>
+<p><strong>RDT 2.0 - Channel with bit errors</strong></p>
+<p>The underlying channel may flip bits in packet. To recover from errors, we use:</p>
+<ul>
+<li>Acknowledgements (ACKs): Receiver explicitly tells sender that the packet was received OK</li>
+<li>Negative Acknowledgements (NACKs): Receiver explicitly tells that the packet had errors, the sender retransmits upon receiving a NACK</li>
+</ul>
+<p align="center">
+<img src="https://lukakerr.github.io/assets/img/3331/rdt2.0.svg">
+</p>
+<p>RDT 2.0 has <em>error detection</em>, <em>feedback</em> via ACKs/NACKs and <em>retransmission</em> unlike in RDT 1.0</p>
+<p>If the ACK/NACK is <em>corrupted</em>, the sender doesn&apos;t know what happened at the receiver and thus can&apos;t retransmit</p>
+<p><strong>RDT2.1</strong></p>
+<ul>
+<li>In RDT 2.1, the sender adds a sequence number to the packet, 2 are used throughout transmission (0 or 1).</li>
+<li>The sender must also check if the NACKs/ACKs received are corrupted</li>
+<li>The receiver also checks if the received packet is a duplicate using the seq number, if so: discard the duplicate.</li>
+</ul>
+<p align="center">
+<img src="https://lukakerr.github.io/assets/img/3331/rdt2.1.svg">
+</p>
+<p>This example shows dotted line as erroneous whilst the solid is error-free in transmission. Erroneous lines return a NACK from receiver or a duplicate from sender</p>
+<p><strong>RDT 2.2</strong></p>
+<p>Same as RDT 2.1, using ACKs only. Instead of NACKs, receiver just sends ACK for the LAST packet which was was received OK, i.e. the receiver must explicitly include seq number of packet being ACKed. Retransmission of current packet whenever duplicate ACK at sender.</p>
+<p align="center">
+<img src="https://lukakerr.github.io/assets/img/3331/rdt2.2.svg">
+</p>
+<p><strong>RDT3.0 and performance</strong></p>
+<p>In RDT 3.0, we assume that the underlying channel can also lose packets meaning that ACKs/data can be lost. Solution: The sender waits a reasonable amount of time for the receiver&apos;s ACKs, if none received, the sender retransmits the packet. If packet is just delayed, retransmission is a duplicate but the seq numbers handle this.</p>
+<p align="center">
+<img src="https://lukakerr.github.io/assets/img/3331/rdt3.0.svg">
+</p>
+<p>Performance isn&apos;t that good, using equation:</p>
+<p align="center">
+<img src="C:\Users\haarr\Desktop\cs3331\lecs\wk04\gBnEq.png">
+</p>
+<p><strong>Pipelined protocols - GBN, SR</strong></p>
+<p>Pipelining allows the sender to send multiple yet &quot;to be ACKed&quot; packets. The range of seq numbers must be increased, there also must be buffering at the sender and/or receiver.</p>
+<p>There are 2 types of generic forms of pipelined protocols: <strong>go-back-N</strong> and <strong>selective repeat</strong></p>
+<p><em>Last packet</em> bit transmitted: t = L/R<br>
+<em>ACK</em> arrives, send next packet: t = RTT + L/R</p>
+<p>Utilization given below:</p>
+<p align="center">
+<img src="C:\Users\haarr\Desktop\cs3331\lecs\wk04\gBnEq.png">
+</p>
+<ul>
+<li>N is the amount of packets sent</li>
+<li>RTT is the round trip time</li>
+<li>R is the bandwidth rate</li>
+<li>L is the length</li>
+</ul>
+<p><strong>Go-back-N</strong>:</p>
+<ul>
+<li>Sender can have upto N unACKed packets in the pipeline</li>
+<li>Sender has a single timer for the <strong>oldest</strong> unACKed packet, as timer expires -&gt; the sender will retransmit all unACKed packets</li>
+<li>No buffer available at the receiver (out-of-order packets discarded)</li>
+<li>Receiver only sends a cumulative ACK and doesn&apos;t ACK the new packet if there&apos;s a gap</li>
+<li>Sender window size &lt; 2^n where n is number of bits in seq number space</li>
+</ul>
+<p align="center">
+<img src="https://lukakerr.github.io/assets/img/3331/gbn.svg">
+</p>
+<p><strong>Selective Repeat</strong>:</p>
+<ul>
+<li>Sender can have up to N unACKed packets in the pipeline</li>
+<li>Sender maintains a time for <strong>each</strong> unACKed packet, as the timer expires, the sender will retransmit only that unACKed packet</li>
+<li>The receiver has a buffer and can accept out-of-order packets</li>
+<li>The receiver sends an individual ACK for each packet</li>
+<li>Sender window size &lt;= 1/2 of seq number space</li>
+</ul>
+<p align="center">
+<img src="https://lukakerr.github.io/assets/img/3331/sr.svg">
+</p>
+<h4 class="mume-header" id="35-connection-oriented-transport-tcp">3.5 - Connection-oriented transport: TCP</h4>
+
+<p><strong>TCP Overview</strong>:<br>
+Properties:</p>
+<ul>
+<li>Point-to-point
+<ul>
+<li>1 sender, 1 receiver</li>
+</ul>
+</li>
+<li>Reliable, in-order byte stream</li>
+<li>Pipelined
+<ul>
+<li>TCP Congestion and flow control set window size</li>
+</ul>
+</li>
+<li>Full duplex data
+<ul>
+<li>Bidirectional data flow in same connection</li>
+</ul>
+</li>
+<li>Connection oriented
+<ul>
+<li>Handshaking initiates sender and receiver state before data exchange</li>
+</ul>
+</li>
+<li>Flow Controlled
+<ul>
+<li>Sender will not overwhelm the receiver</li>
+</ul>
+</li>
+</ul>
+<p><strong>Segment structure</strong></p>
+<p>The TCP segment header consists of:</p>
+<ul>
+<li>Source port number</li>
+<li>Destination Port number</li>
+<li>Sequence number (byte offsets)</li>
+<li>ACK number</li>
+<li>Receive window (bytes receiver willing to accept)</li>
+<li>Header length</li>
+<li>Checksum</li>
+<li>Options</li>
+<li>Data (variable length)</li>
+</ul>
+<p>A TCP segment header is 20 bytes in size compared to 8 bytes of a UDP segment. An entire TCP segment is less than the MSS - max segment size.</p>
+<p><strong>TCP sequence numbers, ACKs</strong></p>
+<ul>
+<li>The Sequence number sent by sender is the 1st byte in the segment</li>
+<li>The ACK sequence number is the next expected byte = seqNo. + Length(data)</li>
+</ul>
+<p align="center">
+<img src="C:\Users\haarr\Desktop\cs3331\lecs\wk04\tcpSEQNo..png">
+</p>
+<p><em>Example</em>:</p>
+<p align="center">
+<img src="C:\Users\haarr\Desktop\cs3331\lecs\wk04\telnet.png">
+</p>
+<p>TCP <strong>Receivers</strong> send cumulative acknowledgements (like GBN)<br>
+Consider a packet containing B bytes [X, X+1, X+2, &#x2026;.X+B-1]</p>
+<ul>
+<li>If all data prior to some seq no. X have already been received
+<ul>
+<li>ACK acknowledges X+B (next expected byte)</li>
+<li>Seqno of next packet is same as last ACK field</li>
+</ul>
+</li>
+</ul>
+<p>Receivers can buffer out-of-sequence packets (like SR).</p>
+<p>Consider Loss with cumulative ACKs:<br>
+Sender sends packets -&gt; <em>100, 200, 300, 400, 500, 600, 700, 800, 900, &#x2026;</em></p>
+<p>Assume the 5th packet (seq. no. 500) is lost but no others, the stream of ACKs would be: <em>200, 300, 400, 500, 500, 500, 500,&#x2026;</em></p>
+<p><strong>TCP timeout</strong></p>
+<p>Note:<br>
+Sender maintains a single retransmission timer (like GBN) and<br>
+retransmits on timeout.</p>
+<p>We need to figure out a way to set TCP timeout value</p>
+<ul>
+<li>Needs to be longer than RTT but RTT varies</li>
+<li>Too short = premature timeout causing unecessary retransmissions</li>
+<li>Too long = Slow reaction, connection has lower throughput</li>
+</ul>
+<p>TimeoutInterval = EstimatedRTT + 4*DevRTT<br>
+EstimatedRTT = (1 - &#x3B1;)*EstimatedRTT + &#x3B1;*SampleRTT<br>
+Note:</p>
+<ul>
+<li>Typically &#x3B1;=0.125</li>
+<li>DevRTT is the safety margin</li>
+<li>SampleRTT is the measured time from segment transmission until ACK receipt</li>
+</ul>
+<p>DevRTT = (1&#x2212;&#x3B2;)*DevRTT+&#x3B2;* &#x2223; SampleRTT &#x2212; EstimatedRTT &#x2223;</p>
+<p><strong>TCP fast retransmit</strong><br>
+Time-out periods are often relatively long, Duplicate ACKs are a sign of an isolated loss. For e.g.<br>
+A sender receives 3 duplicate ACKs for the same data, the sender resends an unACKed segment with smallest sequence number.</p>
+<ul>
+<li>Likely that unACKed segment is lost so we don&apos;t need to wait for timeout.</li>
+</ul>
+<p><strong>TCP Flow control</strong></p>
+<p>Recall that hosts on either side of a TCP connection maintain a receive buffer for the connection, placing data in the receive buffer. This buffer may be busy at times and thus the sender can easily overflow the receive buffer by sending too much data too quickly.</p>
+<p>TCP&apos;s flow-control service prevents this by having the sender maintain a receive window denoted as <em>rwnd</em>. It is used to give the sender an idea how much free buffer space is available at the receiver.</p>
+<p>When rwnd = 0, sender stops sending data. (Sender keeps sending TCP segments with 1 data byte to receiver - dropped but ACKed by receiver)</p>
+<p><strong>Connection management</strong></p>
+<ol>
+<li>A sends a SYN packet to tell B it wants to open a connection</li>
+</ol>
+<ul>
+<li>Starts from some ISN</li>
+</ul>
+<ol start="2">
+<li>B sends a SYN-ACK packet to tell A it accepts and is ready to receive the next byte</li>
+</ol>
+<ul>
+<li>The SYN-ACK contains an ACK number with the value of A&#x2019;s ISN plus 1, and an ISN for B</li>
+</ul>
+<ol start="3">
+<li>A sends an ACK packet to B to acknowledge B&#x2019;s SYN-ACK packet</li>
+</ol>
+<ul>
+<li>The ACK contains an ACK number with the value of B&#x2019;s ISN plus 1, and a sequence number of A&#x2019;s ISN plus 1</li>
+</ul>
+<ol start="4">
+<li>Data is sent between A and B</li>
+<li>When finished, B sends a FIN packet to A</li>
+<li>A sends an ACK packet to B with an ACK number of B&#x2019;s sequence number plus 1, and then a FIN packet to B</li>
+<li>B sends an ACK packet to A with an ACK number of A&#x2019;s sequence number plus 1</li>
+</ol>
+<p align="center">
+<img src="https://lukakerr.github.io/assets/img/3331/synack.svg">
+</p>
+<h4 class="mume-header" id="36-principles-of-congestion-control">3.6 - Principles of congestion control</h4>
+
+<p><strong>Congestion</strong></p>
+<h4 class="mume-header" id="37-tcp-congestion-control">3.7 - TCP Congestion control</h4>
+
+<p><strong>TCP&apos;s approach:</strong></p>
+<p><strong>TCP Slow start</strong></p>
+<p><strong>AIMD</strong></p>
+<p><strong>TCP Flavours</strong></p>
+<p>Note: For exam, study till connection management (up-to page 73 in slides for Transport Layer)</p>
+<p><strong>Sources</strong>:</p>
+<ul>
+<li>Kurose Computer Networking Textbook pages 223 -&gt; 302</li>
+<li><a href="https://lukakerr.github.io/uni/3331-notes">https://lukakerr.github.io/uni/3331-notes</a></li>
+<li><a href="https://webcms3.cse.unsw.edu.au/COMP3331/20T3/resources/52109">https://webcms3.cse.unsw.edu.au/COMP3331/20T3/resources/52109</a></li>
+<li><a href="https://webcms3.cse.unsw.edu.au/COMP3331/20T3/resources/52095">https://webcms3.cse.unsw.edu.au/COMP3331/20T3/resources/52095</a></li>
+</ul>
+<p>Readings: Pages 223 - 302</p>
+
+  </div>
+
+</body></html>    
+<!-- Week04 lecture notes-->
     <!-- Whenever we float, clear it-->
     <div class="clearfix"></div>
     <hr>

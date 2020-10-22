@@ -1112,6 +1112,684 @@ The preferred approach out of the 3 is: ER Style</p>
   </body></html>
     <!-- WEEK03 LECTURE NOTES-->
     <!-- WEEK4 LECTURE NOTES-->
+
+  </head>
+  <body for="html-export">
+    <div class="mume markdown-preview  ">
+    <h2 class="mume-header" id="updating-queries-and-views">Updating, Queries and Views:</h2>
+
+<p><strong>Updates</strong>:</p>
+<p>Allows us to modify specified attributes in a specified tuples of a relation e.g.</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">UPDATE</span> R
+<span class="token keyword">SET</span>    list <span class="token keyword">of</span> assignments
+<span class="token keyword">WHERE</span>  Condition
+<span class="token comment">------------------------------</span>
+<span class="token comment">-- EXAMPLE 1: Adam changes his phone number.</span>
+<span class="token keyword">UPDATE</span> Drinkers
+<span class="token keyword">SET</span>    phone <span class="token operator">=</span> <span class="token string">&apos;9385-2222&apos;</span>
+<span class="token keyword">WHERE</span>  name <span class="token operator">=</span> <span class="token string">&apos;Adam&apos;</span><span class="token punctuation">;</span>
+<span class="token comment">------------------------------</span>
+<span class="token comment">-- EXAMPLE 2: John moves to Coogee.</span>
+<span class="token keyword">UPDATE</span> Drinkers
+<span class="token keyword">SET</span>    addr <span class="token operator">=</span> <span class="token string">&apos;Coogee&apos;</span><span class="token punctuation">,</span>
+     phone <span class="token operator">=</span> <span class="token string">&apos;9665-4321&apos;</span>
+<span class="token keyword">WHERE</span>  name <span class="token operator">=</span> <span class="token string">&apos;John&apos;</span><span class="token punctuation">;</span>
+</pre><p>We can also update many tuples at once:<br>
+<em>Example: Make $3 the maximum price for beer.</em></p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">UPDATE</span> Sells
+<span class="token keyword">SET</span>    price <span class="token operator">=</span> <span class="token number">3.00</span>
+<span class="token keyword">WHERE</span>  price <span class="token operator">&gt;</span> <span class="token number">3.00</span><span class="token punctuation">;</span>
+</pre><p><em>Example: Increase beer prices by 10%.</em></p>
+<pre data-role="codeBlock" data-info class="language-"><code>UPDATE Sells
+SET    price = price * 1.10;
+</code></pre><p><strong>Changing Tables:</strong><br>
+We use the <em>ALTER TABLE</em> operation:<br>
+<code>ALTER TABLE Relation Modifications</code><br>
+Some possible modifications:</p>
+<ul>
+<li>Adding a new column</li>
+<li>Change the properties of an exiting attribute</li>
+<li>Removing an attribute</li>
+</ul>
+<p>Below are some <strong>examples</strong>:</p>
+<p><em>Example: Add phone numbers for hotels.</em></p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> Bars
+  <span class="token keyword">ADD</span> phone <span class="token keyword">char</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span> <span class="token keyword">DEFAULT</span> <span class="token string">&apos;Unlisted&apos;</span>
+</pre><p>This adds a new column to the table and sets default value to <code>Unlisted</code></p>
+<p>We can then use <strong>UPDATE</strong> to add specific phone numbers, as below:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">UPDATE</span> Bars
+<span class="token keyword">SET</span>    phone <span class="token operator">=</span> <span class="token string">&apos;9665-0000&apos;</span>
+<span class="token keyword">WHERE</span>  name <span class="token operator">=</span> <span class="token string">&apos;Coogee Bay Hotel&apos;</span><span class="token punctuation">;</span>
+</pre><h4 class="mume-header" id="sql-queries">SQL Queries:</h4>
+
+<p>A <em>query</em> is a declarative program that retrieves data from a database. They are used in 2 ways:</p>
+<ul>
+<li>Interactively in e.g. psql</li>
+<li>By a program in e.g. PLpgSQL</li>
+</ul>
+<p><em>SELECT</em> is the most common used SQL Query, the result is a relation displayed on output:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> attributes
+<span class="token keyword">FROM</span>   relations
+<span class="token keyword">WHERE</span>  condition
+</pre><p>Consider some <em>examples</em> below:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> Name <span class="token keyword">FROM</span> Beers <span class="token keyword">WHERE</span> Manf <span class="token operator">=</span> <span class="token string">&apos;Toohey&apos;&apos;s&apos;</span><span class="token punctuation">;</span>
+</pre><p>Returns a subset of the Beers relation, shown as output:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>    name
+-------------
+New
+Old
+Red
+Sheaf Stout
+</code></pre><p>Some semantics of <em>SELECT</em>:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>FOR EACH tuple T in R DO
+  check whether T satisfies the condition
+                      in the WHERE clause
+  IF it does THEN
+      print the attributes of T that are
+          specified in the SELECT clause
+  END
+END
+</code></pre><p>NOTE: Select multiple/all attributes (use * for all):</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> Name<span class="token punctuation">,</span> Addr <span class="token keyword">FROM</span> Drinkers<span class="token punctuation">;</span>
+
+name  <span class="token operator">|</span>   addr
+<span class="token comment">--------+----------</span>
+Adam   <span class="token operator">|</span> Randwick
+Gernot <span class="token operator">|</span> Newtown
+John   <span class="token operator">|</span> Clovelly
+Justin <span class="token operator">|</span> Mosman
+</pre><p><strong>Renaming with &quot;AS&quot;:</strong><br>
+Use the AS clause within SELECT to rename attributes/relations, example below:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token comment">-- Example: rename Beers(name,manf) to Beers(beer,brewer)</span>
+
+
+<span class="token keyword">SELECT</span> name <span class="token keyword">AS</span> beer<span class="token punctuation">,</span> manf <span class="token keyword">AS</span> Brewer
+<span class="token keyword">FROM</span> Beers<span class="token punctuation">;</span>
+
+      beer         <span class="token operator">|</span>    brewer
+<span class="token comment">---------------------+---------------</span>
+<span class="token number">80</span><span class="token operator">/</span><span class="token operator">-</span>                <span class="token operator">|</span> Caledonian
+Bigfoot Barley Wine <span class="token operator">|</span> Sierra Nevada
+Burragorang Bock    <span class="token operator">|</span> George IV Inn
+Crown Lager         <span class="token operator">|</span> Carlton
+Fosters Lager       <span class="token operator">|</span> Carlton
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+</pre><p>Note:</p>
+<ul>
+<li>We can also introduce computed values with AS, see example below:</li>
+</ul>
+<pre data-role="codeBlock" data-info class="language-"><code>-- Example: display beer prices in Yen, rather than dollars
+
+
+SELECT bar, beer, price*120 AS PriceInYen  FROM Sells;
+
+     bar        |       beer       |    priceinyen
+------------------+------------------+------------------
+Australia Hotel  | Burragorang Bock |              420
+Coogee Bay Hotel | New              |              270
+Coogee Bay Hotel | Old              |              300
+Coogee Bay Hotel | Sparkling Ale    | 335.999994277954
+Coogee Bay Hotel | Victoria Bitter  | 275.999994277954
+Lord Nelson      | Three Sheets     |              450
+Lord Nelson      | Old Admiral      |              450
+...
+</code></pre><ul>
+<li>We can also do the same thing with text e.g.</li>
+</ul>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> drinker<span class="token punctuation">,</span> <span class="token string">&apos;likes Cooper&apos;&apos;s&apos;</span> <span class="token keyword">AS</span> WhoLikes
+<span class="token keyword">FROM</span> Likes
+<span class="token keyword">WHERE</span> beer <span class="token operator">=</span> <span class="token string">&apos;Sparkling Ale&apos;</span><span class="token punctuation">;</span>
+
+drinker <span class="token operator">|</span>    wholikes
+<span class="token comment">---------+----------------</span>
+Gernot  <span class="token operator">|</span> likes Cooper<span class="token string">&apos;s
+Justin  | likes Cooper&apos;</span>s
+</pre><ul>
+<li>Our selections can be quite specific too, see below:</li>
+</ul>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> price
+<span class="token keyword">FROM</span>   Sells
+<span class="token keyword">WHERE</span>  bar <span class="token operator">=</span> <span class="token string">&apos;Regent Hotel&apos;</span> <span class="token operator">AND</span> beer <span class="token operator">=</span> <span class="token string">&apos;New&apos;</span><span class="token punctuation">;</span>
+
+price
+<span class="token comment">-------</span>
+ <span class="token number">2.2</span>
+
+<span class="token comment">-- Note, we can format this better with the statement:</span>
+
+<span class="token keyword">SELECT</span> to_char<span class="token punctuation">(</span>price<span class="token punctuation">,</span><span class="token string">&apos;$99.99&apos;</span><span class="token punctuation">)</span> <span class="token keyword">AS</span> price
+
+price
+<span class="token comment">---------</span>
+$  <span class="token number">2.20</span>
+</pre><p><strong>Multi-Relation SELECT Queries:</strong></p>
+<p>Similar syntax as before but with multiple relations:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>SELECT Attributes
+FROM   R1, R2, ...
+WHERE  Condition
+</code></pre><p>Consider the below example where we find brewers whose beers John likes:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> Manf <span class="token keyword">as</span> brewer
+<span class="token keyword">FROM</span>   Likes<span class="token punctuation">,</span> Beers
+<span class="token keyword">WHERE</span>  beer <span class="token operator">=</span> name <span class="token operator">AND</span> drinker <span class="token operator">=</span> <span class="token string">&apos;John&apos;</span><span class="token punctuation">;</span>
+
+  brewer
+<span class="token comment">---------------</span>
+Caledonian
+Sierra Nevada
+Sierra Nevada
+Lord Nelson
+
+<span class="token comment">-- Eliminate duplicates with DISTINCT</span>
+</pre><p>Notes:</p>
+<ul>
+<li>If a selection condition refers to 2 relations of which have attributes with the same name, we use the relation name to disambiguate:</li>
+<li>We cannot use AS clause because that&apos;s for output only</li>
+</ul>
+<pre data-role="codeBlock" data-info class="language-"><code>SELECT Bars.name
+FROM   Bars, Beers
+WHERE  Bars.name = Beers.name;
+</code></pre><p><strong>Using same relation TWICE in a select:</strong></p>
+<p>We define new names for each instance of this relation in the FROM clause:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>SELECT r1.a, r2.b
+FROM   R r1, R r2
+WHERE  r1.a = r2.a
+</code></pre><p><strong>Example</strong> below:</p>
+<pre data-role="codeBlock" data-info class="language-"><code>SELECT b1.name, b2.name
+FROM   Beers b1, Beers b2
+WHERE  b1.manf = b2.manf AND b1.name &lt; b2.name;
+
+      name         |       name
+---------------------+------------------
+Crown Lager         | Fosters Lager
+Crown Lager         | Invalid Stout
+Crown Lager         | Melbourne Bitter
+Crown Lager         | Victoria Bitter
+Fosters Lager       | Invalid Stout
+Fosters Lager       | Melbourne Bitter
+</code></pre><p><strong>Explicit Joins</strong></p>
+<p>Explicit joins:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token keyword">FROM</span> A <span class="token keyword">natural</span> <span class="token keyword">join</span> B
+<span class="token keyword">SELECT</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token keyword">FROM</span> A <span class="token keyword">join</span> B <span class="token keyword">using</span> <span class="token punctuation">(</span>A1<span class="token punctuation">,</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span>An<span class="token punctuation">)</span>
+<span class="token keyword">SELECT</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token keyword">FROM</span> A <span class="token keyword">join</span> B <span class="token keyword">on</span> Condition
+
+<span class="token comment">-- Used assuming that the join attributes are named the same in each R</span>
+</pre><p><strong>Example</strong> below:<br>
+<em>Find all the beers sold at bars where john drinks:</em></p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> Sells<span class="token punctuation">.</span>bar<span class="token punctuation">,</span> beer<span class="token punctuation">,</span> price
+<span class="token keyword">FROM</span>   Sells<span class="token punctuation">,</span> Frequents
+<span class="token keyword">WHERE</span>  drinker <span class="token operator">=</span> <span class="token string">&apos;John&apos;</span>
+     <span class="token operator">AND</span> Sells<span class="token punctuation">.</span>bar <span class="token operator">=</span> Frequents<span class="token punctuation">.</span>bar<span class="token punctuation">;</span>
+</pre><p><em>Equivalents</em>:</p>
+<ol>
+<li></li>
+</ol>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> bar<span class="token punctuation">,</span> beer<span class="token punctuation">,</span> price
+<span class="token keyword">FROM</span>   Sells <span class="token keyword">natural</span> <span class="token keyword">join</span> Frequents
+<span class="token keyword">WHERE</span>  drinker<span class="token operator">=</span><span class="token string">&apos;John&apos;</span><span class="token punctuation">;</span>
+     <span class="token comment">-- joins on the only common attribute: bar</span>
+</pre><ol start="2">
+<li></li>
+</ol>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> bar<span class="token punctuation">,</span> beer<span class="token punctuation">,</span> price
+<span class="token keyword">FROM</span>   Sells <span class="token keyword">join</span> Frequents <span class="token keyword">using</span> <span class="token punctuation">(</span>bar<span class="token punctuation">)</span>
+<span class="token keyword">WHERE</span>  drinker<span class="token operator">=</span><span class="token string">&apos;John&apos;</span><span class="token punctuation">;</span>
+     <span class="token comment">-- only one bar attribute in join result</span>
+</pre><ol start="3">
+<li></li>
+</ol>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> Sells<span class="token punctuation">.</span>bar<span class="token punctuation">,</span> beer<span class="token punctuation">,</span> price
+<span class="token keyword">FROM</span>   Sells <span class="token keyword">join</span> Frequents
+         <span class="token keyword">on</span> Sells<span class="token punctuation">.</span>bar <span class="token operator">=</span> Frequents<span class="token punctuation">.</span>bar
+<span class="token keyword">WHERE</span>  drinker<span class="token operator">=</span><span class="token string">&apos;John&apos;</span><span class="token punctuation">;</span>
+     <span class="token comment">-- bar attribute occurs twice in join result</span>
+</pre><p><strong>Outer Joins:</strong></p>
+<p>Join only produces tuples where matching values exist in both sides of the relation i.e. they don&apos;t consider nulls</p>
+<p>In our examples, we can show ALL regions even if there aren&apos;t any drinkers there using OUTER JOIN</p>
+<ul>
+<li>
+<p>The <code>R LEFT OUTER JOIN S</code>:</p>
+<ul>
+<li>All tuples in R have an entry, if a tuple from R has no matches in S, attributes from S are NULL</li>
+</ul>
+<pre data-role="codeBlock" data-info class="language-"><code>  SELECT B.addr, F.drinker
+FROM   Bars as B
+      left outer join
+   Frequents as F
+      on (bar = name)
+ORDER BY B.addr;
+
+addr    | drinker
+------------+---------
+Coogee     | Adam
+Coogee     | John
+Kingsford  | Justin
+Randwick   |
+Sydney     | Justin
+The Rocks  | John
+</code></pre></li>
+<li>
+<p>The <code>R RIGHT OUTER JOIN S</code>:</p>
+<ul>
+<li>All tuples in S have an entry, Null-fills any S tuple with no match in R</li>
+</ul>
+</li>
+<li>
+<p>The <code>R FULL OUTER JOIN S</code>:</p>
+<ul>
+<li>Includes all tuples from R and S in the result, those without matches in other relation are NULL filled.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Subqueries:</strong></p>
+<p>The result of a SELECT-FROM-WHERE query can be used in the WHERE clause of another query.</p>
+<p>Simplest case example:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> <span class="token operator">*</span>
+<span class="token keyword">FROM</span>   R
+<span class="token keyword">WHERE</span>  R<span class="token punctuation">.</span>a <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">SELECT</span> x <span class="token keyword">FROM</span> S <span class="token keyword">WHERE</span> Cond<span class="token punctuation">)</span>
+           <span class="token comment">-- assume only one result</span>
+</pre><p>Another example:</p>
+<p><em>Finding bars serving &apos;New&apos; at the same price as VB from Coogee Bay Hotel</em></p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> bar
+<span class="token keyword">FROM</span>   Sells
+<span class="token keyword">WHERE</span>  beer <span class="token operator">=</span> <span class="token string">&apos;New&apos;</span> <span class="token operator">AND</span>
+     price <span class="token operator">=</span>
+        <span class="token punctuation">(</span><span class="token keyword">SELECT</span> price
+         <span class="token keyword">FROM</span>   Sells
+         <span class="token keyword">WHERE</span>  bar <span class="token operator">=</span> <span class="token string">&apos;Coogee Bay Hotel&apos;</span>
+                <span class="token operator">AND</span> beer <span class="token operator">=</span> <span class="token string">&apos;Victoria Bitter&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+   bar
+<span class="token comment">-------------</span>
+Royal Hotel
+</pre><p>Note:</p>
+<ul>
+<li>Look how <code>beer</code> and <code>bar</code> was repeated in the subquery, this is fine since an attribute refers to the closest nested relation with that attribute - to set the scope, we require the braces.</li>
+</ul>
+<p>Alternative:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> s1<span class="token punctuation">.</span>bar
+<span class="token keyword">FROM</span>   Sells <span class="token keyword">as</span> s1<span class="token punctuation">,</span> Sells <span class="token keyword">as</span> s2
+<span class="token keyword">WHERE</span>  s1<span class="token punctuation">.</span>beer <span class="token operator">=</span> <span class="token string">&apos;New&apos;</span>
+     <span class="token operator">AND</span> s1<span class="token punctuation">.</span>price <span class="token operator">=</span> s2<span class="token punctuation">.</span>price
+     <span class="token operator">AND</span> s2<span class="token punctuation">.</span>bar <span class="token operator">=</span> <span class="token string">&apos;Coogee Bay Hotel&apos;</span>
+     <span class="token operator">AND</span> s2<span class="token punctuation">.</span>beer <span class="token operator">=</span> <span class="token string">&apos;Victoria Bitter&apos;</span><span class="token punctuation">;</span>
+<span class="token comment">-- Expressing a query with joins is more efficient than with subqueries</span>
+</pre><p><strong>The <code>IN</code> operator</strong>:</p>
+<p>This tests whether a specified tuple is contained in a relation i.e. <code>tuple IN relation</code> is true iff tuple contained in the relationship.</p>
+<p><em>Syntax</em>:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> <span class="token operator">*</span>
+<span class="token keyword">FROM</span>   R
+<span class="token keyword">WHERE</span>  R<span class="token punctuation">.</span>a <span class="token operator">IN</span> <span class="token punctuation">(</span><span class="token keyword">SELECT</span> x <span class="token keyword">FROM</span> S <span class="token keyword">WHERE</span> Cond<span class="token punctuation">)</span>
+            <span class="token comment">-- assume multiple results</span>
+</pre><p>An example:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> <span class="token operator">*</span>
+<span class="token keyword">FROM</span>   Beers
+<span class="token keyword">WHERE</span>  name <span class="token operator">IN</span>
+        <span class="token punctuation">(</span><span class="token keyword">SELECT</span> beer
+         <span class="token keyword">FROM</span>   Likes
+         <span class="token keyword">WHERE</span>  drinker <span class="token operator">=</span> <span class="token string">&apos;John&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      name         <span class="token operator">|</span>     manf
+<span class="token comment">---------------------+---------------</span>
+<span class="token number">80</span><span class="token operator">/</span><span class="token operator">-</span>                <span class="token operator">|</span> Caledonian
+Bigfoot Barley Wine <span class="token operator">|</span> Sierra Nevada
+Pale Ale            <span class="token operator">|</span> Sierra Nevada
+Three Sheets        <span class="token operator">|</span> Lord Nelson
+</pre><p><strong>The <code>EXISTS</code> Function</strong>:</p>
+<p>EXISTS(relation) is true iff the relation is non-empty.</p>
+<p><strong>Example</strong>: Find the beers that are the unique beer by their manufacturer.</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> name<span class="token punctuation">,</span> manf
+<span class="token keyword">FROM</span>   Beers b1
+<span class="token keyword">WHERE</span>  <span class="token operator">NOT</span> <span class="token keyword">EXISTS</span>
+        <span class="token punctuation">(</span><span class="token keyword">SELECT</span> <span class="token operator">*</span>
+         <span class="token keyword">FROM</span>   Beers
+         <span class="token comment">-- b1 refers to outer Beers</span>
+         <span class="token keyword">WHERE</span>  manf <span class="token operator">=</span> b1<span class="token punctuation">.</span>manf
+                <span class="token operator">AND</span> name <span class="token operator">!=</span> b1<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p><strong>Quantifiers:</strong><br>
+<code>ANY</code> and <code>ALL</code> behave as existential and universal quantifiers respectively.</p>
+<p><strong>Example</strong>: Find the beers sold for the highest price.</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> beer
+<span class="token keyword">FROM</span>   Sells
+<span class="token keyword">WHERE</span>  price <span class="token operator">&gt;=</span>
+        <span class="token keyword">ALL</span><span class="token punctuation">(</span><span class="token keyword">SELECT</span> price <span class="token keyword">FROM</span> sells<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p><strong>Union, Intersection, Difference</strong>:</p>
+<p>SQL implements the standard set operations on &quot;union-compatible&quot; relations:</p>
+<p><code>R1 UNION R2</code> set of tuples in either R1 or R2<br>
+<code>R1 INTERSECT R2</code> set of tuples in both R1 and R2<br>
+<code>R1 EXCEPT R2</code> set of tuples in R1 but not R2</p>
+<p><strong>Example 1</strong>: Find the drinkers and beers such that the drinker likes the beer and frequents a bar that sells it.</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token punctuation">(</span><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> Likes<span class="token punctuation">)</span>
+<span class="token keyword">INTERSECT</span>
+<span class="token punctuation">(</span><span class="token keyword">SELECT</span> drinker<span class="token punctuation">,</span>beer
+<span class="token keyword">FROM</span>   Sells <span class="token keyword">natural</span> <span class="token keyword">join</span> Frequents<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+drinker <span class="token operator">|</span>      beer
+<span class="token comment">---------+-----------------</span>
+Adam    <span class="token operator">|</span> New
+John    <span class="token operator">|</span> Three Sheets
+Justin  <span class="token operator">|</span> Victoria Bitter
+</pre><p><strong>Example 2</strong>: Find bars that each sell all of the beers Justin likes.</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token comment">-- This acts as a divide operator:</span>
+<span class="token keyword">SELECT</span> <span class="token keyword">DISTINCT</span> a<span class="token punctuation">.</span>bar
+<span class="token keyword">FROM</span>   Sells a
+<span class="token keyword">WHERE</span>  <span class="token operator">NOT</span> <span class="token keyword">EXISTS</span> <span class="token punctuation">(</span>
+         <span class="token punctuation">(</span><span class="token keyword">SELECT</span> beer <span class="token keyword">FROM</span> Likes
+          <span class="token keyword">WHERE</span> drinker <span class="token operator">=</span> <span class="token string">&apos;Justin&apos;</span><span class="token punctuation">)</span>
+         <span class="token keyword">EXCEPT</span>
+         <span class="token punctuation">(</span><span class="token keyword">SELECT</span> beer <span class="token keyword">FROM</span> Sells b
+          <span class="token keyword">WHERE</span> bar <span class="token operator">=</span> a<span class="token punctuation">.</span>bar<span class="token punctuation">)</span>
+     <span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p><strong>Aggregation Operations:</strong><br>
+Selection clauses can contain aggregation operations, e.g. <code>SUM AVG MIN MAX COUNT</code></p>
+<p><em>Example 1:</em> What is the <strong>average</strong> price of New?</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> <span class="token function">AVG</span><span class="token punctuation">(</span>price<span class="token punctuation">)</span>
+<span class="token keyword">FROM</span>   Sells
+<span class="token keyword">WHERE</span>  beer <span class="token operator">=</span> <span class="token string">&apos;New&apos;</span><span class="token punctuation">;</span>
+
+     avg
+<span class="token comment">------------------</span>
+<span class="token number">2.38749998807907</span>
+</pre><p><em>Example 2:</em> How many <em>different</em> bars sell beer?</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> <span class="token function">COUNT</span><span class="token punctuation">(</span><span class="token keyword">DISTINCT</span> bar<span class="token punctuation">)</span>
+<span class="token keyword">FROM</span> Sells<span class="token punctuation">;</span>
+
+count
+<span class="token comment">---------</span>
+   <span class="token number">6</span>
+<span class="token comment">-- Note: Without DISTINCT, the result is 15</span>
+</pre><p>Note: The notation <code>COUNT(*)</code> gives the number of tuples in a relation.</p>
+<p><strong>Grouping:</strong><br>
+<code>SELECT-FROM-WHERE</code> can be followed by GROUP BY</p>
+<p>General format:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span>   attributes<span class="token operator">/</span>aggregations
+<span class="token keyword">FROM</span>     relations
+<span class="token keyword">WHERE</span>    condition
+<span class="token keyword">GROUP</span> <span class="token keyword">BY</span> attribute
+</pre><p>Example 1: <em>How many beers does each brewer make?</em></p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span>   manf<span class="token punctuation">,</span> <span class="token function">COUNT</span><span class="token punctuation">(</span>manf<span class="token punctuation">)</span>
+<span class="token keyword">FROM</span>     Beers
+<span class="token keyword">GROUP</span> <span class="token keyword">BY</span> manf<span class="token punctuation">;</span>
+</pre><p><strong>Note</strong>: Grouping is typically used in queries involving the phrase &quot;for each&quot;.<br>
+Restrictions:</p>
+<p>Example 2: <em>For each drinker, find the average price of New at the bars they go to</em></p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span>   drinker<span class="token punctuation">,</span> <span class="token function">AVG</span><span class="token punctuation">(</span>price<span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token string">&quot;Avg.Price&quot;</span>
+<span class="token keyword">FROM</span>     Frequents<span class="token punctuation">,</span> Sells
+<span class="token keyword">WHERE</span>    beer <span class="token operator">=</span> <span class="token string">&apos;New&apos;</span>
+       <span class="token operator">AND</span> Frequents<span class="token punctuation">.</span>bar <span class="token operator">=</span> Sells<span class="token punctuation">.</span>bar
+<span class="token keyword">GROUP</span> <span class="token keyword">BY</span> drinker<span class="token punctuation">;</span>
+
+drinker <span class="token operator">|</span> Avg<span class="token punctuation">.</span>Price
+<span class="token comment">---------+-----------</span>
+Adam    <span class="token operator">|</span>      <span class="token number">2.25</span>
+John    <span class="token operator">|</span>      <span class="token number">2.25</span>
+Justin  <span class="token operator">|</span>       <span class="token number">2.5</span>
+</pre><p><code>HAVING</code> &amp; <strong>Restrictions</strong>:</p>
+<p>Notes:</p>
+<ul>
+<li>
+<p>We cannot use <code>GROUP BY</code> to re-order results (Use <code>ORDER BY</code> instead):</p>
+<ul>
+<li>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token comment">-- Find the hotel that sells &apos;New&apos; cheapest.</span>
+<span class="token keyword">SELECT</span> name<span class="token punctuation">,</span> manf <span class="token keyword">FROM</span> Beers
+<span class="token keyword">GROUP</span> <span class="token keyword">BY</span> manf<span class="token punctuation">;</span>
+
+ERROR: Attribute beers<span class="token punctuation">.</span>name must be GROUPed <span class="token operator">or</span> used <span class="token operator">in</span> an aggregate <span class="token keyword">function</span>
+</pre></li>
+</ul>
+</li>
+<li>
+<p>Using aggregation</p>
+<ul>
+<li>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token comment">-- How to answer the query: Which bar sells &apos;New&apos; cheapest?</span>
+<span class="token keyword">SELECT</span> bar
+<span class="token keyword">FROM</span>   Sells
+<span class="token keyword">WHERE</span>  beer <span class="token operator">=</span> <span class="token string">&apos;New&apos;</span> <span class="token operator">AND</span>
+  price <span class="token operator">&lt;=</span> <span class="token punctuation">(</span><span class="token keyword">SELECT</span> <span class="token function">MIN</span><span class="token punctuation">(</span>price<span class="token punctuation">)</span>
+              <span class="token keyword">FROM</span>   Sells
+              <span class="token keyword">WHERE</span>  beer <span class="token operator">=</span> <span class="token string">&apos;New&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  bar
+<span class="token comment">--------------</span>
+Regent Hotel
+
+</pre></li>
+</ul>
+</li>
+<li>
+<p>Eliminating groups</p>
+<ul>
+<li>We can use <code>WHERE</code> condition to eliminate groups but also the <code>HAVING</code> clause</li>
+</ul>
+</li>
+</ul>
+<p>Some examples:</p>
+<p><strong>Example 1</strong>: Average beer price by suburb excluding hotels in The Rocks.</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span>   Bars<span class="token punctuation">.</span>addr<span class="token punctuation">,</span> <span class="token function">AVG</span><span class="token punctuation">(</span>Sells<span class="token punctuation">.</span>price<span class="token punctuation">)</span>
+<span class="token keyword">FROM</span>     Sells<span class="token punctuation">,</span> Bars
+<span class="token keyword">WHERE</span>    Bars<span class="token punctuation">.</span>addr <span class="token operator">!=</span> <span class="token string">&apos;The Rocks&apos;</span>
+       <span class="token operator">AND</span> Sells<span class="token punctuation">.</span>bar <span class="token operator">=</span> Bars<span class="token punctuation">.</span>name
+<span class="token keyword">GROUP</span> <span class="token keyword">BY</span> Bars<span class="token punctuation">.</span>addr<span class="token punctuation">;</span>
+</pre><p><code>HAVING</code>:</p>
+<pre data-role="codeBlock" data-info="SQL" class="language-sql"><span class="token keyword">SELECT</span>   attributes<span class="token operator">/</span>aggregations
+<span class="token keyword">FROM</span>     relations
+<span class="token keyword">WHERE</span>    condition <span class="token punctuation">(</span><span class="token keyword">on</span> tuples<span class="token punctuation">)</span>
+<span class="token keyword">GROUP</span> <span class="token keyword">BY</span> attribute
+<span class="token keyword">HAVING</span>   condition <span class="token punctuation">(</span><span class="token keyword">on</span> <span class="token keyword">group</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p><strong>Example 2</strong>: Find the average price of common beers (i.e. those that are served in more than one hotel).</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span>   beer<span class="token punctuation">,</span>
+       to_char<span class="token punctuation">(</span><span class="token function">AVG</span><span class="token punctuation">(</span>price<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token string">&apos;9.99&apos;</span><span class="token punctuation">)</span>
+         <span class="token keyword">as</span> <span class="token string">&quot;$$$&quot;</span>
+<span class="token keyword">FROM</span>     Sells
+<span class="token keyword">GROUP</span> <span class="token keyword">BY</span> beer
+<span class="token keyword">HAVING</span>   <span class="token function">COUNT</span><span class="token punctuation">(</span>bar<span class="token punctuation">)</span> <span class="token operator">&gt;</span> <span class="token number">1</span><span class="token punctuation">;</span>
+
+    beer       <span class="token operator">|</span>  $$$
+<span class="token comment">-----------------+-------</span>
+New             <span class="token operator">|</span>  <span class="token number">2.39</span>
+Old             <span class="token operator">|</span>  <span class="token number">2.53</span>
+Victoria Bitter <span class="token operator">|</span>  <span class="token number">2.40</span>
+</pre><p><strong>Example 3</strong>: Find the average price of beers that are either commonly served (in more than one hotel) or are manufactured by Cooper&apos;s.</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> beer<span class="token punctuation">,</span> <span class="token function">AVG</span><span class="token punctuation">(</span>price<span class="token punctuation">)</span>
+<span class="token keyword">FROM</span>   Sells
+<span class="token keyword">GROUP</span> <span class="token keyword">BY</span> beer
+<span class="token keyword">HAVING</span> <span class="token function">COUNT</span><span class="token punctuation">(</span>bar<span class="token punctuation">)</span> <span class="token operator">&gt;</span> <span class="token number">1</span>
+     <span class="token operator">OR</span> beer <span class="token operator">in</span>
+         <span class="token punctuation">(</span><span class="token keyword">SELECT</span> name
+          <span class="token keyword">FROM</span>   beers
+          <span class="token keyword">WHERE</span>  manf <span class="token operator">=</span> <span class="token string">&apos;Cooper&apos;&apos;s&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    beer       <span class="token operator">|</span>       avg
+<span class="token comment">-----------------+------------------</span>
+New             <span class="token operator">|</span> <span class="token number">2.38749998807907</span>
+Old             <span class="token operator">|</span> <span class="token number">2.53333330154419</span>
+Sparkling Ale   <span class="token operator">|</span> <span class="token number">2.79999995231628</span>
+Victoria Bitter <span class="token operator">|</span> <span class="token number">2.39999997615814</span>
+</pre><p><strong>Example 4</strong>: Find bars that each sell all of the beers Justin likes.</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> <span class="token keyword">DISTINCT</span> S<span class="token punctuation">.</span>bar
+<span class="token keyword">FROM</span>   Sells S<span class="token punctuation">,</span> Likes L
+<span class="token keyword">WHERE</span>  S<span class="token punctuation">.</span>beer <span class="token operator">=</span> L<span class="token punctuation">.</span>beer
+     <span class="token operator">AND</span> L<span class="token punctuation">.</span>drinker <span class="token operator">=</span> <span class="token string">&apos;Justin&apos;</span>
+<span class="token keyword">GROUP</span> <span class="token keyword">BY</span> bar
+<span class="token keyword">HAVING</span> <span class="token function">count</span><span class="token punctuation">(</span>S<span class="token punctuation">.</span>beer<span class="token punctuation">)</span> <span class="token operator">=</span>
+         <span class="token punctuation">(</span><span class="token keyword">SELECT</span> <span class="token function">count</span><span class="token punctuation">(</span>beer<span class="token punctuation">)</span> <span class="token keyword">FROM</span> Likes
+          <span class="token keyword">WHERE</span> drinker <span class="token operator">=</span> <span class="token string">&apos;Justin&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p><strong>Partitions</strong>:<br>
+Partitioning is the database process where very large tables are divided into multiple smaller parts.</p>
+<p>Syntax for PARTITION:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> attr1<span class="token punctuation">,</span> attr2<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span>
+     aggregate1 <span class="token keyword">OVER</span> <span class="token punctuation">(</span><span class="token keyword">PARTITION</span> <span class="token keyword">BY</span> attri<span class="token punctuation">)</span><span class="token punctuation">,</span>
+     aggregate2 <span class="token keyword">OVER</span> <span class="token punctuation">(</span><span class="token keyword">PARTITION</span> <span class="token keyword">BY</span> attrj<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token keyword">FROM</span>   <span class="token keyword">Table</span>
+<span class="token keyword">WHERE</span>  condition <span class="token keyword">on</span> attributes
+</pre><p><strong>Example 1</strong>: Show each city with daily temperature and temperature range</p>
+<p><em>Schema: Weather(city,date,temperature)</em></p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span>  city<span class="token punctuation">,</span>  <span class="token keyword">date</span><span class="token punctuation">,</span>  temperature <span class="token keyword">as</span> <span class="token keyword">temp</span><span class="token punctuation">,</span>
+      <span class="token function">min</span><span class="token punctuation">(</span>temperature<span class="token punctuation">)</span> <span class="token keyword">OVER</span> <span class="token punctuation">(</span><span class="token keyword">PARTITION</span> <span class="token keyword">BY</span> city<span class="token punctuation">)</span> <span class="token keyword">as</span> lowest<span class="token punctuation">,</span>
+      <span class="token function">max</span><span class="token punctuation">(</span>temperature<span class="token punctuation">)</span> <span class="token keyword">OVER</span> <span class="token punctuation">(</span><span class="token keyword">PARTITION</span> <span class="token keyword">BY</span> city<span class="token punctuation">)</span> <span class="token keyword">as</span> highest
+<span class="token keyword">FROM</span>    Weather<span class="token punctuation">;</span>
+
+<span class="token comment">-- Output: Result(city, date, temp, lowest, highest)</span>
+</pre><p>Similar to GROUP BY:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> city<span class="token punctuation">,</span> <span class="token function">min</span><span class="token punctuation">(</span>temperature<span class="token punctuation">)</span> <span class="token function">max</span><span class="token punctuation">(</span>temperature<span class="token punctuation">)</span>
+<span class="token keyword">FROM</span>   Weather  <span class="token keyword">GROUP</span> <span class="token keyword">BY</span> city
+
+<span class="token comment">--Result: one tuple for each city -&gt; Result(city,min,max)</span>
+</pre><p><strong>Example 2</strong>: get a list of low-scoring students in each course</p>
+<p><em>Schema: Enrolment(course,student,mark)</em></p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> course<span class="token punctuation">,</span> student<span class="token punctuation">,</span> mark<span class="token punctuation">,</span>
+     <span class="token function">avg</span><span class="token punctuation">(</span>mark<span class="token punctuation">)</span> <span class="token keyword">OVER</span> <span class="token punctuation">(</span><span class="token keyword">PARTITION</span> <span class="token keyword">BY</span> course<span class="token punctuation">)</span>
+<span class="token keyword">FROM</span>   Enrolments<span class="token punctuation">;</span>
+</pre><p><strong>Complex Queries</strong>:</p>
+<p>We should break the query into a collection of smaller queries i.e. Subqueries in FROM clause and WITH clause (also as a VIEW)</p>
+<p>Using the above example, we use <code>FROM</code>:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> course<span class="token punctuation">,</span> student<span class="token punctuation">,</span> mark
+<span class="token keyword">FROM</span>   <span class="token punctuation">(</span><span class="token keyword">SELECT</span> course<span class="token punctuation">,</span> student<span class="token punctuation">,</span> mark<span class="token punctuation">,</span>
+             <span class="token function">avg</span><span class="token punctuation">(</span>mark<span class="token punctuation">)</span> <span class="token keyword">OVER</span> <span class="token punctuation">(</span><span class="token keyword">PARTITION</span> <span class="token keyword">BY</span> course<span class="token punctuation">)</span>
+      <span class="token keyword">FROM</span>   Enrolments<span class="token punctuation">)</span> <span class="token keyword">AS</span> CourseMarkAndAverages
+<span class="token keyword">WHERE</span>  mark <span class="token operator">&lt;</span> avg<span class="token punctuation">;</span>
+</pre><p>General case:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> attributes
+<span class="token keyword">FROM</span>   <span class="token punctuation">(</span>Query1<span class="token punctuation">)</span> <span class="token keyword">AS</span> X<span class="token punctuation">,</span>
+     <span class="token punctuation">(</span>Query2<span class="token punctuation">)</span> <span class="token keyword">AS</span> Y<span class="token punctuation">,</span>
+     <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token keyword">WHERE</span>  X<span class="token punctuation">.</span>a <span class="token operator">=</span> Y<span class="token punctuation">.</span>b <span class="token operator">AND</span> other conditions
+</pre><p>Using the above example, we use <code>WITH</code>:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">WITH</span> CourseMarksAndAverages <span class="token keyword">AS</span>
+   <span class="token punctuation">(</span><span class="token keyword">SELECT</span> course<span class="token punctuation">,</span> student<span class="token punctuation">,</span> mark<span class="token punctuation">,</span>
+           <span class="token function">avg</span><span class="token punctuation">(</span>mark<span class="token punctuation">)</span> <span class="token keyword">OVER</span> <span class="token punctuation">(</span><span class="token keyword">PARTITION</span> <span class="token keyword">BY</span> course<span class="token punctuation">)</span>
+    <span class="token keyword">FROM</span>   CourseEnrolments<span class="token punctuation">)</span>
+<span class="token keyword">SELECT</span> course<span class="token punctuation">,</span> student<span class="token punctuation">,</span> mark<span class="token punctuation">,</span> avg
+<span class="token keyword">FROM</span>   CourseMarksAndAverages
+<span class="token keyword">WHERE</span>  mark <span class="token operator">&lt;</span> avg<span class="token punctuation">;</span>
+</pre><p>General case:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">WITH</span>   Name1<span class="token punctuation">(</span>a<span class="token punctuation">,</span>b<span class="token punctuation">,</span>c<span class="token punctuation">)</span> <span class="token keyword">AS</span> <span class="token punctuation">(</span>Query1<span class="token punctuation">)</span><span class="token punctuation">,</span>
+     Name2 <span class="token keyword">AS</span> <span class="token punctuation">(</span>Query1<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token keyword">SELECT</span> attributes
+<span class="token keyword">FROM</span>   Name1<span class="token punctuation">,</span> Name2<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token keyword">WHERE</span>  conditions <span class="token keyword">with</span> attributes <span class="token keyword">of</span> Name1 <span class="token operator">and</span> Name2
+</pre><p><strong>Recursive Queries</strong>:</p>
+<p><code>WITH</code> also provides a basis for recursive queries, which are structured as:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">WITH</span> RECURSIVE Recurs<span class="token punctuation">(</span>attributes<span class="token punctuation">)</span> <span class="token keyword">AS</span> <span class="token punctuation">(</span>
+   <span class="token keyword">SELECT</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token operator">not</span> involving Recurs
+ <span class="token keyword">UNION</span>
+   <span class="token keyword">SELECT</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token keyword">FROM</span> Recurs<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">SELECT</span> attributes
+<span class="token keyword">FROM</span>   Recurs<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token keyword">WHERE</span>  condition involving Recurs attributes
+</pre><p><strong>Example 1</strong>: Sum the numbers from 1 to 100:</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">WITH</span> RECURSIVE t<span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token keyword">AS</span> <span class="token punctuation">(</span>
+   <span class="token keyword">SELECT</span> <span class="token number">1</span>
+ <span class="token keyword">UNION</span>
+   <span class="token keyword">SELECT</span> n<span class="token operator">+</span><span class="token number">1</span> <span class="token keyword">FROM</span> t <span class="token keyword">WHERE</span> n <span class="token operator">&lt;</span> <span class="token number">100</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">SELECT</span> <span class="token function">sum</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token keyword">FROM</span> t<span class="token punctuation">;</span>
+</pre><p><strong>Example 2</strong>: Count number of each sub-part in a given part.</p>
+<p><em>Schema: Parts(part, sub_part, quantity)</em></p>
+<pre data-role="codeBlock" data-info="SQL" class="language-sql"><span class="token keyword">WITH</span> RECURSIVE IncludedParts<span class="token punctuation">(</span>sub_part<span class="token punctuation">,</span> part<span class="token punctuation">,</span> quantity<span class="token punctuation">)</span> <span class="token keyword">AS</span> <span class="token punctuation">(</span>
+<span class="token keyword">SELECT</span> sub_part<span class="token punctuation">,</span> part<span class="token punctuation">,</span> quantity
+<span class="token keyword">FROM</span> Parts <span class="token keyword">WHERE</span> part <span class="token operator">=</span> GivenPart
+<span class="token keyword">UNION</span> <span class="token keyword">ALL</span>
+<span class="token keyword">SELECT</span> p<span class="token punctuation">.</span>sub_part<span class="token punctuation">,</span> p<span class="token punctuation">.</span>part<span class="token punctuation">,</span> p<span class="token punctuation">.</span>quantity
+<span class="token keyword">FROM</span> IncludedParts i<span class="token punctuation">,</span> Parts p
+<span class="token keyword">WHERE</span> p<span class="token punctuation">.</span>part <span class="token operator">=</span> i<span class="token punctuation">.</span>sub_part
+<span class="token punctuation">)</span>
+<span class="token keyword">SELECT</span> sub_part<span class="token punctuation">,</span> <span class="token function">SUM</span><span class="token punctuation">(</span>quantity<span class="token punctuation">)</span> <span class="token keyword">as</span> total_quantity
+<span class="token keyword">FROM</span> IncludedParts
+<span class="token keyword">GROUP</span> <span class="token keyword">BY</span> sub_part
+</pre><h4 class="mume-header" id="sql-views"><strong>SQL Views</strong>:</h4>
+
+<p>A view is like a <em>&quot;virtual relation&quot;</em> defined via a query.</p>
+<p>View definition and removal:</p>
+<pre data-role="codeBlock" data-info="SQL" class="language-sql"><span class="token keyword">CREATE</span> <span class="token keyword">VIEW</span> ViewName <span class="token keyword">AS</span> Query
+
+<span class="token keyword">CREATE</span> <span class="token keyword">VIEW</span> ViewName <span class="token punctuation">[</span> <span class="token punctuation">(</span>AttributeNames<span class="token punctuation">)</span> <span class="token punctuation">]</span>
+<span class="token keyword">AS</span> Query
+
+<span class="token keyword">DROP</span> <span class="token keyword">VIEW</span> ViewName
+</pre><p>Note:</p>
+<ul>
+<li>Stored tables in a view are called base tables which should be defined before the view itself</li>
+</ul>
+<p><strong>Example 1</strong>: An avid Carlton drinker might not be interested in any other kinds of beer.</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">CREATE</span> <span class="token keyword">VIEW</span>  MyBeers  <span class="token keyword">AS</span>
+ <span class="token keyword">SELECT</span> name<span class="token punctuation">,</span> manf
+ <span class="token keyword">FROM</span>   Beers
+ <span class="token keyword">WHERE</span>  manf <span class="token operator">=</span> <span class="token string">&apos;Carlton&apos;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> MyBeers<span class="token punctuation">;</span>
+
+     name       <span class="token operator">|</span>  manf
+<span class="token comment">------------------+---------</span>
+Crown Lager      <span class="token operator">|</span> Carlton
+Fosters Lager    <span class="token operator">|</span> Carlton
+Invalid Stout    <span class="token operator">|</span> Carlton
+Melbourne Bitter <span class="token operator">|</span> Carlton
+Victoria Bitter  <span class="token operator">|</span> Carlton
+</pre><p><strong>Example 2</strong>: We don&apos;t really need the address of inner-city hotels.</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">CREATE</span> <span class="token keyword">VIEW</span>  InnerCityHotels  <span class="token keyword">AS</span>
+ <span class="token keyword">SELECT</span> name<span class="token punctuation">,</span> license
+ <span class="token keyword">FROM</span>   Bars
+ <span class="token keyword">WHERE</span>  addr <span class="token operator">in</span> <span class="token punctuation">(</span><span class="token string">&apos;The Rocks&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;Sydney&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> InnerCityHotels<span class="token punctuation">;</span>
+
+    name       <span class="token operator">|</span> license
+<span class="token comment">-----------------+---------</span>
+Australia Hotel <span class="token operator">|</span>  <span class="token number">123456</span>
+Lord Nelson     <span class="token operator">|</span>  <span class="token number">123888</span>
+Marble Bar      <span class="token operator">|</span>  <span class="token number">122123</span>
+</pre><p><strong>Example 3</strong>: Number of beers produced by each brewer.</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">CREATE</span> <span class="token keyword">VIEW</span> BeersBrewed <span class="token keyword">AS</span>
+ <span class="token keyword">SELECT</span> manf <span class="token keyword">as</span> brewer<span class="token punctuation">,</span>
+        <span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">as</span> nbeers
+ <span class="token keyword">FROM</span>   beers <span class="token keyword">GROUP</span> <span class="token keyword">BY</span> manf<span class="token punctuation">;</span>
+
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> BeersBrewed<span class="token punctuation">;</span>
+
+  brewer     <span class="token operator">|</span> nbeers
+<span class="token comment">---------------+--------</span>
+Caledonian    <span class="token operator">|</span>      <span class="token number">1</span>
+Carlton       <span class="token operator">|</span>      <span class="token number">5</span>
+<span class="token keyword">Cascade</span>       <span class="token operator">|</span>      <span class="token number">1</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+</pre><p>Notes:</p>
+<ul>
+<li>A view&apos;s value may change without being explicitly modified (base table updated)</li>
+<li>Views may not be be able to be explicitly modified unless simple</li>
+</ul>
+<p><strong>Example 4</strong>: of view changing when base table changes.</p>
+<pre data-role="codeBlock" data-info="sql" class="language-sql"><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> InnerCityHotels<span class="token punctuation">;</span>
+name <span class="token operator">|</span> license
+<span class="token comment">-----------------+---------</span>
+Australia Hotel <span class="token operator">|</span> <span class="token number">123456</span>
+Lord Nelson <span class="token operator">|</span> <span class="token number">123888</span>
+Marble Bar <span class="token operator">|</span> <span class="token number">122123</span>
+
+<span class="token comment">-- then the Lord Nelson goes broke</span>
+<span class="token keyword">DELETE</span> <span class="token keyword">FROM</span> Bars <span class="token keyword">WHERE</span> name <span class="token operator">=</span> <span class="token string">&apos;Lord Nelson&apos;</span><span class="token punctuation">;</span>
+
+<span class="token comment">-- no explict update has been made to InnerCityHotels</span>
+<span class="token keyword">SELECT</span> \<span class="token operator">*</span> <span class="token keyword">FROM</span> InnerCityHotels<span class="token punctuation">;</span>
+name <span class="token operator">|</span> license
+<span class="token comment">-----------------+---------</span>
+Australia Hotel <span class="token operator">|</span> <span class="token number">123456</span>
+Marble Bar <span class="token operator">|</span> <span class="token number">122123</span>
+</pre><p><strong>Updating views</strong>:</p>
+<p>Conditions:</p>
+<ul>
+<li>The view involves a single relation R</li>
+<li>The <code>WHERE</code> clause does not involve R in a subquery</li>
+<li>The <code>WHERE</code> clause only uses attributes from the <code>SELECT</code></li>
+</ul>
+<p>Our example &apos;InnerCityHotel&apos; view is not updatable<br>
+Use the <code>INSERT</code> clause</p>
+
+    </div>
+  </body></html>
+
+    <!--WEEK 5 LECTURE NOTES-->
     <br>
   <hr>
 <div class="footer">
